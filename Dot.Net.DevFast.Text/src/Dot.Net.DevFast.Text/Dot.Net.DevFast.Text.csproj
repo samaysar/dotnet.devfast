@@ -27,12 +27,12 @@
     <Description>TDL.</Description>
     <Copyright>Copyright © Divya Sarthi MAHESHWARI 2023</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/samaysar/dotdotnet_text</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/samaysar/dotnet.devfast</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/samaysar/dotdotnet_text</RepositoryUrl>
+    <RepositoryUrl>https://github.com/samaysar/dotnet.devfast/tree/master/Dot.Net.DevFast.Text</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>devfast;fastdev;dotnet;stream;streaming;json;fastjson;text</PackageTags>
-    <PackageReleaseNotes>https://raw.githubusercontent.com/samaysar/dotdotnet_text/master/ReleaseNotes.txt</PackageReleaseNotes>
+    <PackageReleaseNotes>https://raw.githubusercontent.com/samaysar/dotnet.devfast/master/Dot.Net.DevFast.Text/ReleaseNotes.txt</PackageReleaseNotes>
     <NeutralLanguage />
 	  <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
