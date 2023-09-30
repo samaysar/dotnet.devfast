@@ -1,0 +1,3 @@
+Dot.Net.DevFast.Text 1.0.0
+
+ 1. 

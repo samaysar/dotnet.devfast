@@ -9,8 +9,8 @@
     <NoWarn />
     <Deterministic>true</Deterministic>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <DocumentationFile>Dot.Net.DevFast.Text.xml</DocumentationFile>
-    <Title>DevFast.Text</Title>
+    <DocumentationFile>Dot.Net.Text.xml</DocumentationFile>
+    <Title>Dot.Net.Text</Title>
     <Company>samaysar</Company>
     <Version Condition="'$(vNugetPack)'==''">1.0.0</Version>
     <Version Condition="'$(vNugetPack)'!=''">$(vNugetPack)</Version>
@@ -22,17 +22,17 @@
     <AssemblyVersion Condition="'$(Version)'!=''">$(Version)</AssemblyVersion>
     <InformationalVersion Condition="'$(vNugetPack)'==''">1.0.0-alpha.0</InformationalVersion>
     <InformationalVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack).0</InformationalVersion>
-    <AssemblyTitle>Dot.Net.DevFast.Text (TargetFramework: $(TargetFramework))</AssemblyTitle>
+    <AssemblyTitle>Dot.Net.Text (TargetFramework: $(TargetFramework))</AssemblyTitle>
     <Authors>Divya Sarthi MAHESHWARI</Authors>
     <Description>TDL.</Description>
     <Copyright>Copyright © Divya Sarthi MAHESHWARI 2023</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageProjectUrl>https://github.com/samaysar/dotdotnet_text</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/samaysar/dotnet.devfast</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/samaysar/dotdotnet_text</RepositoryUrl>
+    <RepositoryUrl>https://github.com/samaysar/dotnet.devfast/tree/master/Dot.Net.Text</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>devfast;fastdev;dotnet;stream;streaming;json;fastjson;text</PackageTags>
-    <PackageReleaseNotes>https://raw.githubusercontent.com/samaysar/dotdotnet_text/master/ReleaseNotes.txt</PackageReleaseNotes>
+    <PackageReleaseNotes>https://raw.githubusercontent.com/samaysar/dotnet.devfast/master/Dot.Net.Text/ReleaseNotes.txt</PackageReleaseNotes>
     <NeutralLanguage />
 	  <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -44,7 +44,7 @@
 	  <None Include="..\..\..\icon.png" Pack="true" PackagePath="" />
 	  <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="" />
 	  <None Include="..\..\README.md" Pack="true" PackagePath="" />
-    <Content Include="Dot.Net.DevFast.Text.xml">
+    <Content Include="Dot.Net.Text.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
