@@ -4,5 +4,16 @@
         <name>Dot.Net.Text</name>
     </assembly>
     <members>
+        <member name="T:Dot.Net.Text.Json.RawJsonReader">
+            <summary>
+            Class responsible to read an <see cref="T:System.IO.Stream"/> and produce an item at a time as raw bytes.
+            </summary>
+        </member>
+        <member name="M:Dot.Net.Text.Json.RawJsonReader.#ctor(System.IO.Stream)">
+            <summary>
+            Ctor.
+            </summary>
+            <param name="stream">A stream to read from.</param>
+        </member>
     </members>
 </doc>
