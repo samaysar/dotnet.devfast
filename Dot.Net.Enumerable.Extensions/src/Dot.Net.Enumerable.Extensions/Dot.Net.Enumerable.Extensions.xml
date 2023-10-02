@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dot.Net.Enumerable.Extensions</name>
+    </assembly>
+    <members>
+        <member name="T:Dot.Net.Enumerable.Extensions.Arrays">
+            <summary>
+            Extensions on Arrays
+            </summary>
+        </member>
+        <member name="M:Dot.Net.Enumerable.Extensions.Arrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 
+            to <paramref name="targetPosition"/> (Included) and onwards.
+            <para>
+            NOTE: This method is SAFE version of <see cref="M:Dot.Net.Enumerable.Extensions.Arrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> as
+            constraint are checked.
+            </para>
+            </summary>
+            <param name="bytes">Source array.</param>
+            <param name="sourcePosition">Position from which to start copying bytes.</param>
+            <param name="total">Total number of bytes to copy.</param>
+            <param name="targetPosition">Position at which starting writing the bytes.</param>
+        </member>
+        <member name="M:Dot.Net.Enumerable.Extensions.Arrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 
+            to <paramref name="targetPosition"/> (Included) and onwards.
+            <para>
+            !!!- CALL IT AT YOUR OWN RISK -!!!
+            </para>
+            <para>
+            This method is UNSAFE version of <see cref="M:Dot.Net.Enumerable.Extensions.Arrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
+            </para>
+            </summary>
+            <param name="bytes">Source array.</param>
+            <param name="sourcePosition">Position from which to start copying bytes.</param>
+            <param name="total">Total number of bytes to copy.</param>
+            <param name="targetPosition">Position at which starting writing the bytes.</param>
+        </member>
+        <member name="M:Dot.Net.Enumerable.Extensions.Arrays.EnsureCapacity(System.Byte[],System.Int32)">
+            <summary>
+            Checks if array needs to be resized. When resize takes place, the content of <paramref name="source"/>
+            are copied to the newly created array.
+            </summary>
+            <param name="source"></param>
+            <param name="capacity"></param>
+        </member>
+        <member name="M:Dot.Net.Enumerable.Extensions.Arrays.EnsureCapacity(System.Byte[]@,System.Int32)">
+            <summary>
+            Checks if array needs to be resized. When resize takes place, the content of <paramref name="source"/>
+            are copied to the newly created array.
+            </summary>
+            <param name="source"></param>
+            <param name="capacity"></param>
+        </member>
+        <member name="M:Dot.Net.Enumerable.Extensions.Arrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Copies <paramref name="total"/> bytes of <paramref name="source"/> array starting from 
+            <paramref name="sourcePosition"/> (included) to <paramref name="target"/> array's
+            <paramref name="targetPosition"/> (included) and onwards.
+            <para>
+            This method is SAFE version of <see cref="M:Dot.Net.Enumerable.Extensions.Arrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            as constraint are checked.
+            </para>
+            </summary>
+            <param name="source">Source array</param>
+            <param name="target">Target array</param>
+            <param name="sourcePosition">Position in source array to start copying byte from.</param>
+            <param name="total">Total number of bytes to copy.</param>
+            <param name="targetPosition">Position in target array to start writing the bytes to.</param>
+        </member>
+        <member name="M:Dot.Net.Enumerable.Extensions.Arrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Copies <paramref name="total"/> bytes of <paramref name="source"/> array starting from 
+            <paramref name="sourcePosition"/> (included) to <paramref name="target"/> array's
+            <paramref name="targetPosition"/> (included) and onwards.
+            <para>
+            !!!- CALL IT AT YOUR OWN RISK -!!!
+            </para>
+            <para>
+            This method is UNSAFE version of <see cref="M:Dot.Net.Enumerable.Extensions.Arrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
+            </para>
+            </summary>
+            <param name="source">Source array</param>
+            <param name="target">Target array</param>
+            <param name="sourcePosition">Position in source array to start copying byte from.</param>
+            <param name="total">Total number of bytes to copy.</param>
+            <param name="targetPosition">Position in target array to start writing the bytes to.</param>
+        </member>
+    </members>
+</doc>
