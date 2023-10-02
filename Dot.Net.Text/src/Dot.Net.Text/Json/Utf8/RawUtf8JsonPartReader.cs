@@ -17,7 +17,7 @@ namespace Dot.Net.Text.Json.Utf8
         readonly Stream _stream;
         byte[] _buffer;
         int _current, _end;
-        long _bytesDiscarded;
+        long _bytesConsumed;
 
         /// <summary>
         /// Creates a newly initialized instance of <see cref="RawUtf8JsonPartReader"/>.
@@ -48,7 +48,7 @@ namespace Dot.Net.Text.Json.Utf8
             _stream = stream;
             _buffer = buffer;
             _current = current;
-            _bytesDiscarded = 0;
+            _bytesConsumed = 0;
             _end = end;
         }
 
@@ -57,7 +57,7 @@ namespace Dot.Net.Text.Json.Utf8
 
         private byte Current => _buffer[_current];
 
-        private long PositionSinceBeginning => _bytesDiscarded + _current;
+        private long PositionSinceBeginning => _bytesConsumed + _current;
 
         /// <inheritdoc />
         public Task<byte[]> GetNextPartAsync(CancellationToken token)
@@ -73,9 +73,9 @@ namespace Dot.Net.Text.Json.Utf8
             if (currentByte != '[')
             {
                 throw new JsonParsingException("Invalid JSON Array. " +
-                    $"Expected = '{ArrayOpen}' (character '['), " +
-                    $"Found = '{currentByte}', " +
-                    $"Byte-wise position '{PositionSinceBeginning}'.");
+                    $"Expected Byte = {ArrayOpen} (character '['), " +
+                    $"Found Byte = {currentByte}, " +
+                    $"Byte Position = {PositionSinceBeginning}.");
             }
         }
 
