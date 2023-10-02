@@ -42,7 +42,7 @@
 
   <ItemGroup>
 	  <None Include="..\..\..\icon.png" Pack="true" PackagePath="" />
-	  <None Include="..\..\LICENSE" Pack="true" Visible="false" PackagePath="" />
+	  <None Include="..\..\..\LICENSE" Pack="true" Visible="false" PackagePath="" />
 	  <None Include="..\..\README.md" Pack="true" PackagePath="" />
     <Content Include="Dot.Net.Text.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -51,6 +51,10 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <BuildAction>None</BuildAction>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 
 </Project>
