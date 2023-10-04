@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dot.Net.Enumerable.Extensions", "src\Dot.Net.Enumerable.Extensions\Dot.Net.Enumerable.Extensions.csproj", "{8B1ADFE2-D507-4C8A-8C98-18A4C522DC12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dot.Net.Extensions", "src\Dot.Net.Extensions\Dot.Net.Extensions.csproj", "{8B1ADFE2-D507-4C8A-8C98-18A4C522DC12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

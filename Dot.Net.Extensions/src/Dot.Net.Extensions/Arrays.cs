@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Dot.Net.Enumerable.Extensions
 {
     /// <summary>
-    /// Extensions on Arrays
+    /// Extension methods on Arrays
     /// </summary>
     public static class Arrays
     {
