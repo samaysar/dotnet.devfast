@@ -19,14 +19,10 @@
         /// <param name="targetPosition">Position at which starting writing the bytes.</param>
         public static void LiftNCopySafe(this byte[] bytes, int sourcePosition, int total, int targetPosition)
         {
-            if (sourcePosition >= bytes.Length)
-                throw new ArgumentException($"Source position {sourcePosition} is greater than length {bytes.Length}");
-            if (targetPosition >= bytes.Length)
-                throw new ArgumentException($"Target position {targetPosition} is greater than length {bytes.Length}");
             if ((sourcePosition + total) > bytes.Length)
-                throw new ArgumentException($"Source breaches length {bytes.Length}");
+                throw new ArgumentException($"Source position breaches length {bytes.Length}");
             if ((targetPosition + total) > bytes.Length)
-                throw new ArgumentException($"Target breaches length {bytes.Length}");
+                throw new ArgumentException($"Target position breaches length {bytes.Length}");
             bytes.LiftNCopyUnSafe(sourcePosition, total, targetPosition);
         }
 
@@ -54,20 +50,20 @@
         /// Creates a new array with double the size. Copies the content of <paramref name="source"/> to the newly created array.
         /// </summary>
         /// <param name="source">Source array</param>
-        public static byte[] DoubleCapacity(this byte[] source)
+        public static byte[] DoubleByteCapacity(this byte[] source)
         {
-            return source.EnsureCapacity(source.Length * 2);
+            return source.EnsureByteCapacity(source.Length * 2);
         }
 
         /// <summary>
-        /// Checks if array needs to be resized. When resize takes place, the content of <paramref name="source"/>
+        /// Checks if array needs to be up-sized. When resize takes place, the content of <paramref name="source"/>
         /// are copied to the newly created array.
         /// </summary>
         /// <param name="source">Source array</param>
         /// <param name="capacity">Minimum length of the array</param>
-        public static byte[] EnsureCapacity(this byte[] source, int capacity)
+        public static byte[] EnsureByteCapacity(this byte[] source, int capacity)
         {
-            EnsureCapacity(ref source, capacity);
+            EnsureByteCapacity(ref source, capacity);
             return source;
         }
 
@@ -77,7 +73,7 @@
         /// </summary>
         /// <param name="source">Source array</param>
         /// <param name="capacity">Minimum length of the array</param>
-        public static void EnsureCapacity(ref byte[] source, int capacity)
+        public static void EnsureByteCapacity(ref byte[] source, int capacity)
         {
             if (capacity <= source.Length) return;
             var target = new byte[capacity];
@@ -101,14 +97,10 @@
         /// <param name="targetPosition">Position in target array to start writing the bytes to.</param>
         public static void CopyToSafe(this byte[] source, byte[] target, int sourcePosition, int total, int targetPosition)
         {
-            if (sourcePosition >= source.Length)
-                throw new ArgumentException($"Source position {sourcePosition} is greater than length {source.Length}");
-            if (targetPosition >= target.Length)
-                throw new ArgumentException($"Target position {targetPosition} is greater than length {target.Length}");
             if ((sourcePosition + total) > source.Length)
-                throw new ArgumentException($"Source breaches length {source.Length}");
+                throw new ArgumentException($"Source position breaches length {source.Length}");
             if ((targetPosition + total) > target.Length)
-                throw new ArgumentException($"Target breaches length {target.Length}");
+                throw new ArgumentException($"Target position breaches length {target.Length}");
             source.CopyToUnSafe(target, sourcePosition, total, targetPosition);
         }
 
