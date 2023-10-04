@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Dot.Net.Enumerable.Extensions
+﻿namespace Dot.Net.Extensions
 {
     /// <summary>
     /// Extension methods on Arrays
