@@ -4,5 +4,15 @@
     "Default"
   ],
   "Markdown.IgnoreLineBreak": true,
-  "Markdown.TableOfContentsModes": "IncludeSummaryWithNewLine"
+  "Markdown.TableOfContentsModes": "IncludeSummaryWithNewLine",
+  "ClassDocItem": {
+    "Sections": [
+      "Header",
+      "Title",
+      "summary",
+      "Definition",
+      "TableOfContents",
+      "Default"
+    ]
+  }
 }

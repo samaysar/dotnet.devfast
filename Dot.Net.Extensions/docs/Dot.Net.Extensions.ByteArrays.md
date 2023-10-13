@@ -8,6 +8,52 @@ Extension methods on Array of type [System.Byte](https://docs.microsoft.com/en-u
 ```csharp
 public static class ByteArrays
 ```
+- **[CopyToSafe(this byte[], byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.CopyToSafe(thisbyte[],byte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.CopyToSafe(this byte[], byte[], int, int, int)')**
+  Copies total bytes of source array starting from 
+  sourcePosition (included) to target array's
+  targetPosition (included) and onwards.
+  
+  This method is SAFE version of [CopyToUnSafe(this byte[], byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.CopyToUnSafe(thisbyte[],byte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.CopyToUnSafe(this byte[], byte[], int, int, int)') 
+  as constraint are checked.
+- **[CopyToUnSafe(this byte[], byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.CopyToUnSafe(thisbyte[],byte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.CopyToUnSafe(this byte[], byte[], int, int, int)')**
+  Copies total bytes of source array starting from 
+  sourcePosition (included) to target array's
+  targetPosition (included) and onwards.
+  
+  !!!- CALL IT AT YOUR OWN RISK -!!!
+  
+  This method is UNSAFE version of [CopyToSafe(this byte[], byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.CopyToSafe(thisbyte[],byte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.CopyToSafe(this byte[], byte[], int, int, int)') 
+  as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
+- **[DoubleByteCapacity(this byte[])](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.DoubleByteCapacity(thisbyte[]) 'Dot.Net.Extensions.ByteArrays.DoubleByteCapacity(this byte[])')**
+  Creates a new array with double the size. Copies the content of source to the newly created array.
+- **[EnsureByteCapacity(byte[], int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(byte[],int) 'Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(byte[], int)')**
+  Checks if array needs to be resized. When resize takes place, the content of source
+  are copied to the newly created array.
+- **[EnsureByteCapacity(this byte[], int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(thisbyte[],int) 'Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(this byte[], int)')**
+  Checks if array needs to be up-sized. When resize takes place, the content of source
+  are copied to the newly created array.
+- **[LiftNCopySafe(this byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.LiftNCopySafe(thisbyte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.LiftNCopySafe(this byte[], int, int, int)')**
+  Copies total bytes starting from sourcePosition (included) 
+  to targetPosition (Included) and onwards.
+  
+  NOTE: This method is SAFE version of [LiftNCopyUnSafe(this byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(thisbyte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(this byte[], int, int, int)') as
+  constraint are checked.
+- **[LiftNCopyUnSafe(this byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(thisbyte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(this byte[], int, int, int)')**
+  Copies total bytes starting from sourcePosition (included) 
+  to targetPosition (Included) and onwards.
+  
+  !!!- CALL IT AT YOUR OWN RISK -!!!
+  
+  This method is UNSAFE version of [LiftNCopySafe(this byte[], int, int, int)](Dot.Net.Extensions.ByteArrays.md#Dot.Net.Extensions.ByteArrays.LiftNCopySafe(thisbyte[],int,int,int) 'Dot.Net.Extensions.ByteArrays.LiftNCopySafe(this byte[], int, int, int)') 
+  as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
+
+## ByteArrays Class
+
+Extension methods on Array of type [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte').
+
+```csharp
+public static class ByteArrays
+```
 
 Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object') &#129106; ByteArrays
 ### Methods
