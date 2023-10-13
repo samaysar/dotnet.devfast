@@ -10,6 +10,11 @@
             to achieve optimized runtime performance and readability of the code.
             </summary>
         </member>
+        <member name="T:Dot.Net.Extensions.NamespaceDoc">
+            <summary>
+            Under this <see langword="namespace"/> we have collected several extension methods on various system types (for e.g. <see cref="T:System.Array"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, ... ).
+            </summary>
+        </member>
         <member name="T:Dot.Net.Extensions.ByteArrays">
             <summary>
             Extension methods on Array of type <see cref="T:System.Byte"/>.
