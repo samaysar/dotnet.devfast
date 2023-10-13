@@ -13,7 +13,6 @@
     <DefaultDocumentationConfigurationFile>DocConfig.json</DefaultDocumentationConfigurationFile>
     <DefaultDocumentationFolder>../../docs</DefaultDocumentationFolder>
     <DefaultDocumentationGeneratedPages>Namespaces,Types</DefaultDocumentationGeneratedPages>
-    <!--<DefaultDocumentationGeneratedPages>Classes</DefaultDocumentationGeneratedPages>-->
     <DefaultDocumentationLinksBaseUrl>https://github.com/samaysar/dotnet.devfast/tree/master/Dot.Net.Extensions/docs</DefaultDocumentationLinksBaseUrl>
     <Title>Dot.Net.Extensions</Title>
     <Company>samaysar</Company>
@@ -64,6 +63,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="OpenCover" Version="4.7.1221" />
   </ItemGroup>
 
 </Project>
