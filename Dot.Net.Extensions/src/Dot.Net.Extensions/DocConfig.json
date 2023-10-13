@@ -1,0 +1,14 @@
+{
+  "Sections": [
+    "Header",
+    "Footer",
+    "Default"
+  ],
+  "NamespaceDocItem": {
+    "Sections": [
+      "Title",
+      "summary",
+      "TableOfContents"
+    ]
+  }
+}

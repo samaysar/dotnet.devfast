@@ -64,5 +64,44 @@ namespace Dot.Net.Extensions.Tests
             That(b, Has.Length.EqualTo(expected));
             Enumerable.Range(0, initial).ForEach((x, _) => That(a[x], Is.EqualTo(b[x])), CancellationToken.None);
         }
+
+        [Test]
+        public void CopyToSafe_Throws_ArgumentException_When_Required()
+        {
+            Throws<ArgumentException>(() => new byte[] { 0 }.CopyToSafe(new byte[1], 0, 2, 0));
+            Throws<ArgumentException>(() => new byte[] { 0 }.CopyToSafe(new byte[1], 1, 1, 0));
+            Throws<ArgumentException>(() => new byte[] { 0 }.CopyToSafe(Array.Empty<byte>(), 0, 1, 1));
+        }
+
+        [Test]
+        public void CopyToSafe_N_CopyToUnSafe_Copies_Correctly()
+        {
+            var a = Enumerable.Range(0, 10).Select(x => (byte)x).ToArray();
+            var b = new byte[5];
+            a.CopyToSafe(b, 5, 5, 0);
+            int first = 0, second = 5;
+            Multiple(() =>
+            {
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first], Is.EqualTo(a[second]));
+            });
+
+            a = Enumerable.Range(0, 10).Select(x => (byte)x).ToArray();
+            b = new byte[5];
+            a.CopyToUnSafe(b, 5, 5, 0);
+            first = 0;
+            second = 5;
+            Multiple(() =>
+            {
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first++], Is.EqualTo(a[second++]));
+                That(b[first], Is.EqualTo(a[second]));
+            });
+        }
     }
 }
