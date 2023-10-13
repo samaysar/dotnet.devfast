@@ -10,9 +10,12 @@ public static class Enumerables
 ```
 - *Methods*
   - **[ForEach&lt;T&gt;(this IEnumerable&lt;T&gt;, Action&lt;T,CancellationToken&gt;, CancellationToken)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEach_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Action_T,System.Threading.CancellationToken_,System.Threading.CancellationToken) 'Dot.Net.Extensions.Enumerables.ForEach<T>(this System.Collections.Generic.IEnumerable<T>, System.Action<T,System.Threading.CancellationToken>, System.Threading.CancellationToken)')**
+  - **[ForEachAsync&lt;T&gt;(this IAsyncEnumerable&lt;T&gt;, Func&lt;T,CancellationToken,Task&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool)')**
   - **[ForEachAsync&lt;T&gt;(this IEnumerable&lt;T&gt;, Func&lt;T,CancellationToken,Task&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool)')**
   - **[SelectAsync&lt;TIn,TOut&gt;(this IAsyncEnumerable&lt;TIn&gt;, Func&lt;TIn,CancellationToken,Task&lt;TOut&gt;&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.SelectAsync<TIn,TOut>(this System.Collections.Generic.IAsyncEnumerable<TIn>, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>>, System.Threading.CancellationToken, bool)')**
   - **[SelectAsync&lt;TIn,TOut&gt;(this IEnumerable&lt;TIn&gt;, Func&lt;TIn,CancellationToken,Task&lt;TOut&gt;&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.SelectAsync<TIn,TOut>(this System.Collections.Generic.IEnumerable<TIn>, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>>, System.Threading.CancellationToken, bool)')**
+  - **[SkipAsync&lt;TIn&gt;(this IAsyncEnumerable&lt;TIn&gt;, int, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool)')**
+  - **[TakeAsync&lt;TIn&gt;(this IAsyncEnumerable&lt;TIn&gt;, int, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool)')**
   - **[ToChunksAsync&lt;T&gt;(this IAsyncEnumerable&lt;T&gt;, int, CancellationToken, bool, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ToChunksAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,int,System.Threading.CancellationToken,bool,bool) 'Dot.Net.Extensions.Enumerables.ToChunksAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, int, System.Threading.CancellationToken, bool, bool)')**
   - **[ToListAsync&lt;T&gt;(this IAsyncEnumerable&lt;T&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ToListAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.ToListAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Threading.CancellationToken, bool)')**
   - **[WhereAsync&lt;T&gt;(this IAsyncEnumerable&lt;T&gt;, Func&lt;T,CancellationToken,Task&lt;bool&gt;&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.WhereAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_bool__,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.WhereAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<bool>>, System.Threading.CancellationToken, bool)')**
@@ -35,7 +38,7 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 Calls [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEach_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Action_T,System.Threading.CancellationToken_,System.Threading.CancellationToken).lambda 'Dot.Net.Extensions.Enumerables.ForEach<T>(this System.Collections.Generic.IEnumerable<T>, System.Action<T,System.Threading.CancellationToken>, System.Threading.CancellationToken).lambda') for every item in [collection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEach_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Action_T,System.Threading.CancellationToken_,System.Threading.CancellationToken).collection 'Dot.Net.Extensions.Enumerables.ForEach<T>(this System.Collections.Generic.IEnumerable<T>, System.Action<T,System.Threading.CancellationToken>, System.Threading.CancellationToken).collection') with given [token](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEach_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Action_T,System.Threading.CancellationToken_,System.Threading.CancellationToken).token 'Dot.Net.Extensions.Enumerables.ForEach<T>(this System.Collections.Generic.IEnumerable<T>, System.Action<T,System.Threading.CancellationToken>, System.Threading.CancellationToken).token').
 
 ```csharp
-public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> collection, System.Action<T,System.Threading.CancellationToken> lambda, System.Threading.CancellationToken token);
+public static void ForEach<T>(this System.Collections.Generic.IEnumerable<T> collection, System.Action<T,System.Threading.CancellationToken> lambda, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Type parameters
 
@@ -62,6 +65,49 @@ predicate to apply
 
 Cancellation token to pass on to the supplied [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEach_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Action_T,System.Threading.CancellationToken_,System.Threading.CancellationToken).lambda 'Dot.Net.Extensions.Enumerables.ForEach<T>(this System.Collections.Generic.IEnumerable<T>, System.Action<T,System.Threading.CancellationToken>, System.Threading.CancellationToken).lambda')
 
+<a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool)'></a>
+
+## Enumerables.ForEachAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,Task>, CancellationToken, bool) Method
+
+Calls [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).lambda 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).lambda') for every item in [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).asyncCollection') with given [token](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).token 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).token'), asynchronously.
+
+```csharp
+public static System.Threading.Tasks.Task ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task> lambda, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
+```
+#### Type parameters
+
+<a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).T'></a>
+
+`T`
+#### Parameters
+
+<a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).asyncCollection'></a>
+
+`asyncCollection` [System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[T](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).T 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).T')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
+
+Asynchronously Enumerable items
+
+<a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).lambda'></a>
+
+`lambda` [System.Func&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Func-3 'System.Func`3')[T](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).T 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).T')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Func-3 'System.Func`3')[System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')[,](https://docs.microsoft.com/en-us/dotnet/api/System.Func-3 'System.Func`3')[System.Threading.Tasks.Task](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task 'System.Threading.Tasks.Task')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Func-3 'System.Func`3')
+
+Action to apply
+
+<a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).token'></a>
+
+`token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
+
+Cancellation token to pass on to the supplied [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).lambda 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).lambda') and [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).asyncCollection')
+
+<a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).continueOnCapturedContext'></a>
+
+`continueOnCapturedContext` [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
+
+[true](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') to attempt to marshal the continuation back to the original context captured; otherwise, [false](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool').
+
+#### Returns
+[System.Threading.Tasks.Task](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.Task 'System.Threading.Tasks.Task')
+
 <a name='Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool)'></a>
 
 ## Enumerables.ForEachAsync<T>(this IEnumerable<T>, Func<T,CancellationToken,Task>, CancellationToken, bool) Method
@@ -69,7 +115,7 @@ Cancellation token to pass on to the supplied [lambda](Dot.Net.Extensions.Enumer
 Calls [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).lambda 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).lambda') for every item in [collection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).collection 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).collection') with given [token](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ForEachAsync_T_(thisSystem.Collections.Generic.IEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_,System.Threading.CancellationToken,bool).token 'Dot.Net.Extensions.Enumerables.ForEachAsync<T>(this System.Collections.Generic.IEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task>, System.Threading.CancellationToken, bool).token'), asynchronously.
 
 ```csharp
-public static System.Threading.Tasks.Task ForEachAsync<T>(this System.Collections.Generic.IEnumerable<T> collection, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task> lambda, System.Threading.CancellationToken token, bool continueOnCapturedContext=false);
+public static System.Threading.Tasks.Task ForEachAsync<T>(this System.Collections.Generic.IEnumerable<T> collection, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task> lambda, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
@@ -113,7 +159,7 @@ Calls [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.
 Returns outputs as a newly created asynchronous enumerable.
 
 ```csharp
-public static System.Collections.Generic.IAsyncEnumerable<TOut> SelectAsync<TIn,TOut>(this System.Collections.Generic.IAsyncEnumerable<TIn> asyncCollection, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>> lambda, System.Threading.CancellationToken token, bool continueOnCapturedContext=false);
+public static System.Collections.Generic.IAsyncEnumerable<TOut> SelectAsync<TIn,TOut>(this System.Collections.Generic.IAsyncEnumerable<TIn> asyncCollection, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>> lambda, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
@@ -146,7 +192,7 @@ Action to apply
 
 `token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
 
-Cancellation token to pass on to the supplied [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool).lambda 'Dot.Net.Extensions.Enumerables.SelectAsync<TIn,TOut>(this System.Collections.Generic.IAsyncEnumerable<TIn>, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>>, System.Threading.CancellationToken, bool).lambda')
+Cancellation token to pass on to the supplied [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool).lambda 'Dot.Net.Extensions.Enumerables.SelectAsync<TIn,TOut>(this System.Collections.Generic.IAsyncEnumerable<TIn>, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>>, System.Threading.CancellationToken, bool).lambda') and [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.SelectAsync<TIn,TOut>(this System.Collections.Generic.IAsyncEnumerable<TIn>, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>>, System.Threading.CancellationToken, bool).asyncCollection')
 
 <a name='Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool).continueOnCapturedContext'></a>
 
@@ -165,7 +211,7 @@ Calls [lambda](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.
 outputs as a newly created asynchronous enumerable.
 
 ```csharp
-public static System.Collections.Generic.IAsyncEnumerable<TOut> SelectAsync<TIn,TOut>(this System.Collections.Generic.IEnumerable<TIn> collection, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>> lambda, System.Threading.CancellationToken token, bool continueOnCapturedContext=false);
+public static System.Collections.Generic.IAsyncEnumerable<TOut> SelectAsync<TIn,TOut>(this System.Collections.Generic.IEnumerable<TIn> collection, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>> lambda, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
@@ -209,6 +255,101 @@ Cancellation token to pass on to the supplied [lambda](Dot.Net.Extensions.Enumer
 #### Returns
 [System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[TOut](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SelectAsync_TIn,TOut_(thisSystem.Collections.Generic.IEnumerable_TIn_,System.Func_TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task_TOut__,System.Threading.CancellationToken,bool).TOut 'Dot.Net.Extensions.Enumerables.SelectAsync<TIn,TOut>(this System.Collections.Generic.IEnumerable<TIn>, System.Func<TIn,System.Threading.CancellationToken,System.Threading.Tasks.Task<TOut>>, System.Threading.CancellationToken, bool).TOut')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
 
+<a name='Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool)'></a>
+
+## Enumerables.SkipAsync<TIn>(this IAsyncEnumerable<TIn>, int, CancellationToken, bool) Method
+
+While iterating on supplied [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).asyncCollection') total of [count](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).count 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).count')
+elements are bypassed and remaining (if any) items are returned as a part of iteration.
+No exception is thrown it [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).asyncCollection') contains lesser number of items.
+
+```csharp
+public static System.Collections.Generic.IAsyncEnumerable<TIn> SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn> asyncCollection, int count, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
+```
+#### Type parameters
+
+<a name='Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).TIn'></a>
+
+`TIn`
+
+Input Type
+#### Parameters
+
+<a name='Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection'></a>
+
+`asyncCollection` [System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[TIn](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).TIn 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).TIn')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
+
+Asynchronously Enumerable items
+
+<a name='Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).count'></a>
+
+`count` [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
+
+Total number of elements to skip
+
+<a name='Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).token'></a>
+
+`token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
+
+Cancellation token for [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).asyncCollection')
+
+<a name='Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).continueOnCapturedContext'></a>
+
+`continueOnCapturedContext` [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
+
+[true](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') to attempt to marshal the continuation back to the original context captured; otherwise, [false](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool').
+
+#### Returns
+[System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[TIn](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.SkipAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).TIn 'Dot.Net.Extensions.Enumerables.SkipAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).TIn')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
+
+<a name='Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool)'></a>
+
+## Enumerables.TakeAsync<TIn>(this IAsyncEnumerable<TIn>, int, CancellationToken, bool) Method
+
+While iterating on supplied [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).asyncCollection') maximum of [count](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).count 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).count')
+elements are returned as a part of iteration.
+If [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).asyncCollection') contains lesser number of items, all iterated items
+are returned.
+
+```csharp
+public static System.Collections.Generic.IAsyncEnumerable<TIn> TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn> asyncCollection, int count, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
+```
+#### Type parameters
+
+<a name='Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).TIn'></a>
+
+`TIn`
+
+Input Type
+#### Parameters
+
+<a name='Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection'></a>
+
+`asyncCollection` [System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[TIn](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).TIn 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).TIn')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
+
+Asynchronously Enumerable items
+
+<a name='Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).count'></a>
+
+`count` [System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
+
+Total number of elements to skip
+
+<a name='Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).token'></a>
+
+`token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
+
+Cancellation token for [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).asyncCollection')
+
+<a name='Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).continueOnCapturedContext'></a>
+
+`continueOnCapturedContext` [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
+
+[true](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') to attempt to marshal the continuation back to the original context captured; otherwise, [false](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool').
+
+#### Returns
+[System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[TIn](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.TakeAsync_TIn_(thisSystem.Collections.Generic.IAsyncEnumerable_TIn_,int,System.Threading.CancellationToken,bool).TIn 'Dot.Net.Extensions.Enumerables.TakeAsync<TIn>(this System.Collections.Generic.IAsyncEnumerable<TIn>, int, System.Threading.CancellationToken, bool).TIn')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
+
 <a name='Dot.Net.Extensions.Enumerables.ToChunksAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,int,System.Threading.CancellationToken,bool,bool)'></a>
 
 ## Enumerables.ToChunksAsync<T>(this IAsyncEnumerable<T>, int, CancellationToken, bool, bool) Method
@@ -218,10 +359,10 @@ in a list and returns such lists as a part of newly created asynchronous enumera
 
 USE-CASE: When the cost of calling [ToListAsync&lt;T&gt;(this IAsyncEnumerable&lt;T&gt;, CancellationToken, bool)](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ToListAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Threading.CancellationToken,bool) 'Dot.Net.Extensions.Enumerables.ToListAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Threading.CancellationToken, bool)') is too huge (requires too much memory or items
 are too many to fit in a single [System.Collections.Generic.List&lt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1 'System.Collections.Generic.List`1')); and working on a small set of such items (instead of consuming single item at a time)
-is advantageous (for e.g. database batch inserts using medium sized collection, instead of inserting item at a time).
+is advantageous (for e.g. database batch inserts using medium sized asyncCollection, instead of inserting item at a time).
 
 ```csharp
-public static System.Collections.Generic.IAsyncEnumerable<System.Collections.Generic.List<T>> ToChunksAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, int maxChunkSize, System.Threading.CancellationToken token, bool reUseList=true, bool continueOnCapturedContext=false);
+public static System.Collections.Generic.IAsyncEnumerable<System.Collections.Generic.List<T>> ToChunksAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, int maxChunkSize, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool reUseList=true, bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
@@ -280,7 +421,7 @@ WARNING: Be sure of the use-case when passing [true](https://docs.microsoft.com/
 Returns a new [System.Collections.Generic.List&lt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.List-1 'System.Collections.Generic.List`1') containing all the items of provided [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.ToListAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.ToListAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Threading.CancellationToken, bool).asyncCollection') asynchronously.
 
 ```csharp
-public static System.Threading.Tasks.Task<System.Collections.Generic.List<T>> ToListAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, System.Threading.CancellationToken token, bool continueOnCapturedContext=false);
+public static System.Threading.Tasks.Task<System.Collections.Generic.List<T>> ToListAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
@@ -320,7 +461,7 @@ Calls [predicate](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerabl
 filtered items as a newly created asynchronous enumerable.
 
 ```csharp
-public static System.Collections.Generic.IAsyncEnumerable<T> WhereAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<bool>> predicate, System.Threading.CancellationToken token, bool continueOnCapturedContext=false);
+public static System.Collections.Generic.IAsyncEnumerable<T> WhereAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<bool>> predicate, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
@@ -347,7 +488,7 @@ Predicate to apply
 
 `token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
 
-Cancellation token to pass on to the supplied [predicate](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.WhereAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_bool__,System.Threading.CancellationToken,bool).predicate 'Dot.Net.Extensions.Enumerables.WhereAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<bool>>, System.Threading.CancellationToken, bool).predicate')
+Cancellation token to pass on to the supplied [predicate](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.WhereAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_bool__,System.Threading.CancellationToken,bool).predicate 'Dot.Net.Extensions.Enumerables.WhereAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<bool>>, System.Threading.CancellationToken, bool).predicate') and [asyncCollection](Dot.Net.Extensions.Enumerables.md#Dot.Net.Extensions.Enumerables.WhereAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_bool__,System.Threading.CancellationToken,bool).asyncCollection 'Dot.Net.Extensions.Enumerables.WhereAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T>, System.Func<T,System.Threading.CancellationToken,System.Threading.Tasks.Task<bool>>, System.Threading.CancellationToken, bool).asyncCollection')
 
 <a name='Dot.Net.Extensions.Enumerables.WhereAsync_T_(thisSystem.Collections.Generic.IAsyncEnumerable_T_,System.Func_T,System.Threading.CancellationToken,System.Threading.Tasks.Task_bool__,System.Threading.CancellationToken,bool).continueOnCapturedContext'></a>
 

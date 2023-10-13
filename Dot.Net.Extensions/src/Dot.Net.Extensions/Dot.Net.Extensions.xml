@@ -127,6 +127,16 @@
             <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/></param>
             <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         </member>
+        <member name="M:Dot.Net.Extensions.Enumerables.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            Calls <paramref name="lambda"/> for every item in <paramref name="asyncCollection"/> with given <paramref name="token"/>, asynchronously.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="asyncCollection">Asynchronously Enumerable items</param>
+            <param name="lambda">Action to apply</param>
+            <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/> and <paramref name="asyncCollection"/></param>
+            <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        </member>
         <member name="M:Dot.Net.Extensions.Enumerables.SelectAsync``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task{``1}},System.Threading.CancellationToken,System.Boolean)">
             <summary>
             Calls <paramref name="lambda"/> for every item in <paramref name="collection"/> with given <paramref name="token"/>, asynchronously, and returns the
@@ -148,7 +158,32 @@
             <typeparam name="TOut">Output Type</typeparam>
             <param name="asyncCollection">Asynchronously Enumerable items</param>
             <param name="lambda">Action to apply</param>
-            <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/></param>
+            <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/> and <paramref name="asyncCollection"/></param>
+            <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:Dot.Net.Extensions.Enumerables.SkipAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            While iterating on supplied <paramref name="asyncCollection"/> total of <paramref name="count"/>
+            elements are bypassed and remaining (if any) items are returned as a part of iteration.
+            No exception is thrown it <paramref name="asyncCollection"/> contains lesser number of items. 
+            </summary>
+            <typeparam name="TIn">Input Type</typeparam>
+            <param name="asyncCollection">Asynchronously Enumerable items</param>
+            <param name="count">Total number of elements to skip</param>
+            <param name="token">Cancellation token for <paramref name="asyncCollection"/></param>
+            <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:Dot.Net.Extensions.Enumerables.TakeAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            While iterating on supplied <paramref name="asyncCollection"/> maximum of <paramref name="count"/>
+            elements are returned as a part of iteration.
+            If <paramref name="asyncCollection"/> contains lesser number of items, all iterated items
+            are returned. 
+            </summary>
+            <typeparam name="TIn">Input Type</typeparam>
+            <param name="asyncCollection">Asynchronously Enumerable items</param>
+            <param name="count">Total number of elements to skip</param>
+            <param name="token">Cancellation token for <paramref name="asyncCollection"/></param>
             <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.WhereAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task{System.Boolean}},System.Threading.CancellationToken,System.Boolean)">
@@ -159,7 +194,7 @@
             <typeparam name="T">Input Type</typeparam>
             <param name="asyncCollection">Asynchronously Enumerable items</param>
             <param name="predicate">Predicate to apply</param>
-            <param name="token">Cancellation token to pass on to the supplied <paramref name="predicate"/></param>
+            <param name="token">Cancellation token to pass on to the supplied <paramref name="predicate"/> and <paramref name="asyncCollection"/></param>
             <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken,System.Boolean)">
@@ -178,7 +213,7 @@
             <para>
             USE-CASE: When the cost of calling <see cref="M:Dot.Net.Extensions.Enumerables.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken,System.Boolean)"/> is too huge (requires too much memory or items
             are too many to fit in a single <see cref="T:System.Collections.Generic.List`1"/>); and working on a small set of such items (instead of consuming single item at a time)
-            is advantageous (for e.g. database batch inserts using medium sized collection, instead of inserting item at a time).
+            is advantageous (for e.g. database batch inserts using medium sized asyncCollection, instead of inserting item at a time).
             </para>
             </summary>
             <typeparam name="T">Input Type</typeparam>
