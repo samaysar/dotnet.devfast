@@ -1,6 +1,4 @@
-﻿using System.Runtime.Intrinsics.X86;
-
-namespace Dot.Net.Extensions.Tests
+﻿namespace Dot.Net.Extensions.Tests
 {
     [TestFixture]
     public class EnumerablesTests
@@ -14,10 +12,10 @@ namespace Dot.Net.Extensions.Tests
             Action<int, CancellationToken> lambda = (x, t) =>
             {
                 val = x;
-                Assert.That(t, Is.EqualTo(token));
+                That(t, Is.EqualTo(token));
             };
             new[] { 1 }.ForEach(lambda, token);
-            Assert.That(val, Is.EqualTo(1));
+            That(val, Is.EqualTo(1));
         }
 
         [Test]
@@ -29,11 +27,11 @@ namespace Dot.Net.Extensions.Tests
             Func<int, CancellationToken, Task> lambda = (x, t) =>
             {
                 val = x;
-                Assert.That(t, Is.EqualTo(token));
+                That(t, Is.EqualTo(token));
                 return Task.CompletedTask;
             };
             await new[] { 1 }.ForEachAsync(lambda, token).ConfigureAwait(false);
-            Assert.That(val, Is.EqualTo(1));
+            That(val, Is.EqualTo(1));
         }
 
         [Test]
@@ -45,7 +43,7 @@ namespace Dot.Net.Extensions.Tests
             Func<int, CancellationToken, Task> lambda = (x, t) =>
             {
                 val = x;
-                Assert.That(t, Is.EqualTo(token));
+                That(t, Is.EqualTo(token));
                 return Task.CompletedTask;
             };
             await new[] { 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
@@ -53,7 +51,7 @@ namespace Dot.Net.Extensions.Tests
                 await Task.CompletedTask;
                 return x;
             }, token).ForEachAsync(lambda, token).ConfigureAwait(false);
-            Assert.That(val, Is.EqualTo(4));
+            That(val, Is.EqualTo(4));
         }
 
         [Test]
@@ -64,16 +62,16 @@ namespace Dot.Net.Extensions.Tests
             var token = cts.Token;
             Func<int, CancellationToken, Task> lambda = (x, _) =>
             {
-                Assert.That(x, Is.EqualTo(val++));
+                That(x, Is.EqualTo(val++));
                 return Task.CompletedTask;
             };
             await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, t) =>
             {
                 await Task.CompletedTask;
-                Assert.That(t, Is.EqualTo(token));
+                That(t, Is.EqualTo(token));
                 return x + 1;
             }, token).ForEachAsync(lambda, token).ConfigureAwait(false);
-            Assert.That(val, Is.EqualTo(6));
+            That(val, Is.EqualTo(6));
         }
 
         [Test]
@@ -84,7 +82,7 @@ namespace Dot.Net.Extensions.Tests
             var token = cts.Token;
             Func<int, CancellationToken, Task> lambda = (x, _) =>
             {
-                Assert.That(x, Is.EqualTo(val++));
+                That(x, Is.EqualTo(val++));
                 return Task.CompletedTask;
             };
             await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
@@ -94,10 +92,10 @@ namespace Dot.Net.Extensions.Tests
             }, token).SelectAsync(async (x, t) =>
             {
                 await Task.CompletedTask;
-                Assert.That(t, Is.EqualTo(token));
+                That(t, Is.EqualTo(token));
                 return x + 1;
             }, token).ForEachAsync(lambda, token).ConfigureAwait(false);
-            Assert.That(val, Is.EqualTo(7));
+            That(val, Is.EqualTo(7));
         }
 
         [Test]
@@ -108,16 +106,16 @@ namespace Dot.Net.Extensions.Tests
                 await Task.CompletedTask;
                 return x;
             }).SkipAsync(2).ToListAsync().ConfigureAwait(false);
-            Assert.That(l, Has.Count.EqualTo(3));
-            Assert.That(l, Has.Member(2));
-            Assert.That(l, Has.Member(3));
-            Assert.That(l, Has.Member(4));
+            That(l, Has.Count.EqualTo(3));
+            That(l, Has.Member(2));
+            That(l, Has.Member(3));
+            That(l, Has.Member(4));
             l = await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
             {
                 await Task.CompletedTask;
                 return x;
             }).SkipAsync(10).ToListAsync().ConfigureAwait(false);
-            Assert.That(l, Is.Empty);
+            That(l, Is.Empty);
         }
 
         [Test]
@@ -128,26 +126,26 @@ namespace Dot.Net.Extensions.Tests
                 await Task.CompletedTask;
                 return x;
             }).SkipAsync(2).TakeAsync(2).ToListAsync().ConfigureAwait(false);
-            Assert.That(l, Has.Count.EqualTo(2));
-            Assert.That(l, Has.Member(2));
-            Assert.That(l, Has.Member(3));
+            That(l, Has.Count.EqualTo(2));
+            That(l, Has.Member(2));
+            That(l, Has.Member(3));
             l = await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
             {
                 await Task.CompletedTask;
                 return x;
             }).SkipAsync(10).TakeAsync(5).ToListAsync().ConfigureAwait(false);
-            Assert.That(l, Is.Empty);
+            That(l, Is.Empty);
             l = await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
             {
                 await Task.CompletedTask;
                 return x;
             }).SkipAsync(0).TakeAsync(10).ToListAsync().ConfigureAwait(false);
-            Assert.That(l, Has.Count.EqualTo(5));
-            Assert.That(l, Has.Member(0));
-            Assert.That(l, Has.Member(1));
-            Assert.That(l, Has.Member(2));
-            Assert.That(l, Has.Member(3));
-            Assert.That(l, Has.Member(4));
+            That(l, Has.Count.EqualTo(5));
+            That(l, Has.Member(0));
+            That(l, Has.Member(1));
+            That(l, Has.Member(2));
+            That(l, Has.Member(3));
+            That(l, Has.Member(4));
         }
 
         [Test]
@@ -161,11 +159,11 @@ namespace Dot.Net.Extensions.Tests
                 return x;
             }, token).WhereAsync((x, t) =>
             {
-                Assert.That(t, Is.EqualTo(token));
+                That(t, Is.EqualTo(token));
                 return Task.FromResult(x > 3);
             }, token).ToListAsync(token).ConfigureAwait(false);
-            Assert.That(l, Has.Count.EqualTo(1));
-            Assert.That(l, Has.Member(4));
+            That(l, Has.Count.EqualTo(1));
+            That(l, Has.Member(4));
         }
 
         [Test]
@@ -178,15 +176,18 @@ namespace Dot.Net.Extensions.Tests
                 await Task.CompletedTask;
                 return x;
             }, token).ToListAsync(token).ConfigureAwait(false);
-            Assert.That(l, Has.Count.EqualTo(5));
-            Assert.That(l, Has.Member(0));
-            Assert.That(l, Has.Member(1));
-            Assert.That(l, Has.Member(2));
-            Assert.That(l, Has.Member(3));
-            Assert.That(l, Has.Member(4));
+            Multiple(() =>
+            {
+                That(l, Has.Count.EqualTo(5));
+                That(l, Has.Member(0));
+                That(l, Has.Member(1));
+                That(l, Has.Member(2));
+                That(l, Has.Member(3));
+                That(l, Has.Member(4));
+            });
 
             cts.Cancel();
-            Assert.ThrowsAsync<OperationCanceledException>(async () => await new[] { 0 }.SelectAsync(
+            ThrowsAsync<OperationCanceledException>(async () => await new[] { 0 }.SelectAsync(
                 async (x, t) =>
                 {
                     await Task.CompletedTask;
@@ -212,12 +213,43 @@ namespace Dot.Net.Extensions.Tests
                 }
                 else
                 {
-                    Assert.That(c, Has.Member(starting++));
+                    That(c, Has.Member(starting++));
                 }
-                Assert.That(c, Has.Count.EqualTo(cnt));
-                Assert.That(c, Has.Member(starting++));
+                That(c, Has.Count.EqualTo(cnt));
+                That(c, Has.Member(starting++));
             }
-            Assert.That(starting, Is.EqualTo(5));
+            That(starting, Is.EqualTo(5));
+            cnt = 2;
+            starting = 0;
+            List<int>? l = null;
+            await foreach (var c in new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
+                           {
+                               await Task.CompletedTask;
+                               return x;
+                           }).ToChunksAsync(2, reUseList: true).ConfigureAwait(false))
+            {
+                if (starting == 4)
+                {
+                    cnt = 1;
+                }
+                else
+                {
+                    That(c, Has.Member(starting++));
+                }
+
+                Multiple(() =>
+                {
+                    That(c, Has.Count.EqualTo(cnt));
+                    That(c, Has.Member(starting++));
+                });
+                l ??= c;
+                Multiple(() =>
+                {
+                    That(l, Is.Not.Null);
+                    That(ReferenceEquals(l, c), Is.True);
+                });
+            }
+            That(starting, Is.EqualTo(5));
         }
 
         [Test]
@@ -230,14 +262,14 @@ namespace Dot.Net.Extensions.Tests
                                return x;
                            }).ToChunksAsync(6).ConfigureAwait(false))
             {
-                Assert.That(c, Has.Count.EqualTo(5));
-                Assert.That(c, Has.Member(starting++));
-                Assert.That(c, Has.Member(starting++));
-                Assert.That(c, Has.Member(starting++));
-                Assert.That(c, Has.Member(starting++));
-                Assert.That(c, Has.Member(starting++));
+                That(c, Has.Count.EqualTo(5));
+                That(c, Has.Member(starting++));
+                That(c, Has.Member(starting++));
+                That(c, Has.Member(starting++));
+                That(c, Has.Member(starting++));
+                That(c, Has.Member(starting++));
             }
-            Assert.That(starting, Is.EqualTo(5));
+            That(starting, Is.EqualTo(5));
         }
     }
 }

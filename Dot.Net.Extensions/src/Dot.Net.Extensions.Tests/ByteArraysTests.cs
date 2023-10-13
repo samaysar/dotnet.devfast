@@ -1,6 +1,4 @@
-﻿using static NUnit.Framework.Assert;
-
-namespace Dot.Net.Extensions.Tests
+﻿namespace Dot.Net.Extensions.Tests
 {
     [TestFixture]
     public class ByteArraysTests
