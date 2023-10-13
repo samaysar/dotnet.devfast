@@ -97,6 +97,12 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position in target array to start writing the bytes to.</param>
         </member>
+        <member name="T:Dot.Net.Extensions.AssemblyDoc">
+            <summary>
+            This assembly contains various well-explained &amp; easy to use extension methods
+            to achieve optimized runtime performance and readability of the code.
+            </summary>
+        </member>
         <member name="T:Dot.Net.Extensions.Enumerables">
             <summary>
             Extension methods on Enumerables

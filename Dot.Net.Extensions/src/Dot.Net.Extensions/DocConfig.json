@@ -1,9 +1,10 @@
 {
   "Sections": [
     "Header",
-    "Footer",
     "Default"
   ],
+  "Markdown.IgnoreLineBreak": true,
+  "Markdown.TableOfContentsModes": "IncludeSummaryWithNewLine",
   "NamespaceDocItem": {
     "Sections": [
       "Title",
