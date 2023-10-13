@@ -221,7 +221,7 @@ namespace Dot.Net.Extensions
         public static async IAsyncEnumerable<List<T>> ToChunksAsync<T>(this IAsyncEnumerable<T> asyncCollection,
             int maxChunkSize,
             [EnumeratorCancellation] CancellationToken token = default,
-            bool reUseList = true,
+            bool reUseList = false,
             bool continueOnCapturedContext = false)
         {
             var l = new List<T>(maxChunkSize);

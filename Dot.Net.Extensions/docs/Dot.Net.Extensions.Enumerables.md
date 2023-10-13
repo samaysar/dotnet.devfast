@@ -362,7 +362,7 @@ are too many to fit in a single [System.Collections.Generic.List&lt;&gt;](https:
 is advantageous (for e.g. database batch inserts using medium sized asyncCollection, instead of inserting item at a time).
 
 ```csharp
-public static System.Collections.Generic.IAsyncEnumerable<System.Collections.Generic.List<T>> ToChunksAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, int maxChunkSize, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool reUseList=true, bool continueOnCapturedContext=false);
+public static System.Collections.Generic.IAsyncEnumerable<System.Collections.Generic.List<T>> ToChunksAsync<T>(this System.Collections.Generic.IAsyncEnumerable<T> asyncCollection, int maxChunkSize, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), bool reUseList=false, bool continueOnCapturedContext=false);
 ```
 #### Type parameters
 
