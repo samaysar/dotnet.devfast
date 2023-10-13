@@ -60,11 +60,11 @@ jobs:
     - name: Display dotnet version
       run: dotnet --version
     - name: Install dependencies
-      run: dotnet restore ${{ matrix.projs }}
+      run: dotnet restore ${{ matrix.proj }}
     - name: Build
-      run: dotnet build ${{ matrix.projs }}
+      run: dotnet build ${{ matrix.proj }}
     - name: Execute unit tests
-      run: dotnet test ${{ matrix.projs }} --collect:"XPlat Code Coverage;Format=json,lcov,cobertura,opencover"
+      run: dotnet test ${{ matrix.proj }} --collect:"XPlat Code Coverage;Format=json,lcov,cobertura,opencover"
   publish:
     needs: build
     runs-on: ubuntu-latest
