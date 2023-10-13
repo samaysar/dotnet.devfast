@@ -3,7 +3,7 @@
 namespace Dot.Net.Extensions
 {
     /// <summary>
-    /// Extension methods on Enumerables
+    /// Extension methods on <see cref="IEnumerable{T}"/> and <see cref="IAsyncEnumerable{T}"/>.
     /// </summary>
     public static class Enumerables
     {
@@ -15,7 +15,7 @@ namespace Dot.Net.Extensions
         /// <param name="lambda">predicate to apply</param>
         /// <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/></param>
         public static void ForEach<T>(this IEnumerable<T> collection, Action<T, CancellationToken> lambda,
-            CancellationToken token)
+            CancellationToken token = default)
         {
             foreach (var item in collection)
             {
@@ -33,10 +33,29 @@ namespace Dot.Net.Extensions
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         public static async Task ForEachAsync<T>(this IEnumerable<T> collection,
             Func<T, CancellationToken, Task> lambda,
-            CancellationToken token,
+            CancellationToken token = default,
             bool continueOnCapturedContext = false)
         {
             foreach (var item in collection)
+            {
+                await lambda(item, token).ConfigureAwait(continueOnCapturedContext);
+            }
+        }
+
+        /// <summary>
+        /// Calls <paramref name="lambda"/> for every item in <paramref name="asyncCollection"/> with given <paramref name="token"/>, asynchronously.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="asyncCollection">Asynchronously Enumerable items</param>
+        /// <param name="lambda">Action to apply</param>
+        /// <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/> and <paramref name="asyncCollection"/></param>
+        /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        public static async Task ForEachAsync<T>(this IAsyncEnumerable<T> asyncCollection,
+            Func<T, CancellationToken, Task> lambda,
+            CancellationToken token = default,
+            bool continueOnCapturedContext = false)
+        {
+            await foreach (var item in asyncCollection.WithCancellation(token).ConfigureAwait(continueOnCapturedContext))
             {
                 await lambda(item, token).ConfigureAwait(continueOnCapturedContext);
             }
@@ -54,7 +73,7 @@ namespace Dot.Net.Extensions
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         public static async IAsyncEnumerable<TOut> SelectAsync<TIn, TOut>(this IEnumerable<TIn> collection,
             Func<TIn, CancellationToken, Task<TOut>> lambda,
-            [EnumeratorCancellation] CancellationToken token,
+            [EnumeratorCancellation] CancellationToken token = default,
             bool continueOnCapturedContext = false)
         {
             foreach (var item in collection)
@@ -71,17 +90,67 @@ namespace Dot.Net.Extensions
         /// <typeparam name="TOut">Output Type</typeparam>
         /// <param name="asyncCollection">Asynchronously Enumerable items</param>
         /// <param name="lambda">Action to apply</param>
-        /// <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/></param>
+        /// <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/> and <paramref name="asyncCollection"/></param>
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         public static async IAsyncEnumerable<TOut> SelectAsync<TIn, TOut>(this IAsyncEnumerable<TIn> asyncCollection,
             Func<TIn, CancellationToken, Task<TOut>> lambda,
-            [EnumeratorCancellation] CancellationToken token,
+            [EnumeratorCancellation] CancellationToken token = default,
+            bool continueOnCapturedContext = false)
+        {
+            await foreach (var item in asyncCollection.WithCancellation(token).ConfigureAwait(continueOnCapturedContext))
+            {
+                yield return await lambda(item, token).ConfigureAwait(continueOnCapturedContext);
+            }
+        }
+
+        /// <summary>
+        /// While iterating on supplied <paramref name="asyncCollection"/> total of <paramref name="count"/>
+        /// elements are bypassed and remaining (if any) items are returned as a part of iteration.
+        /// No exception is thrown it <paramref name="asyncCollection"/> contains lesser number of items. 
+        /// </summary>
+        /// <typeparam name="TIn">Input Type</typeparam>
+        /// <param name="asyncCollection">Asynchronously Enumerable items</param>
+        /// <param name="count">Total number of elements to skip</param>
+        /// <param name="token">Cancellation token for <paramref name="asyncCollection"/></param>
+        /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        public static async IAsyncEnumerable<TIn> SkipAsync<TIn>(this IAsyncEnumerable<TIn> asyncCollection,
+            int count,
+            [EnumeratorCancellation] CancellationToken token = default,
             bool continueOnCapturedContext = false)
         {
             await foreach (var item in asyncCollection.WithCancellation(token)
                                .ConfigureAwait(continueOnCapturedContext))
             {
-                yield return await lambda(item, token).ConfigureAwait(continueOnCapturedContext);
+                if (count > 0) count--;
+                else yield return item;
+            }
+        }
+
+        /// <summary>
+        /// While iterating on supplied <paramref name="asyncCollection"/> maximum of <paramref name="count"/>
+        /// elements are returned as a part of iteration.
+        /// If <paramref name="asyncCollection"/> contains lesser number of items, all iterated items
+        /// are returned. 
+        /// </summary>
+        /// <typeparam name="TIn">Input Type</typeparam>
+        /// <param name="asyncCollection">Asynchronously Enumerable items</param>
+        /// <param name="count">Total number of elements to skip</param>
+        /// <param name="token">Cancellation token for <paramref name="asyncCollection"/></param>
+        /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        public static async IAsyncEnumerable<TIn> TakeAsync<TIn>(this IAsyncEnumerable<TIn> asyncCollection,
+            int count,
+            [EnumeratorCancellation] CancellationToken token = default,
+            bool continueOnCapturedContext = false)
+        {
+            await foreach (var item in asyncCollection.WithCancellation(token)
+                               .ConfigureAwait(continueOnCapturedContext))
+            {
+                if (count > 0)
+                {
+                    count--;
+                    yield return item;
+                }
+                else yield break;
             }
         }
 
@@ -92,15 +161,14 @@ namespace Dot.Net.Extensions
         /// <typeparam name="T">Input Type</typeparam>
         /// <param name="asyncCollection">Asynchronously Enumerable items</param>
         /// <param name="predicate">Predicate to apply</param>
-        /// <param name="token">Cancellation token to pass on to the supplied <paramref name="predicate"/></param>
+        /// <param name="token">Cancellation token to pass on to the supplied <paramref name="predicate"/> and <paramref name="asyncCollection"/></param>
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         public static async IAsyncEnumerable<T> WhereAsync<T>(this IAsyncEnumerable<T> asyncCollection,
             Func<T, CancellationToken, Task<bool>> predicate,
-            [EnumeratorCancellation] CancellationToken token,
+            [EnumeratorCancellation] CancellationToken token = default,
             bool continueOnCapturedContext = false)
         {
-            await foreach (var item in asyncCollection.WithCancellation(token)
-                               .ConfigureAwait(continueOnCapturedContext))
+            await foreach (var item in asyncCollection.WithCancellation(token).ConfigureAwait(continueOnCapturedContext))
             {
                 if (await predicate(item, token).ConfigureAwait(continueOnCapturedContext)) yield return item;
             }
@@ -114,12 +182,11 @@ namespace Dot.Net.Extensions
         /// <param name="token">Cancellation token to observe while iterating <paramref name="asyncCollection"/></param>
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> asyncCollection,
-            CancellationToken token,
+            CancellationToken token = default,
             bool continueOnCapturedContext = false)
         {
             var l = new List<T>();
-            await foreach (var item in asyncCollection.WithCancellation(token)
-                               .ConfigureAwait(continueOnCapturedContext))
+            await foreach (var item in asyncCollection.WithCancellation(token).ConfigureAwait(continueOnCapturedContext))
             {
                 l.Add(item);
             }
@@ -132,7 +199,7 @@ namespace Dot.Net.Extensions
         /// <para>
         /// USE-CASE: When the cost of calling <see cref="ToListAsync{T}(IAsyncEnumerable{T}, CancellationToken, bool)"/> is too huge (requires too much memory or items
         /// are too many to fit in a single <see cref="List{T}"/>); and working on a small set of such items (instead of consuming single item at a time)
-        /// is advantageous (for e.g. database batch inserts using medium sized collection, instead of inserting item at a time).
+        /// is advantageous (for e.g. database batch inserts using medium sized asyncCollection, instead of inserting item at a time).
         /// </para>
         /// </summary>
         /// <typeparam name="T">Input Type</typeparam>
@@ -153,13 +220,12 @@ namespace Dot.Net.Extensions
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         public static async IAsyncEnumerable<List<T>> ToChunksAsync<T>(this IAsyncEnumerable<T> asyncCollection,
             int maxChunkSize,
-            [EnumeratorCancellation] CancellationToken token,
+            [EnumeratorCancellation] CancellationToken token = default,
             bool reUseList = true,
             bool continueOnCapturedContext = false)
         {
             var l = new List<T>(maxChunkSize);
-            await foreach (var item in asyncCollection.WithCancellation(token)
-                               .ConfigureAwait(continueOnCapturedContext))
+            await foreach (var item in asyncCollection.WithCancellation(token).ConfigureAwait(continueOnCapturedContext))
             {
                 l.Add(item);
                 if (l.Count < maxChunkSize) continue;

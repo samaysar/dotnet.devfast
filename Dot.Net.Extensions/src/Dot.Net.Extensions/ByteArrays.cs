@@ -1,9 +1,9 @@
 ﻿namespace Dot.Net.Extensions
 {
     /// <summary>
-    /// Extension methods on Arrays
+    /// Extension methods on Array of type <see cref="byte"/>.
     /// </summary>
-    public static class Arrays
+    public static class ByteArrays
     {
         /// <summary>
         /// Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 

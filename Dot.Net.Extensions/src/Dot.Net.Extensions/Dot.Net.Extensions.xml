@@ -4,17 +4,23 @@
         <name>Dot.Net.Extensions</name>
     </assembly>
     <members>
-        <member name="T:Dot.Net.Extensions.Arrays">
+        <member name="T:Dot.Net.Extensions.AssemblyDoc">
             <summary>
-            Extension methods on Arrays
+            This assembly contains various well-explained &amp; easy to use extension methods
+            to achieve optimized runtime performance and readability of the code.
             </summary>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="T:Dot.Net.Extensions.ByteArrays">
+            <summary>
+            Extension methods on Array of type <see cref="T:System.Byte"/>.
+            </summary>
+        </member>
+        <member name="M:Dot.Net.Extensions.ByteArrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 
             to <paramref name="targetPosition"/> (Included) and onwards.
             <para>
-            NOTE: This method is SAFE version of <see cref="M:Dot.Net.Extensions.Arrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> as
+            NOTE: This method is SAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> as
             constraint are checked.
             </para>
             </summary>
@@ -23,7 +29,7 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position at which starting writing the bytes.</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 
             to <paramref name="targetPosition"/> (Included) and onwards.
@@ -31,7 +37,7 @@
             !!!- CALL IT AT YOUR OWN RISK -!!!
             </para>
             <para>
-            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.Arrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
             as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
             </para>
             </summary>
@@ -40,13 +46,13 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position at which starting writing the bytes.</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.DoubleByteCapacity(System.Byte[])">
+        <member name="M:Dot.Net.Extensions.ByteArrays.DoubleByteCapacity(System.Byte[])">
             <summary>
             Creates a new array with double the size. Copies the content of <paramref name="source"/> to the newly created array.
             </summary>
             <param name="source">Source array</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.EnsureByteCapacity(System.Byte[],System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(System.Byte[],System.Int32)">
             <summary>
             Checks if array needs to be up-sized. When resize takes place, the content of <paramref name="source"/>
             are copied to the newly created array.
@@ -54,7 +60,7 @@
             <param name="source">Source array</param>
             <param name="capacity">Minimum length of the array</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.EnsureByteCapacity(System.Byte[]@,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(System.Byte[]@,System.Int32)">
             <summary>
             Checks if array needs to be resized. When resize takes place, the content of <paramref name="source"/>
             are copied to the newly created array.
@@ -62,13 +68,13 @@
             <param name="source">Source array</param>
             <param name="capacity">Minimum length of the array</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes of <paramref name="source"/> array starting from 
             <paramref name="sourcePosition"/> (included) to <paramref name="target"/> array's
             <paramref name="targetPosition"/> (included) and onwards.
             <para>
-            This method is SAFE version of <see cref="M:Dot.Net.Extensions.Arrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            This method is SAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
             as constraint are checked.
             </para>
             </summary>
@@ -78,7 +84,7 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position in target array to start writing the bytes to.</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes of <paramref name="source"/> array starting from 
             <paramref name="sourcePosition"/> (included) to <paramref name="target"/> array's
@@ -87,7 +93,7 @@
             !!!- CALL IT AT YOUR OWN RISK -!!!
             </para>
             <para>
-            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.Arrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
             as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
             </para>
             </summary>
@@ -99,7 +105,7 @@
         </member>
         <member name="T:Dot.Net.Extensions.Enumerables">
             <summary>
-            Extension methods on Enumerables
+            Extension methods on <see cref="T:System.Collections.Generic.IEnumerable`1"/> and <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
             </summary>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Threading.CancellationToken},System.Threading.CancellationToken)">
@@ -119,6 +125,16 @@
             <param name="collection">Enumerable items</param>
             <param name="lambda">Action to apply</param>
             <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/></param>
+            <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:Dot.Net.Extensions.Enumerables.ForEachAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            Calls <paramref name="lambda"/> for every item in <paramref name="asyncCollection"/> with given <paramref name="token"/>, asynchronously.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="asyncCollection">Asynchronously Enumerable items</param>
+            <param name="lambda">Action to apply</param>
+            <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/> and <paramref name="asyncCollection"/></param>
             <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.SelectAsync``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task{``1}},System.Threading.CancellationToken,System.Boolean)">
@@ -142,7 +158,32 @@
             <typeparam name="TOut">Output Type</typeparam>
             <param name="asyncCollection">Asynchronously Enumerable items</param>
             <param name="lambda">Action to apply</param>
-            <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/></param>
+            <param name="token">Cancellation token to pass on to the supplied <paramref name="lambda"/> and <paramref name="asyncCollection"/></param>
+            <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:Dot.Net.Extensions.Enumerables.SkipAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            While iterating on supplied <paramref name="asyncCollection"/> total of <paramref name="count"/>
+            elements are bypassed and remaining (if any) items are returned as a part of iteration.
+            No exception is thrown it <paramref name="asyncCollection"/> contains lesser number of items. 
+            </summary>
+            <typeparam name="TIn">Input Type</typeparam>
+            <param name="asyncCollection">Asynchronously Enumerable items</param>
+            <param name="count">Total number of elements to skip</param>
+            <param name="token">Cancellation token for <paramref name="asyncCollection"/></param>
+            <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
+        </member>
+        <member name="M:Dot.Net.Extensions.Enumerables.TakeAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Int32,System.Threading.CancellationToken,System.Boolean)">
+            <summary>
+            While iterating on supplied <paramref name="asyncCollection"/> maximum of <paramref name="count"/>
+            elements are returned as a part of iteration.
+            If <paramref name="asyncCollection"/> contains lesser number of items, all iterated items
+            are returned. 
+            </summary>
+            <typeparam name="TIn">Input Type</typeparam>
+            <param name="asyncCollection">Asynchronously Enumerable items</param>
+            <param name="count">Total number of elements to skip</param>
+            <param name="token">Cancellation token for <paramref name="asyncCollection"/></param>
             <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.WhereAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Threading.CancellationToken,System.Threading.Tasks.Task{System.Boolean}},System.Threading.CancellationToken,System.Boolean)">
@@ -153,7 +194,7 @@
             <typeparam name="T">Input Type</typeparam>
             <param name="asyncCollection">Asynchronously Enumerable items</param>
             <param name="predicate">Predicate to apply</param>
-            <param name="token">Cancellation token to pass on to the supplied <paramref name="predicate"/></param>
+            <param name="token">Cancellation token to pass on to the supplied <paramref name="predicate"/> and <paramref name="asyncCollection"/></param>
             <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken,System.Boolean)">
@@ -172,7 +213,7 @@
             <para>
             USE-CASE: When the cost of calling <see cref="M:Dot.Net.Extensions.Enumerables.ToListAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Threading.CancellationToken,System.Boolean)"/> is too huge (requires too much memory or items
             are too many to fit in a single <see cref="T:System.Collections.Generic.List`1"/>); and working on a small set of such items (instead of consuming single item at a time)
-            is advantageous (for e.g. database batch inserts using medium sized collection, instead of inserting item at a time).
+            is advantageous (for e.g. database batch inserts using medium sized asyncCollection, instead of inserting item at a time).
             </para>
             </summary>
             <typeparam name="T">Input Type</typeparam>

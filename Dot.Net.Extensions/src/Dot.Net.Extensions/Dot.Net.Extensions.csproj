@@ -10,6 +10,11 @@
     <Deterministic>true</Deterministic>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>Dot.Net.Extensions.xml</DocumentationFile>
+    <DefaultDocumentationConfigurationFile>DocConfig.json</DefaultDocumentationConfigurationFile>
+    <DefaultDocumentationFolder>../../docs</DefaultDocumentationFolder>
+    <DefaultDocumentationGeneratedPages>Namespaces,Types</DefaultDocumentationGeneratedPages>
+    <!--<DefaultDocumentationGeneratedPages>Classes</DefaultDocumentationGeneratedPages>-->
+    <DefaultDocumentationLinksBaseUrl>https://github.com/samaysar/dotnet.devfast/tree/master/Dot.Net.Extensions/docs</DefaultDocumentationLinksBaseUrl>
     <Title>Dot.Net.Extensions</Title>
     <Company>samaysar</Company>
     <Version Condition="'$(vNugetPack)'==''">1.0.0</Version>
@@ -52,6 +57,13 @@
       <PackageCopyToOutput>true</PackageCopyToOutput>
       <BuildAction>None</BuildAction>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DefaultDocumentation" Version="0.8.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>
