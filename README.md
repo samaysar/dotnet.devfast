@@ -1,8 +1,17 @@
 # dotnet.devfast
 
-dotnet.devfast project aims to provide various NuGet libraries to achieve a single goal <strong>Fast Development in .Net</strong>. Verbosely speaking:
+dotnet.devfast project aims to achieve a single goal <strong>Fast Code Development in .Net</strong>. Verbosely speaking, we want to:
 
-- ** Bring readability to code
-- ** Bring runtime
+- Bring readability to code
+- Optimize runtime execution of code
+- Offload boilerplate code
 
-Please find [Developer Documentation Here](/Dot.Net.Extensions/docs/index.md 'index').
+With this goal, the project is divided into several separate solutions, in order to achieve:
+
+- Separation of concern
+- High Testability
+- Clean Documentation
+- Continuous evolution
+
+Currently the project consists of following packages:
+ - Dot.Net.Extensions: Project(/Dot.Net.Extensions 'index'), Developer Documentation(/Dot.Net.Extensions/docs/index.md 'index'), NuGet
