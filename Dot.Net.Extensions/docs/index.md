@@ -7,4 +7,4 @@ to achieve optimized runtime performance and readability of the code.
 
 | Namespaces | |
 | :--- | :--- |
-| [Dot.Net.Extensions](Dot.Net.Extensions.md 'Dot.Net.Extensions') | |
+| [Dot.Net.Extensions](Dot.Net.Extensions.md 'Dot.Net.Extensions') | Under this [namespace](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/namespace 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/namespace') we have collected several extension methods on various system types (for e.g. [System.Array](https://docs.microsoft.com/en-us/dotnet/api/System.Array 'System.Array'), [System.Collections.Generic.IEnumerable&lt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1 'System.Collections.Generic.IEnumerable`1'), ... ). |
