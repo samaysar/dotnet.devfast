@@ -64,7 +64,7 @@ jobs:
     - name: Build
       run: dotnet build Dot.Net.Extensions/Dot.Net.Extensions.sln
     - name: Execute unit tests
-      run: dotnet test Dot.Net.Extensions/Dot.Net.Extensions.sln --collect "Code Coverage"
+      run: dotnet test Dot.Net.Extensions/Dot.Net.Extensions.sln --collect:"XPlat Code Coverage;Format=json,lcov,cobertura,opencover"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
