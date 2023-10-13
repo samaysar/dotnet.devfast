@@ -207,7 +207,7 @@ namespace Dot.Net.Extensions
         /// <param name="maxChunkSize">Maximum size of chunk</param>
         /// <param name="token">Cancellation token to observe while iterating <paramref name="asyncCollection"/></param>
         /// <param name="reUseList"><see langword="true"/> to reuse list for next iteration result; otherwise, <see langword="false"/>.
-        /// <para>
+        /// <para> 
         /// USE-CASE of <see langword="true"/>: Resultant chunk (<see cref="List{T}"/>) of an iteration is out-of-scope (i.e. candidate for GC) after the iteration.
         /// In other words, it is not shared with some part of the code which may out-live the iteration (e.g. a <see cref="Task"/>) or
         /// the reference of the list itself out-lives the iteration (e.g. setting it to a static field or a reference to another variable that out-lives the iteration).
