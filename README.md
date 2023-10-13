@@ -14,4 +14,4 @@ With this goal, the project is divided into several separate solutions, in order
 - Continuous evolution
 
 Currently the project consists of following packages:
- - Dot.Net.Extensions: Project(/Dot.Net.Extensions 'index'), Developer Documentation(/Dot.Net.Extensions/docs/index.md 'index'), NuGet
+ - Dot.Net.Extensions: [Project](/Dot.Net.Extensions), [Developer Documentation](/Dot.Net.Extensions/docs/index.md 'index'), NuGet
