@@ -45,7 +45,7 @@ jobs:
   build:
     strategy:
       matrix:
-        dotnet-version: [ '6.x.x', '7.x.x' ]
+        dotnet-version: '7.x.x'
         configuration: [Debug]
     runs-on: ubuntu-latest
     steps:
