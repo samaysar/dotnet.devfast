@@ -3,7 +3,7 @@
 
 ## Enumerables Class
 
-Extension methods on Enumerables
+Extension methods on [System.Collections.Generic.IEnumerable&lt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1 'System.Collections.Generic.IEnumerable`1') and [System.Collections.Generic.IAsyncEnumerable&lt;&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1').
 
 ```csharp
 public static class Enumerables

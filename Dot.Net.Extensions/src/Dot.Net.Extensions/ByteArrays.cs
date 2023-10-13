@@ -1,7 +1,7 @@
 ﻿namespace Dot.Net.Extensions
 {
     /// <summary>
-    /// Extension methods on Arrays
+    /// Extension methods on Array of type <see cref="byte"/>.
     /// </summary>
     public static class ByteArrays
     {

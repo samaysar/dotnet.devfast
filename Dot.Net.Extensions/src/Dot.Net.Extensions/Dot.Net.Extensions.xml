@@ -12,7 +12,7 @@
         </member>
         <member name="T:Dot.Net.Extensions.ByteArrays">
             <summary>
-            Extension methods on Arrays
+            Extension methods on Array of type <see cref="T:System.Byte"/>.
             </summary>
         </member>
         <member name="M:Dot.Net.Extensions.ByteArrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
@@ -105,7 +105,7 @@
         </member>
         <member name="T:Dot.Net.Extensions.Enumerables">
             <summary>
-            Extension methods on Enumerables
+            Extension methods on <see cref="T:System.Collections.Generic.IEnumerable`1"/> and <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>.
             </summary>
         </member>
         <member name="M:Dot.Net.Extensions.Enumerables.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0,System.Threading.CancellationToken},System.Threading.CancellationToken)">

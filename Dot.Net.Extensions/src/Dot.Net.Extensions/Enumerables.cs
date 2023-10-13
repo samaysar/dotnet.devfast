@@ -3,7 +3,7 @@
 namespace Dot.Net.Extensions
 {
     /// <summary>
-    /// Extension methods on Enumerables
+    /// Extension methods on <see cref="IEnumerable{T}"/> and <see cref="IAsyncEnumerable{T}"/>.
     /// </summary>
     public static class Enumerables
     {

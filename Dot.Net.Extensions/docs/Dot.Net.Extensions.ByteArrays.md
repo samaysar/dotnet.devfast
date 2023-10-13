@@ -3,7 +3,7 @@
 
 ## ByteArrays Class
 
-Extension methods on Arrays
+Extension methods on Array of type [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte').
 
 ```csharp
 public static class ByteArrays
