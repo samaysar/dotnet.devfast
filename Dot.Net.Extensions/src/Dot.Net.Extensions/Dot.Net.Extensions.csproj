@@ -13,7 +13,6 @@
     <DefaultDocumentationConfigurationFile>DocConfig.json</DefaultDocumentationConfigurationFile>
     <DefaultDocumentationFolder>../../docs</DefaultDocumentationFolder>
     <DefaultDocumentationGeneratedPages>Namespaces,Types</DefaultDocumentationGeneratedPages>
-    <!--<DefaultDocumentationGeneratedPages>Classes</DefaultDocumentationGeneratedPages>-->
     <DefaultDocumentationLinksBaseUrl>https://github.com/samaysar/dotnet.devfast/tree/master/Dot.Net.Extensions/docs</DefaultDocumentationLinksBaseUrl>
     <Title>Dot.Net.Extensions</Title>
     <Company>samaysar</Company>
