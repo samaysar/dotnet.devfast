@@ -1,4 +1,4 @@
-# dotnet.devfast
+# dotnet.devfast [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast/graph/badge.svg?token=JQQNSCWGZB)](https://codecov.io/gh/samaysar/dotnet.devfast)
 
 dotnet.devfast project aims to achieve a single goal <strong>Fast Code Development in .Net</strong>. Verbosely speaking, we want to:
 
@@ -14,4 +14,4 @@ With this goal, the project is divided into several separate solutions, in order
 - Continuous evolution
 
 Currently the project consists of following packages:
- - Dot.Net.Extensions: [Project](/Dot.Net.Extensions), [Developer Documentation](/Dot.Net.Extensions/docs/index.md 'index'), NuGet [![Build status](https://ci.appveyor.com/api/projects/status/7naggm2lvjcikgn2?svg=true)](https://ci.appveyor.com/project/samaysar/dotnet-devfast-extensions) [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast/graph/badge.svg?token=JQQNSCWGZB)](https://codecov.io/gh/samaysar/dotnet.devfast)
+ - [![Build status](https://ci.appveyor.com/api/projects/status/7naggm2lvjcikgn2?svg=true)](https://ci.appveyor.com/project/samaysar/dotnet-devfast-extensions) Dot.Net.Extensions: [Project](/Dot.Net.Extensions), [Developer Documentation](/Dot.Net.Extensions/docs/index.md 'index'), NuGet
