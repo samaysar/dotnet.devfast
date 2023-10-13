@@ -3,7 +3,7 @@
     /// <summary>
     /// Extension methods on Arrays
     /// </summary>
-    public static class Arrays
+    public static class ByteArrays
     {
         /// <summary>
         /// Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 

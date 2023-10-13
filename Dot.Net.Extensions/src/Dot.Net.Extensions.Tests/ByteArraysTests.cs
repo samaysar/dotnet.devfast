@@ -3,7 +3,7 @@
 namespace Dot.Net.Extensions.Tests
 {
     [TestFixture]
-    public class ArraysTests
+    public class ByteArraysTests
     {
         [Test]
         public void LiftNCopySafe_Throws_ArgumentException_When_Required()

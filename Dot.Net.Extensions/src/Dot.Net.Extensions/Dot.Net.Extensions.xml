@@ -4,17 +4,23 @@
         <name>Dot.Net.Extensions</name>
     </assembly>
     <members>
-        <member name="T:Dot.Net.Extensions.Arrays">
+        <member name="T:Dot.Net.Extensions.AssemblyDoc">
+            <summary>
+            This assembly contains various well-explained &amp; easy to use extension methods
+            to achieve optimized runtime performance and readability of the code.
+            </summary>
+        </member>
+        <member name="T:Dot.Net.Extensions.ByteArrays">
             <summary>
             Extension methods on Arrays
             </summary>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 
             to <paramref name="targetPosition"/> (Included) and onwards.
             <para>
-            NOTE: This method is SAFE version of <see cref="M:Dot.Net.Extensions.Arrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> as
+            NOTE: This method is SAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> as
             constraint are checked.
             </para>
             </summary>
@@ -23,7 +29,7 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position at which starting writing the bytes.</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.LiftNCopyUnSafe(System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes starting from <paramref name="sourcePosition"/> (included) 
             to <paramref name="targetPosition"/> (Included) and onwards.
@@ -31,7 +37,7 @@
             !!!- CALL IT AT YOUR OWN RISK -!!!
             </para>
             <para>
-            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.Arrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.LiftNCopySafe(System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
             as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
             </para>
             </summary>
@@ -40,13 +46,13 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position at which starting writing the bytes.</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.DoubleByteCapacity(System.Byte[])">
+        <member name="M:Dot.Net.Extensions.ByteArrays.DoubleByteCapacity(System.Byte[])">
             <summary>
             Creates a new array with double the size. Copies the content of <paramref name="source"/> to the newly created array.
             </summary>
             <param name="source">Source array</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.EnsureByteCapacity(System.Byte[],System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(System.Byte[],System.Int32)">
             <summary>
             Checks if array needs to be up-sized. When resize takes place, the content of <paramref name="source"/>
             are copied to the newly created array.
@@ -54,7 +60,7 @@
             <param name="source">Source array</param>
             <param name="capacity">Minimum length of the array</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.EnsureByteCapacity(System.Byte[]@,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.EnsureByteCapacity(System.Byte[]@,System.Int32)">
             <summary>
             Checks if array needs to be resized. When resize takes place, the content of <paramref name="source"/>
             are copied to the newly created array.
@@ -62,13 +68,13 @@
             <param name="source">Source array</param>
             <param name="capacity">Minimum length of the array</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes of <paramref name="source"/> array starting from 
             <paramref name="sourcePosition"/> (included) to <paramref name="target"/> array's
             <paramref name="targetPosition"/> (included) and onwards.
             <para>
-            This method is SAFE version of <see cref="M:Dot.Net.Extensions.Arrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            This method is SAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
             as constraint are checked.
             </para>
             </summary>
@@ -78,7 +84,7 @@
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position in target array to start writing the bytes to.</param>
         </member>
-        <member name="M:Dot.Net.Extensions.Arrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
+        <member name="M:Dot.Net.Extensions.ByteArrays.CopyToUnSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)">
             <summary>
             Copies <paramref name="total"/> bytes of <paramref name="source"/> array starting from 
             <paramref name="sourcePosition"/> (included) to <paramref name="target"/> array's
@@ -87,7 +93,7 @@
             !!!- CALL IT AT YOUR OWN RISK -!!!
             </para>
             <para>
-            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.Arrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
+            This method is UNSAFE version of <see cref="M:Dot.Net.Extensions.ByteArrays.CopyToSafe(System.Byte[],System.Byte[],System.Int32,System.Int32,System.Int32)"/> 
             as no constraint will be check. Caller MUST make sure all required constraints are checked beforehand.
             </para>
             </summary>
@@ -96,12 +102,6 @@
             <param name="sourcePosition">Position in source array to start copying byte from.</param>
             <param name="total">Total number of bytes to copy.</param>
             <param name="targetPosition">Position in target array to start writing the bytes to.</param>
-        </member>
-        <member name="T:Dot.Net.Extensions.AssemblyDoc">
-            <summary>
-            This assembly contains various well-explained &amp; easy to use extension methods
-            to achieve optimized runtime performance and readability of the code.
-            </summary>
         </member>
         <member name="T:Dot.Net.Extensions.Enumerables">
             <summary>
