@@ -4,12 +4,5 @@
     "Default"
   ],
   "Markdown.IgnoreLineBreak": true,
-  "Markdown.TableOfContentsModes": "IncludeSummaryWithNewLine",
-  "NamespaceDocItem": {
-    "Sections": [
-      "Title",
-      "summary",
-      "TableOfContents"
-    ]
-  }
+  "Markdown.TableOfContentsModes": "IncludeSummaryWithNewLine"
 }
