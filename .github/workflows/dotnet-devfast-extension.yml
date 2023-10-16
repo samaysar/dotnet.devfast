@@ -66,6 +66,7 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         flags: CovDotNetExtensions
   buildFull:
+    needs: buildExtensions
     strategy:
       matrix:
         dotnet-version: ['7.x.x']
