@@ -63,7 +63,7 @@ jobs:
       # run: dotnet restore ${{ matrix.proj }}
     # - name: Build
       # run: dotnet build ${{ matrix.proj }}
-    # - name: Execute unit tests
+    - name: Execute unit tests
       run: dotnet test ${{ matrix.proj }} --collect:"XPlat Code Coverage;Format=json,lcov,cobertura,opencover"
   # publish:
     # needs: build
