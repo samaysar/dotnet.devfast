@@ -59,7 +59,7 @@ jobs:
     - name: Display dotnet version
       run: dotnet --version
     - name: Execute unit tests
-      run: dotnet test Dot.Net.Extensions/Dot.Net.Extensions.sln --collect:"XPlat Code Coverage;Format=opencover"
+      run: dotnet test Dot.Net.Extensions/Dot.Net.Extensions.sln --collect:"XPlat Code Coverage;Format=json,cobertura,lcov,teamcity,opencover"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -83,7 +83,7 @@ jobs:
     - name: Display dotnet version
       run: dotnet --version
     - name: Execute unit tests
-      run: dotnet test . --collect:"XPlat Code Coverage;Format=opencover"
+      run: dotnet test . --collect:"XPlat Code Coverage;Format=json,cobertura,lcov,teamcity,opencover"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
