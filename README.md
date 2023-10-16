@@ -1,6 +1,6 @@
 # dotnet.devfast [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast/graph/badge.svg?token=JQQNSCWGZB)](https://codecov.io/gh/samaysar/dotnet.devfast)
 
-dotnet.devfast project aims to achieve a single goal <strong>Fast Code Development in .Net</strong>. Verbosely speaking, we want to:
+dotnet.devfast project aims to achieve a single goal which is <strong>Fast Code Development in .Net</strong>. Verbosely speaking, we want to:
 
 - Bring readability to code
 - Optimize runtime execution of code
