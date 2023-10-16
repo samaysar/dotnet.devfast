@@ -59,17 +59,18 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
     - name: Display dotnet version
       run: dotnet --version
-    - name: Install dependencies
-      run: dotnet restore ${{ matrix.proj }}
-    - name: Build
-      run: dotnet build ${{ matrix.proj }}
-    - name: Execute unit tests
+    # - name: Install dependencies
+      # run: dotnet restore ${{ matrix.proj }}
+    # - name: Build
+      # run: dotnet build ${{ matrix.proj }}
+    # - name: Execute unit tests
       run: dotnet test ${{ matrix.proj }} --collect:"XPlat Code Coverage;Format=json,lcov,cobertura,opencover"
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+  # publish:
+    # needs: build
+    # runs-on: ubuntu-latest
+    # steps:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        flags: ${{ matrix.proj }}
