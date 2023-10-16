@@ -46,7 +46,6 @@ jobs:
     strategy:
       matrix:
         dotnet-version: ['7.x.x']
-        proj: ['Dot.Net.Extensions/Dot.Net.Extensions.sln']
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -59,18 +58,17 @@ jobs:
         dotnet-version: ${{ matrix.dotnet-version }}
     - name: Display dotnet version
       run: dotnet --version
-    # - name: Install dependencies
-      # run: dotnet restore ${{ matrix.proj }}
-    # - name: Build
-      # run: dotnet build ${{ matrix.proj }}
     - name: Execute unit tests
-      run: dotnet test ${{ matrix.proj }} --collect:"XPlat Code Coverage;Format=opencover"
-  # publish:
-    # needs: build
-    # runs-on: ubuntu-latest
-    # steps:
+      run: dotnet test Dot.Net.Extensions/Dot.Net.Extensions.sln --collect:"XPlat Code Coverage;Format=opencover"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        flags: ${{ matrix.proj }}
+        flags: CovDotNetExtensions
+    - name: Execute unit tests
+      run: dotnet test . --collect:"XPlat Code Coverage;Format=opencover"
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: CovFull
