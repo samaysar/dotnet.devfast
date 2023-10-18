@@ -1,4 +1,6 @@
-﻿namespace Dot.Net.Extensions.Tests
+﻿using Dot.Net.Extensions.SystemTypes;
+
+namespace Dot.Net.Extensions.Tests.SystemTypes
 {
     [TestFixture]
     public class EnumerablesTests
