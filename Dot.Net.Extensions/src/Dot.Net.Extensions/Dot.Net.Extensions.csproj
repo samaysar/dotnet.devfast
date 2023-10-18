@@ -28,7 +28,7 @@
     <InformationalVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack).0</InformationalVersion>
     <AssemblyTitle>Dot.Net.Extensions (TargetFramework: $(TargetFramework))</AssemblyTitle>
     <Authors>Divya Sarthi MAHESHWARI</Authors>
-    <Description>TDL.</Description>
+    <Description>Package containing well-tested, self-explained &amp; easy to use extension methods to achieve optimized runtime performance with improved readability of the code.</Description>
     <Copyright>Copyright © Divya Sarthi MAHESHWARI 2023</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/samaysar/dotnet.devfast</PackageProjectUrl>
