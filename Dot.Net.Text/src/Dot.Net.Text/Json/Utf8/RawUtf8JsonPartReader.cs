@@ -14,8 +14,8 @@ namespace Dot.Net.Text.Json.Utf8
     {
         const byte ArrayOpen = 91;//[
         const byte ArrayClose = 93;//]
-        const byte ObjectOpen = 123;//{
-        const byte ObjectClose = 125;//}
+        //const byte ObjectOpen = 123;//{
+        //const byte ObjectClose = 125;//}
 
         Stream? _stream;
         byte[] _buffer;
@@ -28,15 +28,15 @@ namespace Dot.Net.Text.Json.Utf8
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="token">Cancellation token to observe.</param>
-        /// <param name="size">Initial buffer size. Auto Min. bound = <see cref="TextConst.RawJsonReaderMinBuffer"/></param>
+        /// <param name="size">Initial buffer size. Auto Min. bound = <see cref="TextConst.RawUtf8JsonPartReaderMinBuffer"/></param>
         /// <param name="disposeInner"><see langword="true"/> to dispose <paramref name="stream"/> else <see langword="false"/>.</param>
         public static async Task<IJsonPartReader> CreateAsync(Stream stream,
             CancellationToken token,
             int size = 8 * 1024,
             bool disposeInner = false)
         {
-            var buffer = new byte[Math.Max(TextConst.RawJsonReaderMinBuffer, size)];
-            var end = await stream.ReadAsync(buffer, 0, buffer.Length, token).ConfigureAwait(false);
+            var buffer = new byte[Math.Max(TextConst.RawUtf8JsonPartReaderMinBuffer, size)];
+            var end = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
             int begin = 0;
             var bom = Encoding.UTF8.GetPreamble();
             if (end >= bom.Length &&
@@ -96,14 +96,14 @@ namespace Dot.Net.Text.Json.Utf8
             if (_stream == null || ((_begin + offset) < (_end - 1))) return;
             if (_begin >= (_buffer.Length + 1) / 2)
             {
-                unsafe
-                {
-                    fixed (byte* pSrc = &_buffer[_begin])
-                    fixed (byte* pDst = &_buffer[0])
-                    {
-                        Buffer.MemoryCopy(pSrc, pDst, _buffer.Length, _end - _begin);
-                    }
-                }
+                //unsafe
+                //{
+                //    fixed (byte* pSrc = &_buffer[_begin])
+                //    fixed (byte* pDst = &_buffer[0])
+                //    {
+                //        Buffer.MemoryCopy(pSrc, pDst, _buffer.Length, _end - _begin);
+                //    }
+                //}
                 _end = _end - _begin;
                 _bytesConsumed = _begin;
                 _begin = 0;
@@ -112,7 +112,7 @@ namespace Dot.Net.Text.Json.Utf8
             {
 
             }
-            var read = await _stream.ReadAsync(_buffer, _end, _buffer.Length - _end, token).ConfigureAwait(false);
+            var read = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
             _end += read;
             if (read == 0)
             {

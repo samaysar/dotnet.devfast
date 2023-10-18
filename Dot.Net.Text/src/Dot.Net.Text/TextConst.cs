@@ -3,7 +3,7 @@
 namespace Dot.Net.Text
 {
     /// <summary>
-    /// Contains constant or fixed values.
+    /// Static class holding constant or fixed values for text processing.
     /// </summary>
     public static class TextConst
     {
@@ -15,6 +15,6 @@ namespace Dot.Net.Text
         /// <summary>
         /// Minimum buffer size of <see cref="Json.Utf8.RawUtf8JsonPartReader"/>.
         /// </summary>
-        public const int RawJsonReaderMinBuffer = 256;
+        public const int RawUtf8JsonPartReaderMinBuffer = 1024;
     }
 }

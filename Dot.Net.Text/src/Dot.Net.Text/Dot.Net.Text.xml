@@ -4,16 +4,79 @@
         <name>Dot.Net.Text</name>
     </assembly>
     <members>
-        <member name="T:Dot.Net.Text.Json.RawJsonReader">
+        <member name="T:Dot.Net.Text.AssemblyDoc">
             <summary>
-            Class responsible to read an <see cref="T:System.IO.Stream"/> and produce an item at a time as raw bytes.
+            This assembly contains various well-tested, self-explained &amp; easy to use extension methods
+            to achieve optimized runtime performance with improved readability of the code.
             </summary>
         </member>
-        <member name="M:Dot.Net.Text.Json.RawJsonReader.#ctor(System.IO.Stream)">
+        <member name="T:Dot.Net.Text.Json.IJsonPartReader">
             <summary>
-            Ctor.
+            Interface to dictate how to read a single raw item from a stream of JSON Array.
+            <para>
+            These readers MUST NOT be used to read any arbitrary JSON but a single JSON Array only.
+            </para>
             </summary>
-            <param name="stream">A stream to read from.</param>
+        </member>
+        <member name="M:Dot.Net.Text.Json.IJsonPartReader.ThrowIfTokenNotStartArrayAsync(System.Threading.CancellationToken)">
+            <summary>
+            Check if JSON stream do start with opening Array symbol, if not, throws
+            an exception.
+            <para>
+            NOTE: This should be the first call (and MUST be the ONLY call) before calling any other method.
+            </para>
+            </summary>
+            <param name="token">Token to observer for cancellation.</param>
+        </member>
+        <member name="P:Dot.Net.Text.Json.IJsonPartReader.NotAnEndArray">
+            <summary>
+            Simply checks if we have reached the end of array or not yet.
+            </summary>
+        </member>
+        <member name="M:Dot.Net.Text.Json.IJsonPartReader.GetNextPartAsync(System.Threading.CancellationToken)">
+            <summary>
+            Returns the next item in the JSON Array stream as byte sequence, asynchronously.
+            </summary>
+            <param name="token">Token to observer for cancellation.</param>
+        </member>
+        <member name="T:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader">
+            <summary>
+            Class responsible to read bytes from a <see cref="T:System.IO.Stream"/>, assuming UTF-8 encoded JSON Array,
+            and produce a JSON item at a time as raw bytes.
+            </summary>
+        </member>
+        <member name="M:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader.CreateAsync(System.IO.Stream,System.Threading.CancellationToken,System.Int32,System.Boolean)">
+            <summary>
+            Creates a newly initialized instance of <see cref="T:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader"/>.
+            </summary>
+            <param name="stream">Stream to read from.</param>
+            <param name="token">Cancellation token to observe.</param>
+            <param name="size">Initial buffer size. Auto Min. bound = <see cref="F:Dot.Net.Text.TextConst.RawUtf8JsonPartReaderMinBuffer"/></param>
+            <param name="disposeInner"><see langword="true"/> to dispose <paramref name="stream"/> else <see langword="false"/>.</param>
+        </member>
+        <member name="P:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader.NotAnEndArray">
+            <inheritdoc />
+        </member>
+        <member name="M:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader.GetNextPartAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="M:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader.ThrowIfTokenNotStartArrayAsync(System.Threading.CancellationToken)">
+            <inheritdoc />
+        </member>
+        <member name="T:Dot.Net.Text.TextConst">
+            <summary>
+            Static class holding constant or fixed values for text processing.
+            </summary>
+        </member>
+        <member name="F:Dot.Net.Text.TextConst.Utf8NoBom">
+            <summary>
+            Instance of <see cref="P:System.Text.Encoding.UTF8"/> encoding which will not emit BOM.
+            </summary>
+        </member>
+        <member name="F:Dot.Net.Text.TextConst.RawUtf8JsonPartReaderMinBuffer">
+            <summary>
+            Minimum buffer size of <see cref="T:Dot.Net.Text.Json.Utf8.RawUtf8JsonPartReader"/>.
+            </summary>
         </member>
     </members>
 </doc>

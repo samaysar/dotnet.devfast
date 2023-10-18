@@ -26,7 +26,9 @@
         /// <summary>
         /// Returns the next item in the JSON Array stream as byte sequence, asynchronously.
         /// </summary>
+        /// <param name="consumeItemSeparator">If <see langword="true"/> it detects
+        /// JSON item separator (i.e. ). When  </param>
         /// <param name="token">Token to observer for cancellation.</param>
-        Task<byte[]> GetNextPartAsync(CancellationToken token);
+        Task<byte[]> GetNextPartAsync(bool consumeItemSeparator, CancellationToken token);
     }
 }
