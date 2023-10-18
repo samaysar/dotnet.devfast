@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Dot.Net.Extensions
+namespace Dot.Net.Extensions.SystemTypes
 {
     /// <summary>
     /// Extension methods on <see cref="IEnumerable{T}"/> and <see cref="IAsyncEnumerable{T}"/>.

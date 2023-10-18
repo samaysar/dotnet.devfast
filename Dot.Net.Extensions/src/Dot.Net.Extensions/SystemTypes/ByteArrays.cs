@@ -1,4 +1,4 @@
-﻿namespace Dot.Net.Extensions
+﻿namespace Dot.Net.Extensions.SystemTypes
 {
     /// <summary>
     /// Extension methods on Array of type <see cref="byte"/>.
@@ -19,9 +19,9 @@
         /// <param name="targetPosition">Position at which starting writing the bytes.</param>
         public static void LiftNCopySafe(this byte[] bytes, int sourcePosition, int total, int targetPosition)
         {
-            if ((sourcePosition + total) > bytes.Length)
+            if (sourcePosition + total > bytes.Length)
                 throw new ArgumentException($"Source position breaches length {bytes.Length}");
-            if ((targetPosition + total) > bytes.Length)
+            if (targetPosition + total > bytes.Length)
                 throw new ArgumentException($"Target position breaches length {bytes.Length}");
             bytes.LiftNCopyUnSafe(sourcePosition, total, targetPosition);
         }
@@ -97,9 +97,9 @@
         /// <param name="targetPosition">Position in target array to start writing the bytes to.</param>
         public static void CopyToSafe(this byte[] source, byte[] target, int sourcePosition, int total, int targetPosition)
         {
-            if ((sourcePosition + total) > source.Length)
+            if (sourcePosition + total > source.Length)
                 throw new ArgumentException($"Source position breaches length {source.Length}");
-            if ((targetPosition + total) > target.Length)
+            if (targetPosition + total > target.Length)
                 throw new ArgumentException($"Target position breaches length {target.Length}");
             source.CopyToUnSafe(target, sourcePosition, total, targetPosition);
         }
