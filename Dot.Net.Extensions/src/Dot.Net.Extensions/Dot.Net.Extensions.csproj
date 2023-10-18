@@ -10,7 +10,6 @@
     <Deterministic>true</Deterministic>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>Dot.Net.Extensions.xml</DocumentationFile>
-    <DefaultDocumentationConfigurationFile>DocConfig.json</DefaultDocumentationConfigurationFile>
     <DefaultDocumentationFolder>../../docs</DefaultDocumentationFolder>
     <DefaultDocumentationGeneratedPages>Namespaces,Types</DefaultDocumentationGeneratedPages>
     <DefaultDocumentationConfigurationFile>../../../DocConfig.json</DefaultDocumentationConfigurationFile>
