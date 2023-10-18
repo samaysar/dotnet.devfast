@@ -13,6 +13,7 @@
     <DefaultDocumentationConfigurationFile>DocConfig.json</DefaultDocumentationConfigurationFile>
     <DefaultDocumentationFolder>../../docs</DefaultDocumentationFolder>
     <DefaultDocumentationGeneratedPages>Namespaces,Types</DefaultDocumentationGeneratedPages>
+    <DefaultDocumentationConfigurationFile>../../../DocConfig.json</DefaultDocumentationConfigurationFile>
     <DefaultDocumentationLinksBaseUrl>https://github.com/samaysar/dotnet.devfast/tree/master/Dot.Net.Extensions/docs</DefaultDocumentationLinksBaseUrl>
     <Title>Dot.Net.Extensions</Title>
     <Company>samaysar</Company>
@@ -46,19 +47,7 @@
     <AnalysisLevel>6.0-all</AnalysisLevel>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
-    <WarningLevel>9999</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
-    <WarningLevel>9999</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
-    <WarningLevel>9999</WarningLevel>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+  <PropertyGroup>
     <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
