@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
-    <NoWarn />
+    <NoWarn>CA1062;CA1068</NoWarn>
     <Deterministic>true</Deterministic>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>Dot.Net.Extensions.xml</DocumentationFile>
@@ -28,7 +28,7 @@
     <InformationalVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack).0</InformationalVersion>
     <AssemblyTitle>Dot.Net.Extensions (TargetFramework: $(TargetFramework))</AssemblyTitle>
     <Authors>Divya Sarthi MAHESHWARI</Authors>
-    <Description>TDL.</Description>
+    <Description>Package containing well-tested, self-explained &amp; easy to use extension methods to achieve optimized runtime performance with improved readability of the code.</Description>
     <Copyright>Copyright © Divya Sarthi MAHESHWARI 2023</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>https://github.com/samaysar/dotnet.devfast</PackageProjectUrl>
@@ -43,6 +43,23 @@
     <LangVersion>latest</LangVersion>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <AnalysisLevel>6.0-all</AnalysisLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>
