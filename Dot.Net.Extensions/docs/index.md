@@ -2,8 +2,8 @@
 
 ## Dot.Net.Extensions Assembly
 
-This assembly contains various well-explained & easy to use extension methods
-to achieve optimized runtime performance and readability of the code.
+This assembly contains various well-tested, self-explained & easy to use extension methods
+to achieve optimized runtime performance with improved readability of the code.
 
 | Namespaces | |
 | :--- | :--- |
