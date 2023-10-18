@@ -20,10 +20,10 @@
     <Version Condition="'$(vNugetPack)'!=''">$(vNugetPack)</Version>
     <PackageVersion Condition="'$(vNugetPack)'==''">1.0.0-alpha</PackageVersion>
     <PackageVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack)</PackageVersion>
-    <FileVersion Condition="'$(Version)'==''">1.0.0.0</FileVersion>
-    <FileVersion Condition="'$(Version)'!=''">$(Version)</FileVersion>
-    <AssemblyVersion Condition="'$(Version)'==''">1.0.0.0</AssemblyVersion>
-    <AssemblyVersion Condition="'$(Version)'!=''">$(Version)</AssemblyVersion>
+    <FileVersion Condition="'$(vNugetPack)'==''">1.0.0</FileVersion>
+    <FileVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack)</FileVersion>
+    <AssemblyVersion Condition="'$(vNugetPack)'==''">1.0.0</AssemblyVersion>
+    <AssemblyVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack)</AssemblyVersion>
     <InformationalVersion Condition="'$(vNugetPack)'==''">1.0.0-alpha.0</InformationalVersion>
     <InformationalVersion Condition="'$(vNugetPack)'!=''">$(vNugetPack).0</InformationalVersion>
     <AssemblyTitle>Dot.Net.Extensions (TargetFramework: $(TargetFramework))</AssemblyTitle>
