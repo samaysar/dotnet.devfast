@@ -8,27 +8,18 @@
     /// </summary>
     public interface IJsonArrayPartReader
     {
-        ///// <summary>
-        ///// Check if JSON stream do start with opening Array symbol, if not, throws
-        ///// an exception.
-        ///// <para>
-        ///// NOTE: This should be the first call (and MUST be the ONLY call) before calling any other method.
-        ///// </para>
-        ///// </summary>
-        ///// <param name="token">Token to observer for cancellation.</param>
-        //Task ThrowIfTokenNotStartArrayAsync(CancellationToken token);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token);
 
-        ///// <summary>
-        ///// Simply checks if we have reached the end of array or not yet.
-        ///// </summary>
-        //bool NotAnEndArray { get; }
-
-        ///// <summary>
-        ///// Returns the next item in the JSON Array stream as byte sequence, asynchronously.
-        ///// </summary>
-        ///// <param name="consumeItemSeparator">If <see langword="true"/> it detects
-        ///// JSON item separator (i.e. ). When  </param>
-        ///// <param name="token">Token to observer for cancellation.</param>
-        //Task<byte[]> GetNextPartAsync(bool consumeItemSeparator, CancellationToken token);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token);
     }
 }

@@ -39,10 +39,11 @@ namespace DevFast.Net.Text.Json.Utf8
             _end = end;
         }
 
+        public bool EndOfJson => _stream == null && _current == _end;
         private long Distance => _bytesConsumed + (_current - _begin);
         private bool InRange => _current < _end;
 
-        public async Task<bool> ReadIsBeginArrayAsync(CancellationToken token)
+        public async ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token)
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
             if (!InRange || _buffer[_current] != JsonConst.ArrayBeginByte) return false;
@@ -51,7 +52,7 @@ namespace DevFast.Net.Text.Json.Utf8
             return true;
         }
 
-        public async Task ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
+        public async ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
         {
             if (!await ReadIsBeginArrayAsync(token).ConfigureAwait(false))
             {
@@ -68,85 +69,88 @@ namespace DevFast.Net.Text.Json.Utf8
             }
         }
 
-        private void IncreaseConsumption(int offsetIncrement)
+        private async ValueTask SkipWhiteSpaceAsync(CancellationToken token)
         {
-            _current = _current + offsetIncrement;
-            Interlocked.Add(ref _bytesConsumed, _current - _begin);
-            _begin = _current;
+            while (await EnsureCapacityAsync(token).ConfigureAwait(false))
+            {
+                switch (_buffer[_current])
+                {
+                    case JsonConst.SpaceByte:
+                    case JsonConst.HorizontalTabByte:
+                    case JsonConst.NewLineByte:
+                    case JsonConst.CarriageReturnByte:
+                        _current = _current + 1;
+                        continue;
+                    case JsonConst.CommentSlashByte:
+                        _current = _current + 1;
+                        if (!await EnsureCapacityAsync(token).ConfigureAwait(false))
+                        {
+                            throw new JsonParsingException("Reached end of JSON. " +
+                                                           "Can not find correct comment format " +
+                                                           "(neither single line comment token '//' " +
+                                                           "nor multi-line comment token '/*').");
+                        }
+                        await ReadCommentAsync(token).ConfigureAwait(false);
+                        continue;
+                    default: return;
+                }
+            }
         }
 
-        private async Task SkipWhiteSpaceAsync(CancellationToken token)
+        private async ValueTask ReadCommentAsync(CancellationToken token)
         {
-            _current = _current - 1;
-            while (true)
+            switch (_buffer[_current])
             {
-                _current = _current + 1;
-                if (_current < _end)
+                case JsonConst.CommentSlashByte:
                 {
-                    switch (_buffer[_current])
+                    _current = _current + 1;
+                    while (await EnsureCapacityAsync(token).ConfigureAwait(false))
                     {
-                        case JsonConst.SpaceByte:
-                        case JsonConst.HorizontalTabByte:
-                        case JsonConst.NewLineByte:
-                        case JsonConst.CarriageReturnByte: continue;
-                        case JsonConst.CommentSlashByte:
-                            await ReadCommentAsync(token).ConfigureAwait(false);
+                        if (_buffer[_current] == JsonConst.CarriageReturnByte || _buffer[_current] == JsonConst.NewLineByte)
+                        {
+                            _current = _current + 1;
+                            return;
+                        }
+                        _current = _current + 1;
+                    }
+
+                    throw new JsonParsingException("Reached end of JSON. " +
+                                                   "Can not find end token of single line comment(\r or \n).");
+                }
+                case JsonConst.CommentAsteriskByte:
+                {
+                    _current = _current + 1;
+                    while (await EnsureCapacityAsync(token).ConfigureAwait(false))
+                    {
+                        if (_buffer[_current] == JsonConst.CommentAsteriskByte)
+                        {
+                            _current = _current + 1;
+                            if (await EnsureCapacityAsync(token).ConfigureAwait(false) &&
+                                _buffer[_current] == JsonConst.CommentSlashByte)
+                            {
+                                _current = _current + 1;
+                                return;
+                            }
                             continue;
-                        default: return;
+                        }
+                        _current = _current + 1;
                     }
+                    throw new JsonParsingException("Reached end of JSON. " +
+                                                   "Can not find end token of multi line comment(*/).");
                 }
-                if (await TryIncreasingBufferAsync(token).ConfigureAwait(false)) _current = _current - 1;
-                else return;
+                default:
+                    throw new JsonParsingException("Can not find correct comment format " +
+                                                   "(neither single line comment token '//' nor multi-line comment token '/*'). " +
+                                                   $"0-Based Position = {Distance}.");
             }
         }
 
-        private async Task<int> ReadCommentAsync(CancellationToken token)
+        private async ValueTask<bool> EnsureCapacityAsync(CancellationToken token)
         {
-            var bytes = _buffer;
-            _current = _current + 1;
-            if (_current == _end)
-            {
-                if (!await TryIncreasingBufferAsync(token).ConfigureAwait(false))
-                {
-                    throw new JsonParsingException("Reached end of Json. " +
-                        "Can not find correct comment format " +
-                        "(neither single line comment token '//' nor multi-line comment token '/*').");
-                }
-            }
-            if (bytes[_current] == JsonConst.CommentSlashByte)
-            {
-                _current = _current + 1;
-                for (int i = _current; i < bytes.Length; i++)
-                {
-                    if (bytes[i] == JsonConst.CarriageReturnByte || bytes[i] == JsonConst.NewLineByte)
-                    {
-                        return i;
-                    }
-                }
-
-                throw new JsonParsingException("Reached end of Json. " +
-                                               "Can not find end token of single line comment(\r or \n).");
-            }
-            if (bytes[_current] == JsonConst.CommentAsteriskByte)
-            {
-                _current = _current + 1;
-                for (int i = _current; i < bytes.Length; i++)
-                {
-                    if (bytes[i] == JsonConst.CommentAsteriskByte && bytes[i + 1] == JsonConst.CommentSlashByte)
-                    {
-                        return i + 1;
-                    }
-                }
-                throw new JsonParsingException("Reached end of Json. " +
-                                               "Can not find end token of multi line comment(*/).");
-            }
-
-            throw new JsonParsingException("Can not find correct comment format " +
-                "(neither single line comment token '//' nor multi-line comment token '/*'). " +
-                $"0-Based Position = {Distance}.");
+            return _current != _end || await TryIncreasingBufferAsync(token).ConfigureAwait(false);
         }
 
-        private async Task ReDefineBufferAsync(CancellationToken token)
+        private async ValueTask ReDefineBufferAsync(CancellationToken token)
         {
             if (_stream == null) return;
             if (_current >= (_buffer.Length + 1) / 2)
@@ -169,12 +173,12 @@ namespace DevFast.Net.Text.Json.Utf8
             }
         }
 
-        private async Task<bool> TryIncreasingBufferAsync(CancellationToken token)
+        private async ValueTask<bool> TryIncreasingBufferAsync(CancellationToken token)
         {
             if(_stream == null) return false;
             if (_end == _buffer.Length)
             {
-                _buffer = _buffer.DoubleByteCapacity();
+                Interlocked.Exchange(ref _buffer, _buffer.DoubleByteCapacity());
             }
             var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
             if (end == 0)
@@ -184,6 +188,13 @@ namespace DevFast.Net.Text.Json.Utf8
             }
             Interlocked.Add(ref _end, end);
             return true;
+        }
+
+        private void IncreaseConsumption(int offsetIncrement)
+        {
+            _current = _current + offsetIncrement;
+            Interlocked.Add(ref _bytesConsumed, _current - _begin);
+            _begin = _current;
         }
     }
 }
