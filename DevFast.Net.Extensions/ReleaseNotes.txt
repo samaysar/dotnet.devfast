@@ -1,0 +1,23 @@
+DevFast.Net.Extensions 0.1.0
+
+ 1. New feature - namespace DevFast.Net.Extensions.SystemTypes added, containing
+	A. Static Class ByteArrays with methods
+			- CopyToSafe(this byte[], byte[], int, int, int)
+			- CopyToUnSafe(this byte[], byte[], int, int, int)
+			- DoubleByteCapacity(this byte[])
+			- EnsureByteCapacity(byte[], int)
+			- EnsureByteCapacity(this byte[], int)
+			- LiftNCopySafe(this byte[], int, int, int)
+			- LiftNCopyUnSafe(this byte[], int, int, int)
+	B. Static Class Enumerables with methods
+			- ForEach<T>(this IEnumerable<T>, Action<T,CancellationToken>, CancellationToken)
+			- ForEachAsync<T>(this IEnumerable<T>, Func<T,CancellationToken,Task>, CancellationToken, bool)
+			- SelectAsync<TIn,TOut>(this IEnumerable<TIn>, Func<TIn,CancellationToken,Task<TOut>>, CancellationToken, bool)
+			- ForEachAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,Task>, CancellationToken, bool)
+			- SelectAsync<TIn,TOut>(this IAsyncEnumerable<TIn>, Func<TIn,CancellationToken,Task<TOut>>, CancellationToken, bool)
+			- SkipAsync<TIn>(this IAsyncEnumerable<TIn>, int, CancellationToken, bool)
+			- TakeAsync<TIn>(this IAsyncEnumerable<TIn>, int, CancellationToken, bool)
+			- ToChunksAsync<T>(this IAsyncEnumerable<T>, int, CancellationToken, bool, bool)
+			- ToListAsync<T>(this IAsyncEnumerable<T>, CancellationToken, bool)
+			- WhereAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,Task<bool>>, CancellationToken, bool)
+		
