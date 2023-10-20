@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using DevFast.Net.Text.Json.Utf8;
 
 namespace DevFast.Net.Text
 {
@@ -13,8 +14,18 @@ namespace DevFast.Net.Text
         public static readonly Encoding Utf8NoBom = new UTF8Encoding(false);
 
         /// <summary>
-        /// Minimum buffer size of <see cref="Json.Utf8.RawUtf8JsonPartReader"/>.
+        /// Minimum buffer size of <see cref="Utf8JsonArrayArrayPartReader"/>.
         /// </summary>
         public const int RawUtf8JsonPartReaderMinBuffer = 1024;
+
+        /// <summary>
+        /// Json Begin-Array ('[') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte JsonArrayBeginByte = 91;
+
+        /// <summary>
+        /// Json End-Array (']') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte JsonArrayEndByte = 93;
     }
 }
