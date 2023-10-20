@@ -4,6 +4,7 @@ using Utf8Json;
 
 namespace DevFast.Net.Text.Json.Utf8
 {
+    // based on the work done on project Utf8Json (https://github.com/neuecc/Utf8Json)
     internal sealed class Utf8JsonArrayArrayPartReader : IJsonArrayPartReader
     {
         volatile Stream? _stream;
@@ -41,41 +42,23 @@ namespace DevFast.Net.Text.Json.Utf8
         private long Distance => _bytesConsumed + (_current - _begin);
         private bool InRange => _current < _end;
 
-        private async Task ReDefineBufferAsync(CancellationToken token)
+        public async Task<bool> ReadIsBeginArrayAsync(CancellationToken token)
         {
-            if (_stream == null) return;
-            if (_current >= (_buffer.Length + 1) / 2)
-            {
-                Interlocked.Add(ref _end, -_current);
-                _buffer.LiftNCopyUnSafe(_current, _end, 0);
-                Interlocked.Add(ref _bytesConsumed, _current - _begin);
-                _current = _begin = 0;
-            }
-            var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
-            if (end == 0)
-            {
-                Interlocked.Exchange(ref _stream, null);
-            }
-            else
-            {
-                Interlocked.Add(ref _end, end);
-            }
+            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+            if (!InRange || _buffer[_current] != JsonConst.ArrayBeginByte) return false;
+            IncreaseConsumption(1);
+            await ReDefineBufferAsync(token).ConfigureAwait(false);
+            return true;
         }
 
         public async Task ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
         {
-            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
-            if (InRange && _buffer[_current] == TextConst.JsonArrayBeginByte)
-            {
-                Interlocked.Increment(ref _current);
-                await ReDefineBufferAsync(token).ConfigureAwait(false);
-            }
-            else
+            if (!await ReadIsBeginArrayAsync(token).ConfigureAwait(false))
             {
                 if (InRange)
                 {
                     throw new JsonParsingException("Invalid byte value for JSON begin-array. " +
-                                               $"Expected = {TextConst.JsonArrayBeginByte}, " +
+                                               $"Expected = {JsonConst.ArrayBeginByte}, " +
                                                $"Found = {_buffer[_current]}, " +
                                                $"0-Based Position = {Distance}.");
                 }
@@ -85,36 +68,103 @@ namespace DevFast.Net.Text.Json.Utf8
             }
         }
 
+        private void IncreaseConsumption(int offsetIncrement)
+        {
+            _current = _current + offsetIncrement;
+            Interlocked.Add(ref _bytesConsumed, _current - _begin);
+            _begin = _current;
+        }
+
         private async Task SkipWhiteSpaceAsync(CancellationToken token)
         {
-            while (_stream != null)
+            _current = _current - 1;
+            while (true)
             {
-                var localCurrent = _current - 1;
-                while (true)
+                _current = _current + 1;
+                if (_current < _end)
                 {
-                    localCurrent++;
-                    if (localCurrent < _end)
+                    switch (_buffer[_current])
                     {
-                        switch (_buffer[localCurrent])
-                        {
-                            case 0x20: // Space
-                            case 0x09: // Horizontal tab
-                            case 0x0A: // Line feed or New line
-                            case 0x0D: // Carriage return
-                                continue;
-                            case (byte)'/': // BeginComment
-                                localCurrent = await ReadCommentAsync(localCurrent, token).ConfigureAwait(false);
-                                continue;                            
-                            default:
-                                _current = localCurrent;
-                                return;
-                        }
+                        case JsonConst.SpaceByte:
+                        case JsonConst.HorizontalTabByte:
+                        case JsonConst.NewLineByte:
+                        case JsonConst.CarriageReturnByte: continue;
+                        case JsonConst.CommentSlashByte:
+                            await ReadCommentAsync(token).ConfigureAwait(false);
+                            continue;
+                        default: return;
                     }
-                    if (await TryIncreasingBufferAsync(token).ConfigureAwait(false))
+                }
+                if (await TryIncreasingBufferAsync(token).ConfigureAwait(false)) _current = _current - 1;
+                else return;
+            }
+        }
+
+        private async Task<int> ReadCommentAsync(CancellationToken token)
+        {
+            var bytes = _buffer;
+            _current = _current + 1;
+            if (_current == _end)
+            {
+                if (!await TryIncreasingBufferAsync(token).ConfigureAwait(false))
+                {
+                    throw new JsonParsingException("Reached end of Json. " +
+                        "Can not find correct comment format " +
+                        "(neither single line comment token '//' nor multi-line comment token '/*').");
+                }
+            }
+            if (bytes[_current] == JsonConst.CommentSlashByte)
+            {
+                _current = _current + 1;
+                for (int i = _current; i < bytes.Length; i++)
+                {
+                    if (bytes[i] == JsonConst.CarriageReturnByte || bytes[i] == JsonConst.NewLineByte)
                     {
-                        localCurrent--;
+                        return i;
                     }
-                    else return;
+                }
+
+                throw new JsonParsingException("Reached end of Json. " +
+                                               "Can not find end token of single line comment(\r or \n).");
+            }
+            if (bytes[_current] == JsonConst.CommentAsteriskByte)
+            {
+                _current = _current + 1;
+                for (int i = _current; i < bytes.Length; i++)
+                {
+                    if (bytes[i] == JsonConst.CommentAsteriskByte && bytes[i + 1] == JsonConst.CommentSlashByte)
+                    {
+                        return i + 1;
+                    }
+                }
+                throw new JsonParsingException("Reached end of Json. " +
+                                               "Can not find end token of multi line comment(*/).");
+            }
+
+            throw new JsonParsingException("Can not find correct comment format " +
+                "(neither single line comment token '//' nor multi-line comment token '/*'). " +
+                $"0-Based Position = {Distance}.");
+        }
+
+        private async Task ReDefineBufferAsync(CancellationToken token)
+        {
+            if (_stream == null) return;
+            if (_current >= (_buffer.Length + 1) / 2)
+            {
+                Interlocked.Add(ref _end, -_current);
+                _buffer.LiftNCopyUnSafe(_current, _end, 0);
+                _current = _begin = 0;
+            }
+            if (_end < _buffer.Length)
+            {
+                var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
+                if (end == 0)
+                {
+                    Interlocked.Exchange(ref _stream, null);
+                }
+                else
+                {
+                    Interlocked.Add(ref _end, end);
                 }
             }
         }
@@ -122,6 +172,10 @@ namespace DevFast.Net.Text.Json.Utf8
         private async Task<bool> TryIncreasingBufferAsync(CancellationToken token)
         {
             if(_stream == null) return false;
+            if (_end == _buffer.Length)
+            {
+                _buffer = _buffer.DoubleByteCapacity();
+            }
             var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
             if (end == 0)
             {
@@ -130,44 +184,6 @@ namespace DevFast.Net.Text.Json.Utf8
             }
             Interlocked.Add(ref _end, end);
             return true;
-        }
-
-        private async Task<int> ReadCommentAsync(int current)
-        {
-            throw new NotImplementedException();
-        }
-
-        private async Task EnsureData(int offset, CancellationToken token)
-        {
-            if (_stream == null || ((_begin + offset) < (_end - 1))) return;
-            if (_begin >= (_buffer.Length + 1) / 2)
-            {
-                //unsafe
-                //{
-                //    fixed (byte* pSrc = &_buffer[_begin])
-                //    fixed (byte* pDst = &_buffer[0])
-                //    {
-                //        Buffer.MemoryCopy(pSrc, pDst, _buffer.Length, _end - _begin);
-                //    }
-                //}
-                _end = _end - _begin;
-                _bytesConsumed = _begin;
-                _begin = 0;
-            }
-            else
-            {
-
-            }
-            var read = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
-            _end += read;
-            if (read == 0)
-            {
-                if (_disposeInner)
-                {
-                    await _stream.DisposeAsync().ConfigureAwait(false);
-                }
-                _stream = null;
-            }
         }
     }
 }

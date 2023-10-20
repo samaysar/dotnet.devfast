@@ -16,16 +16,6 @@ namespace DevFast.Net.Text
         /// <summary>
         /// Minimum buffer size of <see cref="Utf8JsonArrayArrayPartReader"/>.
         /// </summary>
-        public const int RawUtf8JsonPartReaderMinBuffer = 1024;
-
-        /// <summary>
-        /// Json Begin-Array ('[') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
-        /// </summary>
-        public const byte JsonArrayBeginByte = 91;
-
-        /// <summary>
-        /// Json End-Array (']') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
-        /// </summary>
-        public const byte JsonArrayEndByte = 93;
+        public const int RawUtf8JsonPartReaderMinBuffer = 1024;        
     }
 }
