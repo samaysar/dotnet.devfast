@@ -43,15 +43,6 @@ namespace DevFast.Net.Text.Json.Utf8
         private long Distance => _bytesConsumed + (_current - _begin);
         private bool InRange => _current < _end;
 
-        public async ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token)
-        {
-            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
-            if (!InRange || _buffer[_current] != JsonConst.ArrayBeginByte) return false;
-            IncreaseConsumption(1);
-            await ReDefineBufferAsync(token).ConfigureAwait(false);
-            return true;
-        }
-
         public async ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
         {
             if (!await ReadIsBeginArrayAsync(token).ConfigureAwait(false))
@@ -59,15 +50,43 @@ namespace DevFast.Net.Text.Json.Utf8
                 if (InRange)
                 {
                     throw new JsonParsingException("Invalid byte value for JSON begin-array. " +
-                                               $"Expected = {JsonConst.ArrayBeginByte}, " +
-                                               $"Found = {_buffer[_current]}, " +
-                                               $"0-Based Position = {Distance}.");
+                                                   $"Expected = {JsonConst.ArrayBeginByte}, " +
+                                                   $"Found = {_buffer[_current]}, " +
+                                                   $"0-Based Position = {Distance}.");
                 }
 
                 throw new JsonParsingException("Reached end, unable to find JSON begin-array." +
                                                $"0-Based Position = {Distance}.");
             }
         }
+
+        public async ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token)
+        {
+            return await ReadIsGivenByteAsync(JsonConst.ArrayBeginByte, token).ConfigureAwait(false);
+        }
+
+        public async ValueTask<bool> ReadIsEndArrayAsync(CancellationToken token)
+        {
+            return await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
+        }
+
+        private async ValueTask<bool> ReadIsGivenByteAsync(byte match, CancellationToken token)
+        {
+            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+            if (!InRange || _buffer[_current] != match) return false;
+            IncreaseConsumption(1);
+            await ReDefineBufferAsync(token).ConfigureAwait(false);
+            return true;
+        }
+
+        //public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token)
+        //{
+        //    await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+        //    if (!InRange || _buffer[_current] != JsonConst.ArrayBeginByte) return false;
+        //    IncreaseConsumption(1);
+        //    await ReDefineBufferAsync(token).ConfigureAwait(false);
+        //    return true;
+        //}
 
         private async ValueTask SkipWhiteSpaceAsync(CancellationToken token)
         {
@@ -156,7 +175,7 @@ namespace DevFast.Net.Text.Json.Utf8
             if (_current >= (_buffer.Length + 1) / 2)
             {
                 Interlocked.Add(ref _end, -_current);
-                _buffer.LiftNCopyUnSafe(_current, _end, 0);
+                if (_end > 0) _buffer.LiftNCopyUnSafe(_current, _end, 0);
                 _current = _begin = 0;
             }
             if (_end < _buffer.Length)
