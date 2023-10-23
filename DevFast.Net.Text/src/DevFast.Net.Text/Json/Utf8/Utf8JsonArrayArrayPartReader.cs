@@ -1,6 +1,7 @@
 ﻿using DevFast.Net.Extensions.SystemTypes;
 using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 using Utf8Json;
 
 namespace DevFast.Net.Text.Json.Utf8
@@ -55,7 +56,6 @@ namespace DevFast.Net.Text.Json.Utf8
                                                    $"Found = {_buffer[_current]}, " +
                                                    $"0-Based Position = {Distance}.");
                 }
-
                 throw new JsonParsingException("Reached end, unable to find JSON begin-array." +
                                                $"0-Based Position = {Distance}.");
             }
@@ -71,7 +71,7 @@ namespace DevFast.Net.Text.Json.Utf8
             return await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
         }
 
-        public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token)
+        public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token, bool withVerify = true)
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
             await ReDefineBufferAsync(0, token).ConfigureAwait(false);
@@ -79,23 +79,32 @@ namespace DevFast.Net.Text.Json.Utf8
             await SkipUntilNextRawAsync(token).ConfigureAwait(false);
             var currentRaw = new byte[_current - _begin];
             _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
-            await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false);
-            return currentRaw;
+            //We want to intentionally keep 'withVerify' after ',' check!
+            if (await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false) ||
+                !withVerify || (InRange && _buffer[_current] == JsonConst.ArrayEndByte)) return currentRaw;
+            if (InRange)
+            {
+                throw new JsonParsingException($"Invalid byte value when parsing JSON element inside a JSON Array. " +
+                                               $"Expected = {JsonConst.ValueSeparatorByte} or {JsonConst.ArrayEndByte}, " +
+                                               $"Found = {_buffer[_current]}, " +
+                                               $"0-Based Position = {Distance}.");
+            }
+            throw new JsonParsingException("Reached end, unable to find JSON end-array." +
+                                           $"0-Based Position = {Distance}.");
         }
 
-        private async Task SkipUntilNextRawAsync(CancellationToken token)
+        private async ValueTask SkipUntilNextRawAsync(CancellationToken token)
         {
-            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
             switch (_buffer[_current])
             {
                 case JsonConst.ArrayBeginByte:
-                    await ReadArrayAsync(token).ConfigureAwait(false);
+                    await SkipArrayAsync(token).ConfigureAwait(false);
                     break;
                 case JsonConst.ObjectBeginByte:
-                    await ReadObjectAsync(token).ConfigureAwait(false);
+                    await SkipObjectAsync(token).ConfigureAwait(false);
                     break;
                 case JsonConst.StringQuoteByte:
-                    await ReadStringAsync(token).ConfigureAwait(false);
+                    await SkipStringAsync(token).ConfigureAwait(false);
                     break;
                 case JsonConst.MinusSignByte:
                 case JsonConst.Number0Byte:
@@ -108,16 +117,16 @@ namespace DevFast.Net.Text.Json.Utf8
                 case JsonConst.Number7Byte:
                 case JsonConst.Number8Byte:
                 case JsonConst.Number9Byte:
-                    await ReadNumberAsync(token).ConfigureAwait(false);
+                    await SkipNumberAsync(token).ConfigureAwait(false);
                     break;
                 case JsonConst.FirstOfTrueByte:
-                    await ReadTrueAsync(token).ConfigureAwait(false);
+                    await SkipTrueAsync(token).ConfigureAwait(false);
                     break;
                 case JsonConst.FirstOfFalseByte:
-                    await ReadFalseAsync(token).ConfigureAwait(false);
+                    await SkipFalseAsync(token).ConfigureAwait(false);
                     break;
                 case JsonConst.FirstOfNullByte:
-                    await ReadNullAsync(token).ConfigureAwait(false);
+                    await SkipNullAsync(token).ConfigureAwait(false);
                     break;
                 default:
                     throw new JsonParsingException($"Invalid byte value for start of JSON element. " +
@@ -126,39 +135,62 @@ namespace DevFast.Net.Text.Json.Utf8
             }
         }
 
-        private async ValueTask ReadArrayAsync(CancellationToken token)
+        private async ValueTask SkipArrayAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        private async ValueTask ReadObjectAsync(CancellationToken token)
+        private async ValueTask SkipObjectAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        private async ValueTask ReadStringAsync(CancellationToken token)
+        private async ValueTask SkipStringAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        private async ValueTask ReadNumberAsync(CancellationToken token)
+        private async ValueTask SkipNumberAsync(CancellationToken token)
         {
             throw new NotImplementedException();
         }
 
-        private async ValueTask ReadTrueAsync(CancellationToken token)
+        private async ValueTask SkipTrueAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            await SkipOrThrowAsync((byte)'t', token, "true literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'r', token, "true literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'u', token, "true literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'e', token, "true literal").ConfigureAwait(false);
         }
 
-        private async ValueTask ReadFalseAsync(CancellationToken token)
+        private async ValueTask SkipFalseAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            await SkipOrThrowAsync((byte)'f', token, "false literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'a', token, "false literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'l', token, "false literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'s', token, "false literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'e', token, "false literal").ConfigureAwait(false);
         }
 
-        private async ValueTask ReadNullAsync(CancellationToken token)
+        private async ValueTask SkipNullAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            await SkipOrThrowAsync((byte)'n', token, "null literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'u', token, "null literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
+            await SkipOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
+        }
+
+        private async ValueTask SkipOrThrowAsync(byte expected, CancellationToken token, string partOf)
+        {
+            await EnsureCapacityAsync(token).ConfigureAwait(false);
+            if (_buffer[_current] != expected)
+            {
+                throw new JsonParsingException($"Invalid byte value when parsing '{partOf}' JSON element. " +
+                                               $"Expected = {expected}, " +
+                                               $"Found = {_buffer[_current]}, " +
+                                               $"0-Based Position = {Distance}.");
+            }
+            _current = _current + 1;
         }
 
         private async ValueTask<bool> ReadIsGivenByteAsync(byte match, CancellationToken token)
