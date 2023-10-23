@@ -70,6 +70,89 @@ namespace DevFast.Net.Text.Json.Utf8
             return await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
         }
 
+        public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token)
+        {
+            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+            IncreaseConsumption(0);
+            if (!InRange) return Array.Empty<byte>();
+            switch(_buffer[_current])
+            {
+                case JsonConst.ArrayBeginByte:
+                    await ReadArrayAsync(token).ConfigureAwait(false);
+                    break;
+                case JsonConst.ObjectBeginByte:
+                    await ReadObjectAsync(token).ConfigureAwait(false);
+                    break;
+                case JsonConst.StringQuoteByte:
+                    await ReadStringAsync(token).ConfigureAwait(false);
+                    break;
+                case JsonConst.MinusSignByte:
+                case JsonConst.Number0Byte:
+                case JsonConst.Number1Byte:
+                case JsonConst.Number2Byte:
+                case JsonConst.Number3Byte:
+                case JsonConst.Number4Byte:
+                case JsonConst.Number5Byte:
+                case JsonConst.Number6Byte:
+                case JsonConst.Number7Byte:
+                case JsonConst.Number8Byte:
+                case JsonConst.Number9Byte:
+                    await ReadNumberAsync(token).ConfigureAwait(false);
+                    break;
+                case JsonConst.FirstOfTrueByte:
+                    await ReadTrueAsync(token).ConfigureAwait(false);
+                    break;
+                case JsonConst.FirstOfFalseByte:
+                    await ReadFalseAsync(token).ConfigureAwait(false);
+                    break;
+                case JsonConst.FirstOfNullByte:
+                    await ReadNullAsync(token).ConfigureAwait(false);
+                    break;
+                default: throw new JsonParsingException($"Invalid byte value for start of JSON element. " +
+                                                        $"Found = {_buffer[_current]}, " +
+                                                        $"0-Based Position = {Distance}.");
+            }
+            var currentRaw = new byte[_current - _begin];
+            _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
+            await ReadIsGivenByteAsync(JsonConst.NameSeparatorByte, token).ConfigureAwait(false);
+            return currentRaw;
+        }
+
+        private async ValueTask ReadArrayAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async ValueTask ReadObjectAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async ValueTask ReadStringAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async ValueTask ReadNumberAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async ValueTask ReadTrueAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async ValueTask ReadFalseAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        private async ValueTask ReadNullAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
         private async ValueTask<bool> ReadIsGivenByteAsync(byte match, CancellationToken token)
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
@@ -78,15 +161,6 @@ namespace DevFast.Net.Text.Json.Utf8
             await ReDefineBufferAsync(token).ConfigureAwait(false);
             return true;
         }
-
-        //public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token)
-        //{
-        //    await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
-        //    if (!InRange || _buffer[_current] != JsonConst.ArrayBeginByte) return false;
-        //    IncreaseConsumption(1);
-        //    await ReDefineBufferAsync(token).ConfigureAwait(false);
-        //    return true;
-        //}
 
         private async ValueTask SkipWhiteSpaceAsync(CancellationToken token)
         {
@@ -214,6 +288,18 @@ namespace DevFast.Net.Text.Json.Utf8
             _current = _current + offsetIncrement;
             Interlocked.Add(ref _bytesConsumed, _current - _begin);
             _begin = _current;
+        }
+
+        public void Dispose()
+        {
+            _stream?.Dispose();
+            _stream = null;
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (_stream != null) await _stream.DisposeAsync().ConfigureAwait(false);
+            _stream = null;
         }
     }
 }

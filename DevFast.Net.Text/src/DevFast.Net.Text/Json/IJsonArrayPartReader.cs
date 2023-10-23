@@ -6,7 +6,7 @@
     /// These readers MUST NOT be used to read any arbitrary JSON but a single JSON Array only.
     /// </para>
     /// </summary>
-    public interface IJsonArrayPartReader
+    public interface IJsonArrayPartReader : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// 

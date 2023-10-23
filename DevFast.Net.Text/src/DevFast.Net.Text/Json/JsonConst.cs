@@ -16,6 +16,101 @@
         public const byte ArrayEndByte = (byte)']';
 
         /// <summary>
+        /// JSON Begin-Object ('{') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte ObjectBeginByte = (byte)'{';
+
+        /// <summary>
+        /// JSON Begin-Object ('}') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte ObjectEndByte = (byte)'}';
+
+        /// <summary>
+        /// JSON String-Quote ('"') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte StringQuoteByte = (byte)'"';
+
+        /// <summary>
+        /// JSON value separator (',') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte ValueSeparatorByte = (byte)',';
+
+        /// <summary>
+        /// JSON name separator (':') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte NameSeparatorByte = (byte)':';
+
+        /// <summary>
+        /// JSON 't' character, of 'true' literal value, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte FirstOfTrueByte = (byte)'t';
+
+        /// <summary>
+        /// JSON 'f' character, of 'false' literal value, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte FirstOfFalseByte = (byte)'f';
+
+        /// <summary>
+        /// JSON 'n' character, of 'null' literal value, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte FirstOfNullByte = (byte)'n';
+
+        /// <summary>
+        /// JSON Minus Sign ('-') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte MinusSignByte = (byte)'-';
+
+        /// <summary>
+        /// JSON numeric 1 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number1Byte = (byte)'1';
+
+        /// <summary>
+        /// JSON numeric 2 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number2Byte = (byte)'2';
+
+        /// <summary>
+        /// JSON numeric 3 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number3Byte = (byte)'3';
+
+        /// <summary>
+        /// JSON numeric 4 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number4Byte = (byte)'4';
+
+        /// <summary>
+        /// JSON numeric 5 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number5Byte = (byte)'5';
+
+        /// <summary>
+        /// JSON numeric 6 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number6Byte = (byte)'6';
+
+        /// <summary>
+        /// JSON numeric 7 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number7Byte = (byte)'7';
+
+        /// <summary>
+        /// JSON numeric 8 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number8Byte = (byte)'8';
+
+        /// <summary>
+        /// JSON numeric 9 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number9Byte = (byte)'9';
+
+        /// <summary>
+        /// JSON numeric 0 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte Number0Byte = (byte)'0';
+
+        /// <summary>
         /// JSON single line comment's slash ('/') character value as <see cref="byte"/>.
         /// </summary>
         public const byte CommentSlashByte = (byte)'/';
