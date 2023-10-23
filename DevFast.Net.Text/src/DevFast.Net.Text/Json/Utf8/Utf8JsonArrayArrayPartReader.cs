@@ -1,4 +1,5 @@
 ﻿using DevFast.Net.Extensions.SystemTypes;
+using System.Diagnostics;
 using System.Text;
 using Utf8Json;
 
@@ -73,9 +74,19 @@ namespace DevFast.Net.Text.Json.Utf8
         public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token)
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
-            IncreaseConsumption(0);
+            await ReDefineBufferAsync(0, token).ConfigureAwait(false);
             if (!InRange) return Array.Empty<byte>();
-            switch(_buffer[_current])
+            await SkipUntilNextRawAsync(token).ConfigureAwait(false);
+            var currentRaw = new byte[_current - _begin];
+            _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
+            await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false);
+            return currentRaw;
+        }
+
+        private async Task SkipUntilNextRawAsync(CancellationToken token)
+        {
+            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+            switch (_buffer[_current])
             {
                 case JsonConst.ArrayBeginByte:
                     await ReadArrayAsync(token).ConfigureAwait(false);
@@ -108,14 +119,11 @@ namespace DevFast.Net.Text.Json.Utf8
                 case JsonConst.FirstOfNullByte:
                     await ReadNullAsync(token).ConfigureAwait(false);
                     break;
-                default: throw new JsonParsingException($"Invalid byte value for start of JSON element. " +
-                                                        $"Found = {_buffer[_current]}, " +
-                                                        $"0-Based Position = {Distance}.");
+                default:
+                    throw new JsonParsingException($"Invalid byte value for start of JSON element. " +
+                                                   $"Found = {_buffer[_current]}, " +
+                                                   $"0-Based Position = {Distance}.");
             }
-            var currentRaw = new byte[_current - _begin];
-            _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
-            await ReadIsGivenByteAsync(JsonConst.NameSeparatorByte, token).ConfigureAwait(false);
-            return currentRaw;
         }
 
         private async ValueTask ReadArrayAsync(CancellationToken token)
@@ -157,8 +165,7 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
             if (!InRange || _buffer[_current] != match) return false;
-            IncreaseConsumption(1);
-            await ReDefineBufferAsync(token).ConfigureAwait(false);
+            await ReDefineBufferAsync(1, token).ConfigureAwait(false);
             return true;
         }
 
@@ -243,8 +250,9 @@ namespace DevFast.Net.Text.Json.Utf8
             return _current != _end || await TryIncreasingBufferAsync(token).ConfigureAwait(false);
         }
 
-        private async ValueTask ReDefineBufferAsync(CancellationToken token)
+        private async ValueTask ReDefineBufferAsync(int offsetIncrement, CancellationToken token)
         {
+            IncreaseConsumption(offsetIncrement);
             if (_stream == null) return;
             if (_current >= (_buffer.Length + 1) / 2)
             {
@@ -252,18 +260,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 if (_end > 0) _buffer.LiftNCopyUnSafe(_current, _end, 0);
                 _current = _begin = 0;
             }
-            if (_end < _buffer.Length)
-            {
-                var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
-                if (end == 0)
-                {
-                    Interlocked.Exchange(ref _stream, null);
-                }
-                else
-                {
-                    Interlocked.Add(ref _end, end);
-                }
-            }
+            if (_end < _buffer.Length) await FillBufferAsync(token).ConfigureAwait(false);
         }
 
         private async ValueTask<bool> TryIncreasingBufferAsync(CancellationToken token)
@@ -273,12 +270,19 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 Interlocked.Exchange(ref _buffer, _buffer.DoubleByteCapacity());
             }
+            return await FillBufferAsync(token).ConfigureAwait(false);
+        }
+
+        private async ValueTask<bool> FillBufferAsync(CancellationToken token)
+        {
+            Debug.Assert(_stream != null);
             var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
             if (end == 0)
             {
                 Interlocked.Exchange(ref _stream, null);
                 return false;
             }
+
             Interlocked.Add(ref _end, end);
             return true;
         }
