@@ -42,6 +42,7 @@ namespace DevFast.Net.Text.Json.Utf8
         }
 
         public bool EndOfJson => _stream == null && _current == _end;
+        public byte Current => _buffer[_end];
         private long Distance => _bytesConsumed + (_current - _begin);
         private bool InRange => _current < _end;
 
@@ -80,6 +81,7 @@ namespace DevFast.Net.Text.Json.Utf8
             var currentRaw = new byte[_current - _begin];
             _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
             //We want to intentionally keep 'withVerify' after ',' check!
+            //to either validate everything or nothing
             if (await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false) ||
                 !withVerify || (InRange && _buffer[_current] == JsonConst.ArrayEndByte)) return currentRaw;
             if (InRange)
@@ -147,50 +149,69 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipStringAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            
         }
 
         private async ValueTask SkipNumberAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            //we just take everything until begin of next token (even if number is not valid!)
+            //number parsing rules are too much to write here
+            //Serializer will do its job during deserialization
+            while (await EnsureCapacityAsync(token).ConfigureAwait(false))
+            {
+                switch (_buffer[_current])
+                {
+                    case JsonConst.MinusSignByte:
+                    case JsonConst.PlusSignByte:
+                    case JsonConst.ExponentLowerByte:
+                    case JsonConst.ExponentUpperByte:
+                    case JsonConst.DecimalPointByte:
+                    case JsonConst.Number0Byte:
+                    case JsonConst.Number1Byte:
+                    case JsonConst.Number2Byte:
+                    case JsonConst.Number3Byte:
+                    case JsonConst.Number4Byte:
+                    case JsonConst.Number5Byte:
+                    case JsonConst.Number6Byte:
+                    case JsonConst.Number7Byte:
+                    case JsonConst.Number8Byte:
+                    case JsonConst.Number9Byte:
+                        _current = 1 + _current;
+                        continue;
+                    default: return;
+                }
+            }
         }
 
         private async ValueTask SkipTrueAsync(CancellationToken token)
         {
-            await SkipOrThrowAsync((byte)'t', token, "true literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'r', token, "true literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'u', token, "true literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'e', token, "true literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'r', token, "true literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'u', token, "true literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'e', token, "true literal").ConfigureAwait(false);
         }
 
         private async ValueTask SkipFalseAsync(CancellationToken token)
         {
-            await SkipOrThrowAsync((byte)'f', token, "false literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'a', token, "false literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'l', token, "false literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'s', token, "false literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'e', token, "false literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'a', token, "false literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'l', token, "false literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'s', token, "false literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'e', token, "false literal").ConfigureAwait(false);
         }
 
         private async ValueTask SkipNullAsync(CancellationToken token)
         {
-            await SkipOrThrowAsync((byte)'n', token, "null literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'u', token, "null literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
-            await SkipOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'u', token, "null literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
         }
 
-        private async ValueTask SkipOrThrowAsync(byte expected, CancellationToken token, string partOf)
+        private async ValueTask NextExpectedOrThrowAsync(byte expected, CancellationToken token, string partOf)
         {
-            await EnsureCapacityAsync(token).ConfigureAwait(false);
-            if (_buffer[_current] != expected)
-            {
-                throw new JsonParsingException($"Invalid byte value when parsing '{partOf}' JSON element. " +
-                                               $"Expected = {expected}, " +
-                                               $"Found = {_buffer[_current]}, " +
-                                               $"0-Based Position = {Distance}.");
-            }
-            _current = _current + 1;
+            if (await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false) && _buffer[_current] == expected) return;
+            throw new JsonParsingException($"Invalid byte value when parsing '{partOf}' JSON element. " +
+                                           $"Expected = {expected}, " +
+                                           $"Found = {_buffer[_current]}, " +
+                                           $"0-Based Position = {Distance}.");
         }
 
         private async ValueTask<bool> ReadIsGivenByteAsync(byte match, CancellationToken token)
@@ -211,11 +232,10 @@ namespace DevFast.Net.Text.Json.Utf8
                     case JsonConst.HorizontalTabByte:
                     case JsonConst.NewLineByte:
                     case JsonConst.CarriageReturnByte:
-                        _current = _current + 1;
+                        await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
                         continue;
                     case JsonConst.CommentSlashByte:
-                        _current = _current + 1;
-                        if (!await EnsureCapacityAsync(token).ConfigureAwait(false))
+                        if (!await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false))
                         {
                             throw new JsonParsingException("Reached end of JSON. " +
                                                            "Can not find correct comment format " +
@@ -234,47 +254,44 @@ namespace DevFast.Net.Text.Json.Utf8
             switch (_buffer[_current])
             {
                 case JsonConst.CommentSlashByte:
-                {
-                    _current = _current + 1;
-                    while (await EnsureCapacityAsync(token).ConfigureAwait(false))
+                    while (await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false))
                     {
                         if (_buffer[_current] == JsonConst.CarriageReturnByte || _buffer[_current] == JsonConst.NewLineByte)
                         {
-                            _current = _current + 1;
+                            await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
                             return;
                         }
-                        _current = _current + 1;
                     }
 
                     throw new JsonParsingException("Reached end of JSON. " +
                                                    "Can not find end token of single line comment(\r or \n).");
-                }
                 case JsonConst.CommentAsteriskByte:
-                {
-                    _current = _current + 1;
-                    while (await EnsureCapacityAsync(token).ConfigureAwait(false))
+                    while (await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false))
                     {
                         if (_buffer[_current] == JsonConst.CommentAsteriskByte)
                         {
-                            _current = _current + 1;
-                            if (await EnsureCapacityAsync(token).ConfigureAwait(false) &&
+                            if (await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
                                 _buffer[_current] == JsonConst.CommentSlashByte)
                             {
-                                _current = _current + 1;
+                                await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
                                 return;
                             }
-                            continue;
+                            _current = _current - 1;
                         }
-                        _current = _current + 1;
                     }
                     throw new JsonParsingException("Reached end of JSON. " +
                                                    "Can not find end token of multi line comment(*/).");
-                }
                 default:
                     throw new JsonParsingException("Can not find correct comment format " +
                                                    "(neither single line comment token '//' nor multi-line comment token '/*'). " +
                                                    $"0-Based Position = {Distance}.");
             }
+        }
+
+        private async ValueTask<bool> SkipOneWithEnsureCapacityAsync(CancellationToken token)
+        {
+            _current = 1 + _current;
+            return await EnsureCapacityAsync(token).ConfigureAwait(false);
         }
 
         private async ValueTask<bool> EnsureCapacityAsync(CancellationToken token)
@@ -321,20 +338,13 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private void IncreaseConsumption(int offsetIncrement)
         {
-            _current = _current + offsetIncrement;
+            _current = offsetIncrement + _current;
             Interlocked.Add(ref _bytesConsumed, _current - _begin);
             _begin = _current;
         }
 
         public void Dispose()
         {
-            _stream?.Dispose();
-            _stream = null;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            if (_stream != null) await _stream.DisposeAsync().ConfigureAwait(false);
             _stream = null;
         }
     }

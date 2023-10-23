@@ -61,6 +61,26 @@
         public const byte MinusSignByte = (byte)'-';
 
         /// <summary>
+        /// JSON Plus Sign ('+') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte PlusSignByte = (byte)'+';
+
+        /// <summary>
+        /// JSON Upper Case Exponent ('E') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte ExponentUpperByte = (byte)'E';
+
+        /// <summary>
+        /// JSON Lower Case Exponent ('e') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte ExponentLowerByte = (byte)'e';
+
+        /// <summary>
+        /// JSON Decimal Point ('.') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte DecimalPointByte = (byte)'.';
+
+        /// <summary>
         /// JSON numeric 1 character as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
         public const byte Number1Byte = (byte)'1';
