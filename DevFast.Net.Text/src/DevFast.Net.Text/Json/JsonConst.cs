@@ -41,19 +41,34 @@
         public const byte NameSeparatorByte = (byte)':';
 
         /// <summary>
-        /// JSON 't' character, of 'true' literal value, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// JSON 't' character (can be used to identify beginning of 'true' literal or horizontal tab '\t' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
         public const byte FirstOfTrueByte = (byte)'t';
 
         /// <summary>
-        /// JSON 'f' character, of 'false' literal value, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// JSON 'f' character (can be used to identify beginning of 'false' literal or form-feed '\f' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
         public const byte FirstOfFalseByte = (byte)'f';
 
         /// <summary>
-        /// JSON 'n' character, of 'null' literal value, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// JSON 'n' character (can be used to identify beginning of 'null' literal or line-feed '\n' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
         public const byte FirstOfNullByte = (byte)'n';
+
+        /// <summary>
+        /// JSON 'b' character (to identify backspace '\b' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte BackspaceInStringByte = (byte)'b';
+
+        /// <summary>
+        /// JSON 'r' character (can be used to identify 'r' in 'true' literal or identify backspace '\r' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte CarriageReturnInStringByte = (byte)'r';
+
+        /// <summary>
+        /// JSON 'u' character (can be used to identify 'u' in 'true' literal, 'u' in 'null' literal or to identify Hex-Digits '\uXXXX' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// </summary>
+        public const byte HexDigitInStringByte = (byte)'u';
 
         /// <summary>
         /// JSON Minus Sign ('-') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
@@ -71,7 +86,7 @@
         public const byte ExponentUpperByte = (byte)'E';
 
         /// <summary>
-        /// JSON Lower Case Exponent ('e') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
+        /// JSON Lower Case Exponent ('e') character (as in numeric values or can be used to identify 'e' in 'true' or in 'false' literal), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
         public const byte ExponentLowerByte = (byte)'e';
 
@@ -131,9 +146,14 @@
         public const byte Number0Byte = (byte)'0';
 
         /// <summary>
-        /// JSON single line comment's slash ('/') character value as <see cref="byte"/>.
+        /// JSON single line comment's slash ('/', a.k.a. Solidus) character value as <see cref="byte"/>.
         /// </summary>
         public const byte CommentSlashByte = (byte)'/';
+
+        /// <summary>
+        /// JSON escape ('\', a.k.a. Reverse Solidus) character value as <see cref="byte"/>.
+        /// </summary>
+        public const byte ReverseSlashByte = (byte)'\\';
 
         /// <summary>
         /// JSON multi-line comment's asterisk ('*') character value as <see cref="byte"/>.
