@@ -1,13 +1,11 @@
 ﻿using DevFast.Net.Extensions.SystemTypes;
 using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 using Utf8Json;
 
 namespace DevFast.Net.Text.Json.Utf8
 {
-    // based on the work done on project Utf8Json (https://github.com/neuecc/Utf8Json)
-    internal sealed class Utf8JsonArrayArrayPartReader : IJsonArrayPartReader
+    internal sealed class Utf8JsonArrayPartReader : IJsonArrayPartReader
     {
         private readonly bool _disposeStream;
         Stream? _stream;
@@ -31,10 +29,10 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 begin = 3;
             }
-            return new Utf8JsonArrayArrayPartReader(stream, buffer, begin, end, disposeStream);
+            return new Utf8JsonArrayPartReader(stream, buffer, begin, end, disposeStream);
         }
 
-        private Utf8JsonArrayArrayPartReader(Stream stream, byte[] buffer, int begin, int end, bool disposeStream)
+        private Utf8JsonArrayPartReader(Stream stream, byte[] buffer, int begin, int end, bool disposeStream)
         {
             _stream = stream;
             _buffer = buffer;
