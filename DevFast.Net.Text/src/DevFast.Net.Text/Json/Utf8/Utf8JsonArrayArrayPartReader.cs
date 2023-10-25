@@ -1,7 +1,6 @@
 ﻿using DevFast.Net.Extensions.SystemTypes;
 using System.Diagnostics;
 using System.Text;
-using System.Text.RegularExpressions;
 using Utf8Json;
 
 namespace DevFast.Net.Text.Json.Utf8
@@ -9,6 +8,7 @@ namespace DevFast.Net.Text.Json.Utf8
     // based on the work done on project Utf8Json (https://github.com/neuecc/Utf8Json)
     internal sealed class Utf8JsonArrayArrayPartReader : IJsonArrayPartReader
     {
+        private readonly bool _disposeStream;
         volatile Stream? _stream;
         volatile byte[] _buffer;
         volatile int _begin, _end, _current;
@@ -16,7 +16,8 @@ namespace DevFast.Net.Text.Json.Utf8
 
         public static async Task<IJsonArrayPartReader> CreateAsync(Stream stream,
             CancellationToken token,
-            int size = TextConst.RawUtf8JsonPartReaderMinBuffer)
+            int size = TextConst.RawUtf8JsonPartReaderMinBuffer,
+            bool disposeStream = false)
         {
             var buffer = new byte[Math.Max(TextConst.RawUtf8JsonPartReaderMinBuffer, size)];
             var end = await stream.ReadAsync(buffer, token).ConfigureAwait(false);
@@ -29,16 +30,17 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 begin = 3;
             }
-            return new Utf8JsonArrayArrayPartReader(stream, buffer, begin, end);
+            return new Utf8JsonArrayArrayPartReader(stream, buffer, begin, end, disposeStream);
         }
 
-        private Utf8JsonArrayArrayPartReader(Stream stream, byte[] buffer, int begin, int end)
+        private Utf8JsonArrayArrayPartReader(Stream stream, byte[] buffer, int begin, int end, bool disposeStream)
         {
             _stream = stream;
             _buffer = buffer;
             _current = _begin = begin;
             _bytesConsumed = _begin;
             _end = end;
+            _disposeStream = disposeStream;
         }
 
         public bool EndOfJson => _stream == null && _current == _end;
@@ -83,7 +85,8 @@ namespace DevFast.Net.Text.Json.Utf8
             //We want to intentionally keep 'withVerify' after ',' check!
             //to either validate everything or nothing
             if (await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false) ||
-                !withVerify || (InRange && _buffer[_current] == JsonConst.ArrayEndByte)) return currentRaw;
+                !withVerify ||
+                await ReadIsEndArrayAsync(token).ConfigureAwait(false)) return currentRaw;
             if (InRange)
             {
                 throw new JsonParsingException($"Invalid byte value when parsing JSON element inside a JSON Array. " +
@@ -157,7 +160,7 @@ namespace DevFast.Net.Text.Json.Utf8
             //we just take everything until begin of next token (even if number is not valid!)
             //number parsing rules are too much to write here
             //Serializer will do its job during deserialization
-            while (await EnsureCapacityAsync(token).ConfigureAwait(false))
+            while (await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false))
             {
                 switch (_buffer[_current])
                 {
@@ -176,7 +179,6 @@ namespace DevFast.Net.Text.Json.Utf8
                     case JsonConst.Number7Byte:
                     case JsonConst.Number8Byte:
                     case JsonConst.Number9Byte:
-                        _current = 1 + _current;
                         continue;
                     default: return;
                 }
@@ -188,6 +190,7 @@ namespace DevFast.Net.Text.Json.Utf8
             await NextExpectedOrThrowAsync((byte)'r', token, "true literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'u', token, "true literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'e', token, "true literal").ConfigureAwait(false);
+            await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
         }
 
         private async ValueTask SkipFalseAsync(CancellationToken token)
@@ -196,6 +199,7 @@ namespace DevFast.Net.Text.Json.Utf8
             await NextExpectedOrThrowAsync((byte)'l', token, "false literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'s', token, "false literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'e', token, "false literal").ConfigureAwait(false);
+            await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
         }
 
         private async ValueTask SkipNullAsync(CancellationToken token)
@@ -203,6 +207,7 @@ namespace DevFast.Net.Text.Json.Utf8
             await NextExpectedOrThrowAsync((byte)'u', token, "null literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
+            await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
         }
 
         private async ValueTask NextExpectedOrThrowAsync(byte expected, CancellationToken token, string partOf)
@@ -276,7 +281,7 @@ namespace DevFast.Net.Text.Json.Utf8
                                 await SkipOneWithEnsureCapacityAsync(token).ConfigureAwait(false);
                                 return;
                             }
-                            _current = _current - 1;
+                            _current = -1 + _current;
                         }
                     }
                     throw new JsonParsingException("Reached end of JSON. " +
@@ -343,8 +348,9 @@ namespace DevFast.Net.Text.Json.Utf8
             _begin = _current;
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
+            if (_stream != null && _disposeStream) await _stream.DisposeAsync().ConfigureAwait(false);
             _stream = null;
         }
     }

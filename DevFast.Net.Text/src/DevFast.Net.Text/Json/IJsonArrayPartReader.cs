@@ -6,7 +6,7 @@
     /// These readers MUST NOT be used to read any arbitrary JSON but a single JSON Array only.
     /// </para>
     /// </summary>
-    public interface IJsonArrayPartReader : IDisposable
+    public interface IJsonArrayPartReader : IAsyncDisposable
     {
         /// <summary>
         /// 
@@ -21,5 +21,20 @@
         /// <param name="token"></param>
         /// <returns></returns>
         ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        ValueTask<bool> ReadIsEndArrayAsync(CancellationToken token);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="withVerify"></param>
+        /// <returns></returns>
+        ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token, bool withVerify = true);
     }
 }
