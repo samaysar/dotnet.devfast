@@ -15,7 +15,7 @@ namespace DevFast.Net.Text.Json.Utf8
         int _begin, _end, _current;
         long _bytesConsumed;
 
-        public static async Task<IJsonArrayPartReader> CreateAsync(Stream stream,
+        public static async ValueTask<IJsonArrayPartReader> CreateAsync(Stream stream,
             CancellationToken token,
             int size = TextConst.RawUtf8JsonPartReaderMinBuffer,
             bool disposeStream = false)
@@ -143,7 +143,23 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipArrayAsync(CancellationToken token)
         {
-            throw new NotImplementedException();
+            if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false))
+            {
+                await SkipWhiteSpaceWithVerifyAsync("]", token).ConfigureAwait(false);
+                while (_buffer[_current] != JsonConst.ArrayEndByte)
+                {
+                    await SkipUntilNextRawAsync(token).ConfigureAwait(false);
+                    await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ObjectEndByte,
+                            "array",
+                            "',' or ']' (but not ',]')",
+                            token)
+                        .ConfigureAwait(false);
+                }
+                await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
+                return;
+            }
+            throw new JsonParsingException($"Reached end, unable to find valid JSON end-array (']'). " +
+                                           $"0-Based Position = {Distance}.");
         }
 
         private async ValueTask SkipObjectAsync(CancellationToken token)
@@ -155,16 +171,53 @@ namespace DevFast.Net.Text.Json.Utf8
                 {
                     if (_buffer[_current] != JsonConst.StringQuoteByte)
                     {
-                        throw new JsonParsingException($"Reached end, unable to find valid JSON end-object ('}}'). " +
-                                                       $"0-Based Position = {Distance}.");
+                        throw new JsonParsingException($"Invalid byte value for start of Object Property Name. " +
+                            $"Expected = {JsonConst.StringQuoteByte}, " +
+                            $"Found = {_buffer[_current]}, " +
+                            $"0-Based Position = {Distance}.");
                     }
                     await SkipStringAsync(token).ConfigureAwait(false);
-
+                    await SkipWhiteSpaceWithVerifyAsync(":", token).ConfigureAwait(false);
+                    _current--;
+                    await NextExpectedOrThrowAsync(JsonConst.NameSeparatorByte, token, "Object property").ConfigureAwait(false);
+                    await SkipWhiteSpaceWithVerifyAsync("Object property value", token).ConfigureAwait(false);
+                    await SkipUntilNextRawAsync(token).ConfigureAwait(false);
+                    await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ObjectEndByte,
+                            "Object property",
+                            "',' or '}' (but not ',}')",
+                            token)
+                        .ConfigureAwait(false);
                 }
                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
+                return;
             }
             throw new JsonParsingException($"Reached end, unable to find valid JSON end-object ('}}'). " +
                                            $"0-Based Position = {Distance}.");
+        }
+
+        private async ValueTask ReadIsValueSeparationOrEndWithVerifyAsync(byte end, string partOf, string expected, CancellationToken token)
+        {
+            if (await ReadIsValueSeparationOrEndAsync(end, token).ConfigureAwait(false)) return;
+            if (InRange)
+            {
+                throw new JsonParsingException($"Invalid byte value for '{partOf}'. " +
+                    $"Expected = {expected}, " +
+                    $"Found = {_buffer[_current]}, " +
+                    $"0-Based Position = {Distance}.");
+            }
+            throw new JsonParsingException($"Reached end, unable to find '{end}'. " +
+                                           $"0-Based Position = {Distance}.");
+        }
+
+        private async ValueTask<bool> ReadIsValueSeparationOrEndAsync(byte end, CancellationToken token)
+        {
+            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+            if (!InRange) return false;
+            if (_buffer[_current] == end) return true;
+            if (_buffer[_current] != JsonConst.ValueSeparatorByte) return false;
+            _current++;
+            await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+            return InRange && _buffer[_current] != end;
         }
 
         private async ValueTask SkipStringAsync(CancellationToken token)
@@ -404,7 +457,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask<bool> TryIncreasingBufferAsync(CancellationToken token)
         {
-            if(_stream == null) return false;
+            if (_stream == null) return false;
             if (_end == _buffer.Length) _buffer = _buffer.DoubleByteCapacity();
             return await FillBufferAsync(token).ConfigureAwait(false);
         }
