@@ -1,10 +1,17 @@
-﻿namespace DevFast.Net.Text.Json
+﻿using DevFast.Net.Text.Json.Utf8;
+
+namespace DevFast.Net.Text.Json
 {
     /// <summary>
     /// Static class holding constant or fixed values for JSON text processing.
     /// </summary>
     public static class JsonConst
     {
+        /// <summary>
+        /// Minimum buffer size of <see cref="AsyncUtf8JsonArrayPartReader"/>.
+        /// </summary>
+        public const int RawUtf8JsonPartReaderMinBuffer = 512;
+
         /// <summary>
         /// JSON Begin-Array ('[') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>

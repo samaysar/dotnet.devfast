@@ -11,11 +11,6 @@ namespace DevFast.Net.Text
         /// <summary>
         /// Instance of <see cref="Encoding.UTF8"/> encoding which will not emit BOM.
         /// </summary>
-        public static readonly Encoding Utf8NoBom = new UTF8Encoding(false);
-
-        /// <summary>
-        /// Minimum buffer size of <see cref="AsyncUtf8JsonArrayPartReader"/>.
-        /// </summary>
-        public const int RawUtf8JsonPartReaderMinBuffer = 2048;
+        public static readonly Encoding Utf8NoBom = new UTF8Encoding(false);        
     }
 }

@@ -10,7 +10,6 @@ namespace DevFast.Net.Text.Tests
             {
                 That(TextConst.Utf8NoBom.GetPreamble(), Is.Empty);
                 That(TextConst.Utf8NoBom.EncodingName, Is.EqualTo("Unicode (UTF-8)"));
-                That(TextConst.RawUtf8JsonPartReaderMinBuffer, Is.EqualTo(2 * 1024));
             });
         }
     }

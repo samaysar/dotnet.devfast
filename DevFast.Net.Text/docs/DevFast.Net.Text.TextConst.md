@@ -9,7 +9,6 @@ Static class holding constant or fixed values for text processing.
 public static class TextConst
 ```
 - *Fields*
-  - **[RawUtf8JsonPartReaderMinBuffer](DevFast.Net.Text.TextConst.md#DevFast.Net.Text.TextConst.RawUtf8JsonPartReaderMinBuffer 'DevFast.Net.Text.TextConst.RawUtf8JsonPartReaderMinBuffer')**
   - **[Utf8NoBom](DevFast.Net.Text.TextConst.md#DevFast.Net.Text.TextConst.Utf8NoBom 'DevFast.Net.Text.TextConst.Utf8NoBom')**
 
 ## TextConst Class
@@ -22,19 +21,6 @@ public static class TextConst
 
 Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object') &#129106; TextConst
 ### Fields
-
-<a name='DevFast.Net.Text.TextConst.RawUtf8JsonPartReaderMinBuffer'></a>
-
-## TextConst.RawUtf8JsonPartReaderMinBuffer Field
-
-Minimum buffer size of [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader').
-
-```csharp
-public const int RawUtf8JsonPartReaderMinBuffer = 2048;
-```
-
-#### Field Value
-[System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
 
 <a name='DevFast.Net.Text.TextConst.Utf8NoBom'></a>
 

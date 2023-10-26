@@ -8,6 +8,7 @@
         {
             Multiple(() =>
             {
+                That(JsonConst.RawUtf8JsonPartReaderMinBuffer, Is.EqualTo(512));
                 That(JsonConst.ArrayBeginByte, Is.EqualTo(0x5B));
                 That(JsonConst.ArrayEndByte, Is.EqualTo(0x5D));
                 That(JsonConst.ObjectBeginByte, Is.EqualTo(0x7B));

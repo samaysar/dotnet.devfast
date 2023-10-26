@@ -39,6 +39,7 @@ public static class JsonConst
   - **[ObjectBeginByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ObjectBeginByte 'DevFast.Net.Text.Json.JsonConst.ObjectBeginByte')**
   - **[ObjectEndByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ObjectEndByte 'DevFast.Net.Text.Json.JsonConst.ObjectEndByte')**
   - **[PlusSignByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.PlusSignByte 'DevFast.Net.Text.Json.JsonConst.PlusSignByte')**
+  - **[RawUtf8JsonPartReaderMinBuffer](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.RawUtf8JsonPartReaderMinBuffer 'DevFast.Net.Text.Json.JsonConst.RawUtf8JsonPartReaderMinBuffer')**
   - **[ReverseSlashByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ReverseSlashByte 'DevFast.Net.Text.Json.JsonConst.ReverseSlashByte')**
   - **[SecondOfHexDigitInStringByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.SecondOfHexDigitInStringByte 'DevFast.Net.Text.Json.JsonConst.SecondOfHexDigitInStringByte')**
   - **[SpaceByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.SpaceByte 'DevFast.Net.Text.Json.JsonConst.SpaceByte')**
@@ -445,6 +446,19 @@ public const byte PlusSignByte = 43;
 
 #### Field Value
 [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')
+
+<a name='DevFast.Net.Text.Json.JsonConst.RawUtf8JsonPartReaderMinBuffer'></a>
+
+## JsonConst.RawUtf8JsonPartReaderMinBuffer Field
+
+Minimum buffer size of [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader').
+
+```csharp
+public const int RawUtf8JsonPartReaderMinBuffer = 512;
+```
+
+#### Field Value
+[System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
 
 <a name='DevFast.Net.Text.Json.JsonConst.ReverseSlashByte'></a>
 
