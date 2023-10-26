@@ -91,6 +91,18 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="ensureEoj"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public IAsyncEnumerable<byte[]> EnumerateRawJsonArrayElementAsync(bool ensureEoj, CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
         public async ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token)
@@ -106,6 +118,28 @@ namespace DevFast.Net.Text.Json.Utf8
         public async ValueTask<bool> ReadIsEndArrayAsync(CancellationToken token)
         {
             return await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public ValueTask<bool> ReadIsEndArrayOrEndOfJsonAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public ValueTask ReadIsEndArrayWithEndOfJsonVerifyAsync(CancellationToken token)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -505,8 +539,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask<bool> FillBufferAsync(CancellationToken token)
         {
-            Debug.Assert(_stream != null);
-            var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
+            var end = await _stream!.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
             if (end == 0)
             {
                 await DisposeStreamAsync().ConfigureAwait(false);

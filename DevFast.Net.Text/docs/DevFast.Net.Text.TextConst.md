@@ -27,7 +27,7 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 
 ## TextConst.RawUtf8JsonPartReaderMinBuffer Field
 
-Minimum buffer size of [Utf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.Utf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.Utf8JsonArrayPartReader').
+Minimum buffer size of [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader').
 
 ```csharp
 public const int RawUtf8JsonPartReaderMinBuffer = 2048;

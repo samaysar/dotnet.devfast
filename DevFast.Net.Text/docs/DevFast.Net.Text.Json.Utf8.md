@@ -4,4 +4,4 @@
 
 | Classes | |
 | :--- | :--- |
-| [Utf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.Utf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.Utf8JsonArrayPartReader') | |
+| [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader') | |
