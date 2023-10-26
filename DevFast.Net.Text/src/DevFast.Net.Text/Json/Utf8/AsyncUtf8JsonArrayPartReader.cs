@@ -4,7 +4,10 @@ using System.Text;
 
 namespace DevFast.Net.Text.Json.Utf8
 {
-    internal sealed class Utf8JsonArrayPartReader : IJsonArrayPartReader
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class AsyncUtf8JsonArrayPartReader : IAsyncJsonArrayPartReader
     {
         private readonly bool _disposeStream;
         Stream? _stream;
@@ -12,7 +15,15 @@ namespace DevFast.Net.Text.Json.Utf8
         int _begin, _end, _current;
         long _bytesConsumed;
 
-        public static async ValueTask<IJsonArrayPartReader> CreateAsync(Stream stream,
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="token"></param>
+        /// <param name="size"></param>
+        /// <param name="disposeStream"></param>
+        /// <returns></returns>
+        public static async ValueTask<IAsyncJsonArrayPartReader> CreateAsync(Stream stream,
             CancellationToken token,
             int size = TextConst.RawUtf8JsonPartReaderMinBuffer,
             bool disposeStream = false)
@@ -28,10 +39,10 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 begin = 3;
             }
-            return new Utf8JsonArrayPartReader(stream, buffer, begin, end, disposeStream);
+            return new AsyncUtf8JsonArrayPartReader(stream, buffer, begin, end, disposeStream);
         }
 
-        private Utf8JsonArrayPartReader(Stream stream, byte[] buffer, int begin, int end, bool disposeStream)
+        private AsyncUtf8JsonArrayPartReader(Stream stream, byte[] buffer, int begin, int end, bool disposeStream)
         {
             _stream = stream;
             _buffer = buffer;
@@ -41,11 +52,26 @@ namespace DevFast.Net.Text.Json.Utf8
             _disposeStream = disposeStream;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool EndOfJson => _stream == null && _current == _end;
-        public byte Current => _buffer[_end];
-        private long Distance => _bytesConsumed + (_current - _begin);
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte? Current => EndOfJson ? null : _buffer[_current];
+        /// <summary>
+        /// 
+        /// </summary>
+        public long Distance => _bytesConsumed + (_current - _begin);
         private bool InRange => _current < _end;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
         public async ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
         {
             if (!await ReadIsBeginArrayAsync(token).ConfigureAwait(false))
@@ -62,38 +88,56 @@ namespace DevFast.Net.Text.Json.Utf8
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token)
         {
             return await ReadIsGivenByteAsync(JsonConst.ArrayBeginByte, token).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async ValueTask<bool> ReadIsEndArrayAsync(CancellationToken token)
         {
             return await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="withVerify"></param>
+        /// <returns></returns>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
         public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token, bool withVerify = true)
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
             await ReDefineBufferAsync(0, token).ConfigureAwait(false);
-            if (!InRange) return Array.Empty<byte>();
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return Array.Empty<byte>();
             await SkipUntilNextRawAsync(token).ConfigureAwait(false);
             var currentRaw = new byte[_current - _begin];
             _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
             //We want to intentionally keep 'withVerify' after ',' check!
             //to either validate everything or nothing
-            if (await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false) ||
-                !withVerify ||
-                await ReadIsEndArrayAsync(token).ConfigureAwait(false)) return currentRaw;
-            if (InRange)
+            if(withVerify)
             {
-                throw new JsonArrayPartParsingException($"Invalid byte value when parsing JSON element inside a JSON Array. " +
-                                               $"Expected = {JsonConst.ValueSeparatorByte} or {JsonConst.ArrayEndByte}, " +
-                                               $"Found = {_buffer[_current]}, " +
-                                               $"0-Based Position = {Distance}.");
+                await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ArrayEndByte,
+                        "array",
+                        "',' or ']' (but not ',]')",
+                        token)
+                    .ConfigureAwait(false);
             }
-            throw new JsonArrayPartParsingException("Reached end, unable to find JSON end-array." +
-                                           $"0-Based Position = {Distance}.");
+            else
+            {
+                await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false);
+            }
+            return currentRaw;            
         }
 
         private async ValueTask SkipUntilNextRawAsync(CancellationToken token)
@@ -146,7 +190,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 while (_buffer[_current] != JsonConst.ArrayEndByte)
                 {
                     await SkipUntilNextRawAsync(token).ConfigureAwait(false);
-                    await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ObjectEndByte,
+                    await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ArrayEndByte,
                             "array",
                             "',' or ']' (but not ',]')",
                             token)
@@ -465,7 +509,7 @@ namespace DevFast.Net.Text.Json.Utf8
             var end = await _stream.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).ConfigureAwait(false);
             if (end == 0)
             {
-                _stream = null;
+                await DisposeStreamAsync().ConfigureAwait(false);
                 return false;
             }
 
@@ -480,7 +524,16 @@ namespace DevFast.Net.Text.Json.Utf8
             _begin = _current;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async ValueTask DisposeAsync()
+        {
+            await DisposeStreamAsync().ConfigureAwait(false);
+        }
+
+        private async ValueTask DisposeStreamAsync()
         {
             if (_stream != null && _disposeStream) await _stream.DisposeAsync().ConfigureAwait(false);
             _stream = null;

@@ -12,7 +12,44 @@ public interface IJsonArrayPartReader :
 System.IAsyncDisposable
 ```
 
+Derived  
+&#8627; [Utf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.Utf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.Utf8JsonArrayPartReader')
+
 Implements [System.IAsyncDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable 'System.IAsyncDisposable')
+### Properties
+
+<a name='DevFast.Net.Text.Json.IJsonArrayPartReader.Current'></a>
+
+## IJsonArrayPartReader.Current Property
+
+```csharp
+System.Nullable<byte> Current { get; }
+```
+
+#### Property Value
+[System.Nullable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1 'System.Nullable`1')[System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Nullable-1 'System.Nullable`1')
+
+<a name='DevFast.Net.Text.Json.IJsonArrayPartReader.Distance'></a>
+
+## IJsonArrayPartReader.Distance Property
+
+```csharp
+long Distance { get; }
+```
+
+#### Property Value
+[System.Int64](https://docs.microsoft.com/en-us/dotnet/api/System.Int64 'System.Int64')
+
+<a name='DevFast.Net.Text.Json.IJsonArrayPartReader.EndOfJson'></a>
+
+## IJsonArrayPartReader.EndOfJson Property
+
+```csharp
+bool EndOfJson { get; }
+```
+
+#### Property Value
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 ### Methods
 
 <a name='DevFast.Net.Text.Json.IJsonArrayPartReader.GetCurrentRawAsync(System.Threading.CancellationToken,bool)'></a>

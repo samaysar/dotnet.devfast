@@ -27,8 +27,4 @@
     <ProjectReference Include="..\DevFast.Net.Text\DevFast.Net.Text.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Json\Utf8\" />
-  </ItemGroup>
-
 </Project>

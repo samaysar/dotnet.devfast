@@ -14,7 +14,7 @@ namespace DevFast.Net.Text
         public static readonly Encoding Utf8NoBom = new UTF8Encoding(false);
 
         /// <summary>
-        /// Minimum buffer size of <see cref="Utf8JsonArrayPartReader"/>.
+        /// Minimum buffer size of <see cref="AsyncUtf8JsonArrayPartReader"/>.
         /// </summary>
         public const int RawUtf8JsonPartReaderMinBuffer = 2048;
     }
