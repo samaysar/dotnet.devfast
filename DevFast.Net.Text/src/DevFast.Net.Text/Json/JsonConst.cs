@@ -58,17 +58,17 @@
         /// <summary>
         /// JSON 'b' character (to identify backspace '\b' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
-        public const byte BackspaceInStringByte = (byte)'b';
+        public const byte LastOfBackspaceInStringByte = (byte)'b';
 
         /// <summary>
         /// JSON 'r' character (can be used to identify 'r' in 'true' literal or identify backspace '\r' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
-        public const byte CarriageReturnInStringByte = (byte)'r';
+        public const byte LastOfCarriageReturnInStringByte = (byte)'r';
 
         /// <summary>
         /// JSON 'u' character (can be used to identify 'u' in 'true' literal, 'u' in 'null' literal or to identify Hex-Digits '\uXXXX' in JSON string along with <see cref="ReverseSlashByte"/>), as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
         /// </summary>
-        public const byte HexDigitInStringByte = (byte)'u';
+        public const byte SecondOfHexDigitInStringByte = (byte)'u';
 
         /// <summary>
         /// JSON Minus Sign ('-') character, as in numeric values, as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).
@@ -146,9 +146,9 @@
         public const byte Number0Byte = (byte)'0';
 
         /// <summary>
-        /// JSON single line comment's slash ('/', a.k.a. Solidus) character value as <see cref="byte"/>.
+        /// JSON forward slash ('/', a.k.a. Solidus), to identify single line comment, character value as <see cref="byte"/>.
         /// </summary>
-        public const byte CommentSlashByte = (byte)'/';
+        public const byte ForwardSlashByte = (byte)'/';
 
         /// <summary>
         /// JSON escape ('\', a.k.a. Reverse Solidus) character value as <see cref="byte"/>.
@@ -156,9 +156,9 @@
         public const byte ReverseSlashByte = (byte)'\\';
 
         /// <summary>
-        /// JSON multi-line comment's asterisk ('*') character value as <see cref="byte"/>.
+        /// JSON asterisk ('*'), to identify multi-line comment, character value as <see cref="byte"/>.
         /// </summary>
-        public const byte CommentAsteriskByte = (byte)'*';
+        public const byte AsteriskByte = (byte)'*';
 
         /// <summary>
         /// JSON space (' ') character value as <see cref="byte"/> (based on https://datatracker.ietf.org/doc/html/rfc7159).

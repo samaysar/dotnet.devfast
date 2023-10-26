@@ -16,6 +16,6 @@ namespace DevFast.Net.Text
         /// <summary>
         /// Minimum buffer size of <see cref="Utf8JsonArrayPartReader"/>.
         /// </summary>
-        internal const int RawUtf8JsonPartReaderMinBuffer = 1024;        
+        public const int RawUtf8JsonPartReaderMinBuffer = 2048;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using DevFast.Net.Extensions.SystemTypes;
 using System.Diagnostics;
 using System.Text;
-using Utf8Json;
 
 namespace DevFast.Net.Text.Json.Utf8
 {
@@ -53,12 +52,12 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 if (InRange)
                 {
-                    throw new JsonParsingException("Invalid byte value for JSON begin-array. " +
+                    throw new JsonArrayPartParsingException("Invalid byte value for JSON begin-array. " +
                                                    $"Expected = {JsonConst.ArrayBeginByte}, " +
                                                    $"Found = {_buffer[_current]}, " +
                                                    $"0-Based Position = {Distance}.");
                 }
-                throw new JsonParsingException("Reached end, unable to find JSON begin-array." +
+                throw new JsonArrayPartParsingException("Reached end, unable to find JSON begin-array." +
                                                $"0-Based Position = {Distance}.");
             }
         }
@@ -88,12 +87,12 @@ namespace DevFast.Net.Text.Json.Utf8
                 await ReadIsEndArrayAsync(token).ConfigureAwait(false)) return currentRaw;
             if (InRange)
             {
-                throw new JsonParsingException($"Invalid byte value when parsing JSON element inside a JSON Array. " +
+                throw new JsonArrayPartParsingException($"Invalid byte value when parsing JSON element inside a JSON Array. " +
                                                $"Expected = {JsonConst.ValueSeparatorByte} or {JsonConst.ArrayEndByte}, " +
                                                $"Found = {_buffer[_current]}, " +
                                                $"0-Based Position = {Distance}.");
             }
-            throw new JsonParsingException("Reached end, unable to find JSON end-array." +
+            throw new JsonArrayPartParsingException("Reached end, unable to find JSON end-array." +
                                            $"0-Based Position = {Distance}.");
         }
 
@@ -133,7 +132,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     await SkipNullAsync(token).ConfigureAwait(false);
                     break;
                 default:
-                    throw new JsonParsingException($"Invalid byte value for start of JSON element. " +
+                    throw new JsonArrayPartParsingException($"Invalid byte value for start of JSON element. " +
                                                    $"Found = {_buffer[_current]}, " +
                                                    $"0-Based Position = {Distance}.");
             }
@@ -156,7 +155,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
                 return;
             }
-            throw new JsonParsingException($"Reached end, unable to find valid JSON end-array (']'). " +
+            throw new JsonArrayPartParsingException($"Reached end, unable to find valid JSON end-array (']'). " +
                                            $"0-Based Position = {Distance}.");
         }
 
@@ -169,7 +168,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 {
                     if (_buffer[_current] != JsonConst.StringQuoteByte)
                     {
-                        throw new JsonParsingException($"Invalid byte value for start of Object Property Name. " +
+                        throw new JsonArrayPartParsingException($"Invalid byte value for start of Object Property Name. " +
                             $"Expected = {JsonConst.StringQuoteByte}, " +
                             $"Found = {_buffer[_current]}, " +
                             $"0-Based Position = {Distance}.");
@@ -189,7 +188,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
                 return;
             }
-            throw new JsonParsingException($"Reached end, unable to find valid JSON end-object ('}}'). " +
+            throw new JsonArrayPartParsingException($"Reached end, unable to find valid JSON end-object ('}}'). " +
                                            $"0-Based Position = {Distance}.");
         }
 
@@ -198,12 +197,12 @@ namespace DevFast.Net.Text.Json.Utf8
             if (await ReadIsValueSeparationOrEndAsync(end, token).ConfigureAwait(false)) return;
             if (InRange)
             {
-                throw new JsonParsingException($"Invalid byte value for '{partOf}'. " +
+                throw new JsonArrayPartParsingException($"Invalid byte value for '{partOf}'. " +
                     $"Expected = {expected}, " +
                     $"Found = {_buffer[_current]}, " +
                     $"0-Based Position = {Distance}.");
             }
-            throw new JsonParsingException($"Reached end, unable to find '{end}'. " +
+            throw new JsonArrayPartParsingException($"Reached end, unable to find '{end}'. " +
                                            $"0-Based Position = {Distance}.");
         }
 
@@ -230,15 +229,15 @@ namespace DevFast.Net.Text.Json.Utf8
                             switch (_buffer[_current])
                             {
                                 case JsonConst.ReverseSlashByte:
-                                case JsonConst.CommentSlashByte:
+                                case JsonConst.ForwardSlashByte:
                                 case JsonConst.StringQuoteByte:
-                                case JsonConst.BackspaceInStringByte:
+                                case JsonConst.LastOfBackspaceInStringByte:
                                 case JsonConst.FirstOfFalseByte:
                                 case JsonConst.FirstOfNullByte:
                                 case JsonConst.FirstOfTrueByte:
-                                case JsonConst.CarriageReturnInStringByte:
+                                case JsonConst.LastOfCarriageReturnInStringByte:
                                     continue;
-                                case JsonConst.HexDigitInStringByte:
+                                case JsonConst.SecondOfHexDigitInStringByte:
                                     //We do not care if it is NOT a valid hex code
                                     //Json Serializer will do its work! we just skip 4 bytes!
                                     if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
@@ -249,31 +248,31 @@ namespace DevFast.Net.Text.Json.Utf8
                                         _current--;
                                         continue;
                                     }
-                                    throw new JsonParsingException($"Reached end, unable to find valid HEX-DIGITs. " +
+                                    throw new JsonArrayPartParsingException($"Reached end, unable to find valid HEX-DIGITs. " +
                                                                    $"0-Based Position = {Distance}.");
                                 default:
-                                    throw new JsonParsingException($"Bad JSON escape. " +
+                                    throw new JsonArrayPartParsingException($"Bad JSON escape. " +
                                         $"Expected = \\{JsonConst.ReverseSlashByte} or " +
-                                        $"\\{JsonConst.CommentSlashByte} or " +
+                                        $"\\{JsonConst.ForwardSlashByte} or " +
                                         $"\\{JsonConst.StringQuoteByte} or " +
-                                        $"\\{JsonConst.BackspaceInStringByte} or " +
+                                        $"\\{JsonConst.LastOfBackspaceInStringByte} or " +
                                         $"\\{JsonConst.FirstOfFalseByte} or " +
                                         $"\\{JsonConst.FirstOfNullByte} or " +
                                         $"\\{JsonConst.FirstOfTrueByte} or " +
-                                        $"\\{JsonConst.CarriageReturnInStringByte} or " +
-                                        $"\\{JsonConst.HexDigitInStringByte}XXXX, " +
+                                        $"\\{JsonConst.LastOfCarriageReturnInStringByte} or " +
+                                        $"\\{JsonConst.SecondOfHexDigitInStringByte}XXXX, " +
                                         $"Found = \\{_buffer[_current]}, " +
                                         $"0-Based Position = {Distance}.");
                             }
                         }
-                        throw new JsonParsingException($"Reached end, unable to find valid escape character. " +
+                        throw new JsonArrayPartParsingException($"Reached end, unable to find valid escape character. " +
                                                        $"0-Based Position = {Distance}.");
                     case JsonConst.StringQuoteByte:
                         await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
                         return;
                 }
             }
-            throw new JsonParsingException($"Reached end, unable to find end-of-string quote '\"'. " +
+            throw new JsonArrayPartParsingException($"Reached end, unable to find end-of-string quote '\"'. " +
                                            $"0-Based Position = {Distance}.");
         }
 
@@ -309,8 +308,8 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipTrueAsync(CancellationToken token)
         {
-            await NextExpectedOrThrowAsync(JsonConst.CarriageReturnInStringByte, token, "true literal").ConfigureAwait(false);
-            await NextExpectedOrThrowAsync(JsonConst.HexDigitInStringByte, token, "true literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync(JsonConst.LastOfCarriageReturnInStringByte, token, "true literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync(JsonConst.SecondOfHexDigitInStringByte, token, "true literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync(JsonConst.ExponentLowerByte, token, "true literal").ConfigureAwait(false);
             await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
         }
@@ -326,7 +325,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipNullAsync(CancellationToken token)
         {
-            await NextExpectedOrThrowAsync(JsonConst.HexDigitInStringByte, token, "null literal").ConfigureAwait(false);
+            await NextExpectedOrThrowAsync(JsonConst.SecondOfHexDigitInStringByte, token, "null literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
             await NextExpectedOrThrowAsync((byte)'l', token, "null literal").ConfigureAwait(false);
             await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
@@ -337,12 +336,12 @@ namespace DevFast.Net.Text.Json.Utf8
             if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) && _buffer[_current] == expected) return;
             if (InRange)
             {
-                throw new JsonParsingException($"Invalid byte value while parsing '{partOf}'. " +
+                throw new JsonArrayPartParsingException($"Invalid byte value while parsing '{partOf}'. " +
                                                $"Expected = {expected}, " +
                                                $"Found = {_buffer[_current]}, " +
                                                $"0-Based Position = {Distance}.");
             }
-            throw new JsonParsingException($"Reached end while parsing '{partOf}'. " +
+            throw new JsonArrayPartParsingException($"Reached end while parsing '{partOf}'. " +
                                            $"Expected = {expected}, " +
                                            $"0-Based Position = {Distance}.");
         }
@@ -359,7 +358,7 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
             if (!InRange)
-                throw new JsonParsingException($"Reached end, expected to find '{jsonToken}'. " +
+                throw new JsonArrayPartParsingException($"Reached end, expected to find '{jsonToken}'. " +
                                                $"0-Based Position = {Distance}.");
         }
 
@@ -375,10 +374,10 @@ namespace DevFast.Net.Text.Json.Utf8
                     case JsonConst.CarriageReturnByte:
                         await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
                         continue;
-                    case JsonConst.CommentSlashByte:
+                    case JsonConst.ForwardSlashByte:
                         if (!await NextWithEnsureCapacityAsync(token).ConfigureAwait(false))
                         {
-                            throw new JsonParsingException("Reached end. " +
+                            throw new JsonArrayPartParsingException("Reached end. " +
                                                            "Can not find correct comment format " +
                                                            "(neither single line comment token '//' " +
                                                            "nor multi-line comment token '/*').");
@@ -394,7 +393,7 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             switch (_buffer[_current])
             {
-                case JsonConst.CommentSlashByte:
+                case JsonConst.ForwardSlashByte:
                     while (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false))
                     {
                         if (_buffer[_current] == JsonConst.CarriageReturnByte || _buffer[_current] == JsonConst.NewLineByte)
@@ -404,15 +403,15 @@ namespace DevFast.Net.Text.Json.Utf8
                         }
                     }
 
-                    throw new JsonParsingException("Reached end. " +
+                    throw new JsonArrayPartParsingException("Reached end. " +
                                                    "Can not find end token of single line comment(\r or \n).");
-                case JsonConst.CommentAsteriskByte:
+                case JsonConst.AsteriskByte:
                     while (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false))
                     {
-                        if (_buffer[_current] == JsonConst.CommentAsteriskByte)
+                        if (_buffer[_current] == JsonConst.AsteriskByte)
                         {
                             if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
-                                _buffer[_current] == JsonConst.CommentSlashByte)
+                                _buffer[_current] == JsonConst.ForwardSlashByte)
                             {
                                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false);
                                 return;
@@ -420,10 +419,10 @@ namespace DevFast.Net.Text.Json.Utf8
                             _current--;
                         }
                     }
-                    throw new JsonParsingException("Reached end. " +
+                    throw new JsonArrayPartParsingException("Reached end. " +
                                                    "Can not find end token of multi line comment(*/).");
                 default:
-                    throw new JsonParsingException("Can not find correct comment format " +
+                    throw new JsonArrayPartParsingException("Can not find correct comment format " +
                                                    "(neither single line comment token '//' nor multi-line comment token '/*'). " +
                                                    $"0-Based Position = {Distance}.");
             }
