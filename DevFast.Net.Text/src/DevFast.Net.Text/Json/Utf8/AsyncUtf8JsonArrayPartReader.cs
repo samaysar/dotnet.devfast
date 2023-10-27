@@ -7,18 +7,9 @@ namespace DevFast.Net.Text.Json.Utf8
     /// Class implementing <see cref="IAsyncJsonArrayPartReader"/> for standard Utf-8 JSON data encoding
     /// based on https://datatracker.ietf.org/doc/html/rfc7159 (grammar shown at https://www.json.org/json-en.html).
     /// <para>
-    /// Current implementation parses following two (2) types and three (3) literal values 'null', 'true', 'false' without any validation:
-    /// </para>
-    /// <para>
-    /// 1. Unicode code-points values (i.e. in \uXXXX, X can be any valid byte value).
-    /// </para>
-    /// 2. Numeric values (both 2.0e-1+10 and 2.0Ee10 will be parsed as Numeric values without error).
-    /// <para>
-    /// The main reason to ignore validation is that such error MUST be thrown during deserialization.
-    /// Also, to keep the code simple and faster.
-    /// </para>
     /// This implementation support both single line comments (starting with '//' and ending in either Carriage return '\r'
     /// or newline '\n') and multiline comments (starting with '/*' and ending with '*/').
+    /// </para>
     /// </summary>
     public sealed class AsyncUtf8JsonArrayPartReader : IAsyncJsonArrayPartReader
     {
