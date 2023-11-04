@@ -7,28 +7,28 @@
     public enum JsonType
     {
         /// <summary>
-        /// Absence of any other Json types. Normally represents end of JSON data or absence of value.
+        /// Absence of any other JSON types. Normally represents end of JSON data or absence of value.
         /// </summary>
         Nothing = 0,
         /// <summary>
-        /// Json object containing everything including and in-between '{' and '}'.
+        /// JSON object containing everything including &amp; in-between '{' and '}'.
         /// </summary>
         Obj = 1,
         /// <summary>
-        /// Array/collection of other JSON types (see <see cref="Array"/>).
+        /// Array/collection of other JSON types, containing everything including &amp; in-between '[' and ']'.
         /// </summary>
         Arr = 2,
         /// <summary>
-        /// Numerical values (see <see cref="int"/>, <see cref="long"/>, <see cref="double"/>, <see cref="decimal"/> etc.).
+        /// JSON numerical values defined as 'integer fraction exponent'. See https://www.json.org/json-en.html.
         /// </summary>
         Num = 3,
         /// <summary>
-        /// Text value containing everything including and in-between '"' and '"' (see <see cref="string"/>).
+        /// JSON string value containing everything including and in-between '"' and '"'.
         /// </summary>
         Str = 4,
-        /// <summary>JSON 'true' or 'false' literal (see <see cref="bool"/>).</summary>
+        /// <summary>JSON 'true' or 'false' literal.</summary>
         Bool = 5,
-        /// <summary>JSON 'null' literal (NOT same as <see cref="Nothing"/>, see <see langword="null"/>).</summary>
+        /// <summary>JSON 'null' literal (NOT same as <see cref="Nothing"/>).</summary>
         Null = 6
     }
 }

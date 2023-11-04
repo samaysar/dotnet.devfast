@@ -13,10 +13,10 @@
                 That(typeValues.Length, Is.EqualTo(7));
                 var pos = 0;
                 That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Nothing"));
-                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Obj"));
-                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Arr"));
-                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Num"));
-                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Str"));
+                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Object"));
+                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Array"));
+                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Number"));
+                That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("String"));
                 That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Bool"));
                 That(typeValues.GetValue(pos)!.ToString(), Is.EqualTo("Null"));
             });

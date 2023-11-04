@@ -1,4 +1,5 @@
 ﻿using DevFast.Net.Extensions.SystemTypes;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace DevFast.Net.Text.Json.Utf8
@@ -79,10 +80,13 @@ namespace DevFast.Net.Text.Json.Utf8
         private bool InRange => _current < _end;
 
         /// <summary>
-        /// 
+        /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it checks
+        /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances 
+        /// its current position to next <see cref="byte"/> in the sequence or to end of JSON. If the value does NOT match,
+        /// reader position is maintained on the current byte and an error 
+        /// (of type <see cref="JsonArrayPartParsingException"/>) is thrown.
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
+        /// <param name="token">Cancellation token to observe</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
         public async ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
         {
@@ -101,15 +105,32 @@ namespace DevFast.Net.Text.Json.Utf8
         }
 
         /// <summary>
-        /// 
+        /// Provides a convenient way to asynchronously enumerate over elements of a JSON array (one at a time).
+        /// For every iteration, such mechanism produces <see cref="RawJson"/>, where <see cref="RawJson.Value"/> represents
+        /// entire value-form (including structural characters, string quotes etc.) of such an individual
+        /// element &amp; <see cref="RawJson.Type"/> indicates underlying JSON element type. 
+        /// Any standard JSON serializer can be used to deserialize <see cref="RawJson.Value"/>
+        /// to obtain an instance of corresponding .Net type.
         /// </summary>
-        /// <param name="ensureEoj"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public IAsyncEnumerable<byte[]> EnumerateRawJsonArrayElementAsync(bool ensureEoj, CancellationToken token)
+        /// <param name="ensureEoj"><see langword="false"/> to ignore leftover JSON after <see cref="JsonConst.ArrayEndByte"/>.
+        /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
+        /// single line and multiline comments are allowed after <see cref="JsonConst.ArrayEndByte"/> until <see cref="EoJ"/>.</param>
+        /// <param name="token">Cancellation token to observe.</param>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
+        public async IAsyncEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj,
+            [EnumeratorCancellation] CancellationToken token)
         {
-            throw new NotImplementedException();
+            await ReadIsBeginArrayWithVerifyAsync(token).ConfigureAwait(false);
+            while (!await ReadIsEndArrayAsync(ensureEoj, token).ConfigureAwait(false))
+            {
+                var next = await GetCurrentRawAsync(token).ConfigureAwait(false);
+                if (next.Type == JsonType.Nothing)
+                {
+                    throw new JsonArrayPartParsingException($"Expected a valid JSON element or end of JSON array. " +
+                        $"0-Based Position = {Position}.");
+                }
+                yield return next;
+            }
         }
 
         /// <summary>
@@ -140,16 +161,15 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <param name="withVerify"></param>
         /// <returns></returns>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        public async ValueTask<byte[]> GetCurrentRawAsync(CancellationToken token, bool withVerify = true)
+        public async ValueTask<RawJson> GetCurrentRawAsync(CancellationToken token, bool withVerify = true)
         {
             await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
-            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return Array.Empty<byte>();
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Nothing, Array.Empty<byte>());
             await ReDefineBufferAsync(0, token).ConfigureAwait(false);
-            await SkipUntilNextRawAsync(token).ConfigureAwait(false);
+            var type = await SkipUntilNextRawAsync(token).ConfigureAwait(false);
             var currentRaw = new byte[_current - _begin];
             _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
-            //We want to intentionally keep 'withVerify' after ',' check!
-            //to either validate everything or nothing
+
             if(withVerify)
             {
                 await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ArrayEndByte,
@@ -162,22 +182,22 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 await ReadIsGivenByteAsync(JsonConst.ValueSeparatorByte, token).ConfigureAwait(false);
             }
-            return currentRaw;            
+            return new RawJson(type, currentRaw);
         }
 
-        private async ValueTask SkipUntilNextRawAsync(CancellationToken token)
+        private async ValueTask<JsonType> SkipUntilNextRawAsync(CancellationToken token)
         {
             switch (_buffer[_current])
             {
                 case JsonConst.ArrayBeginByte:
                     await SkipArrayAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Arr;
                 case JsonConst.ObjectBeginByte:
                     await SkipObjectAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Obj;
                 case JsonConst.StringQuoteByte:
                     await SkipStringAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Str;
                 case JsonConst.MinusSignByte:
                 case JsonConst.Number0Byte:
                 case JsonConst.Number1Byte:
@@ -190,16 +210,16 @@ namespace DevFast.Net.Text.Json.Utf8
                 case JsonConst.Number8Byte:
                 case JsonConst.Number9Byte:
                     await SkipNumberAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Num;
                 case JsonConst.FirstOfTrueByte:
                     await SkipRueOfTrueWithoutValidationAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Bool;
                 case JsonConst.FirstOfFalseByte:
                     await SkipAlseOfFalseWithoutValidationAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Bool;
                 case JsonConst.FirstOfNullByte:
                     await SkipUllOfNullWithoutValidationAsync(token).ConfigureAwait(false);
-                    break;
+                    return JsonType.Null;
                 default:
                     throw new JsonArrayPartParsingException($"Invalid byte value for start of JSON element. " +
                                                    $"Found = {_buffer[_current]}, " +

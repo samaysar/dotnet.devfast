@@ -6,7 +6,7 @@ namespace DevFast.Net.Text.Json
     /// Static class holding constant or fixed values for JSON text processing.
     /// </summary>
     public static class JsonConst
-    {
+    {        
         /// <summary>
         /// Minimum buffer size of <see cref="AsyncUtf8JsonArrayPartReader"/>.
         /// </summary>
