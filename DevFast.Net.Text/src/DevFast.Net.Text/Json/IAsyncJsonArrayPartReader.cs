@@ -79,10 +79,19 @@
         ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token);
 
         /// <summary>
-        /// 
+        /// Reads the current JSON element as <see cref="RawJson"/>. If reaches <see cref="EoJ"/> or
+        /// encounters <see cref="JsonConst.ArrayEndByte"/>, returned <see cref="RawJson.Type"/> is
+        /// <see cref="JsonType.Nothing"/>.
+        /// <para>
+        /// One should prefer <see cref="EnumerateRawJsonArrayElementAsync(bool, CancellationToken)"/>
+        /// to parse well-structured JSON stream over this method.
+        /// This method is to parse non-standard chain of JSON elements separated by ',' (or not).
+        /// </para>
         /// </summary>
-        /// <param name="token">Cancellation token to observe</param>
-        /// <param name="withVerify"></param>
+        /// <param name="token">Cancellation token to observe.</param>
+        /// <param name="withVerify"><see langword="true"/> to verify the presence of ',' or ']' (but not ',]')
+        /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
         ValueTask<RawJson> GetCurrentRawAsync(CancellationToken token, bool withVerify = true);
     }
 }

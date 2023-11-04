@@ -151,15 +151,33 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <returns></returns>
         public async ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token)
         {
-            return await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
+            var reply = await ReadIsGivenByteAsync(JsonConst.ArrayEndByte, token).ConfigureAwait(false);
+            if(ensureEoj && reply)
+            {
+                //we need to make sure only comments exists or we reached EOJ!
+                await SkipWhiteSpaceAsync(token).ConfigureAwait(false);
+                if(!EoJ)
+                {
+                    throw new JsonArrayPartParsingException($"Expected End Of JSON after encountering ']'. " +
+                                                            $"0-Based Position = {Position}.");
+                }
+            }
+            return reply;
         }
 
         /// <summary>
-        /// 
+        /// Reads the current JSON element as <see cref="RawJson"/>. If reaches <see cref="EoJ"/> or
+        /// encounters <see cref="JsonConst.ArrayEndByte"/>, returned <see cref="RawJson.Type"/> is
+        /// <see cref="JsonType.Nothing"/>.
+        /// <para>
+        /// One should prefer <see cref="EnumerateRawJsonArrayElementAsync(bool, CancellationToken)"/>
+        /// to parse well-structured JSON stream over this method.
+        /// This method is to parse non-standard chain of JSON elements separated by ',' (or not).
+        /// </para>
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="withVerify"></param>
-        /// <returns></returns>
+        /// <param name="token">Cancellation token to observe.</param>
+        /// <param name="withVerify"><see langword="true"/> to verify the presence of ',' or ']' (but not ',]')
+        /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
         public async ValueTask<RawJson> GetCurrentRawAsync(CancellationToken token, bool withVerify = true)
         {
@@ -396,7 +414,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipRueOfTrueWithoutValidationAsync(CancellationToken token)
         {
-            //JsonSerializer must handle validation!
+            //JsonSerializer must handle literal validation!
             //we skip 3 bytes
             if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
@@ -413,7 +431,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipAlseOfFalseWithoutValidationAsync(CancellationToken token)
         {
-            //JsonSerializer must handle validation!
+            //JsonSerializer must handle literal validation!
             //we skip 4 bytes
             if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
@@ -431,7 +449,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private async ValueTask SkipUllOfNullWithoutValidationAsync(CancellationToken token)
         {
-            //JsonSerializer must handle validation!
+            //JsonSerializer must handle literal validation!
             //we skip 3 bytes
             if (await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
                 await NextWithEnsureCapacityAsync(token).ConfigureAwait(false) &&
