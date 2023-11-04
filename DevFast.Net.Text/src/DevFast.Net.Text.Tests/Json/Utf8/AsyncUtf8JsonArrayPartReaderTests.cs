@@ -20,7 +20,9 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             {
                 That(await r.ReadIsBeginArrayAsync(default), Is.False);
                 That(await r.ReadIsEndArrayAsync(false, default), Is.False);
-                That(await r.GetCurrentRawAsync(default), Is.Empty);
+                var current = await r.GetCurrentRawAsync(default);
+                That(current.Value, Is.Empty);
+                That(current.Type, Is.EqualTo(JsonType.Nothing));
                 That(r.EoJ, Is.True);
                 That(r.Current, Is.Null);
                 That(r.Position, Is.EqualTo(withPreamble ? 3 : 0));
@@ -44,7 +46,9 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             {
                 That(await r.ReadIsBeginArrayAsync(default), Is.True);
                 That(await r.ReadIsBeginArrayAsync(default), Is.False);
-                That(await r.GetCurrentRawAsync(default), Is.Empty);
+                var current = await r.GetCurrentRawAsync(default);
+                That(current.Value, Is.Empty);
+                That(current.Type, Is.EqualTo(JsonType.Nothing));
                 That(r.EoJ, Is.False);
                 That(r.Current, Is.EqualTo(JsonConst.ArrayEndByte));
                 That(await r.ReadIsEndArrayAsync(true, default), Is.True);
