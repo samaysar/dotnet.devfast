@@ -26,11 +26,11 @@ namespace DevFast.Net.Extensions.Tests.SystemTypes
             var val = 0;
             var cts = new CancellationTokenSource();
             var token = cts.Token;
-            Func<int, CancellationToken, Task> lambda = (x, t) =>
+            Func<int, CancellationToken, ValueTask> lambda = (x, t) =>
             {
                 val = x;
                 That(t, Is.EqualTo(token));
-                return Task.CompletedTask;
+                return ValueTask.CompletedTask;
             };
             await new[] { 1 }.ForEachAsync(lambda, token).ConfigureAwait(false);
             That(val, Is.EqualTo(1));
@@ -42,17 +42,13 @@ namespace DevFast.Net.Extensions.Tests.SystemTypes
             var val = 1;
             var cts = new CancellationTokenSource();
             var token = cts.Token;
-            Func<int, CancellationToken, Task> lambda = (x, t) =>
+            Func<int, CancellationToken, ValueTask> lambda = (x, t) =>
             {
                 val = x;
                 That(t, Is.EqualTo(token));
-                return Task.CompletedTask;
+                return ValueTask.CompletedTask;
             };
-            await new[] { 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
-            {
-                await Task.CompletedTask;
-                return x;
-            }, token).ForEachAsync(lambda, token).ConfigureAwait(false);
+            await new[] { 1, 2, 3, 4 }.SelectAsync((x,_) => ValueTask.FromResult(x), token).ForEachAsync(lambda, token).ConfigureAwait(false);
             That(val, Is.EqualTo(4));
         }
 
@@ -62,10 +58,10 @@ namespace DevFast.Net.Extensions.Tests.SystemTypes
             var val = 1;
             var cts = new CancellationTokenSource();
             var token = cts.Token;
-            Func<int, CancellationToken, Task> lambda = (x, _) =>
+            Func<int, CancellationToken, ValueTask> lambda = (x, _) =>
             {
                 That(x, Is.EqualTo(val++));
-                return Task.CompletedTask;
+                return ValueTask.CompletedTask;
             };
             await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, t) =>
             {
@@ -82,10 +78,10 @@ namespace DevFast.Net.Extensions.Tests.SystemTypes
             var val = 2;
             var cts = new CancellationTokenSource();
             var token = cts.Token;
-            Func<int, CancellationToken, Task> lambda = (x, _) =>
+            Func<int, CancellationToken, ValueTask> lambda = (x, _) =>
             {
                 That(x, Is.EqualTo(val++));
-                return Task.CompletedTask;
+                return ValueTask.CompletedTask;
             };
             await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
             {
@@ -94,6 +90,18 @@ namespace DevFast.Net.Extensions.Tests.SystemTypes
             }, token).SelectAsync(async (x, t) =>
             {
                 await Task.CompletedTask;
+                That(t, Is.EqualTo(token));
+                return x + 1;
+            }, token).ForEachAsync(lambda, token).ConfigureAwait(false);
+            That(val, Is.EqualTo(7));
+
+            val = 2;
+            await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
+            {
+                await Task.CompletedTask;
+                return x + 1;
+            }, token).SelectAsync((x, t) =>
+            {
                 That(t, Is.EqualTo(token));
                 return x + 1;
             }, token).ForEachAsync(lambda, token).ConfigureAwait(false);
@@ -162,10 +170,64 @@ namespace DevFast.Net.Extensions.Tests.SystemTypes
             }, token).WhereAsync((x, t) =>
             {
                 That(t, Is.EqualTo(token));
-                return Task.FromResult(x > 3);
+                return ValueTask.FromResult(x > 3);
             }, token).ToListAsync(token).ConfigureAwait(false);
-            That(l, Has.Count.EqualTo(1));
-            That(l, Has.Member(4));
+            Multiple(() =>
+            {
+                That(l, Has.Count.EqualTo(1));
+                That(l, Has.Member(4));
+            });
+            l = await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
+            {
+                await Task.CompletedTask;
+                return x;
+            }, token).WhereAsync((x, t) =>
+            {
+                That(t, Is.EqualTo(token));
+                return x > 3;
+            }, token).ToListAsync(token).ConfigureAwait(false);
+            Multiple(() =>
+            {
+                That(l, Has.Count.EqualTo(1));
+                That(l, Has.Member(4));
+            });
+        }
+
+        [Test]
+        public async Task CountAsync_N_CountLongAsync_Properly_Counts_Elements()
+        {
+            var cts = new CancellationTokenSource();
+            var token = cts.Token;
+            var l = await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
+            {
+                await Task.CompletedTask;
+                return x;
+            }, token).CountAsync(token).ConfigureAwait(false);
+            var ul = await new[] { 0, 1, 2, 3, 4 }.SelectAsync(async (x, _) =>
+            {
+                await Task.CompletedTask;
+                return x;
+            }, token).CountLongAsync(token).ConfigureAwait(false);
+            Multiple(() =>
+            {
+                That(l, Is.EqualTo(5));
+                That(ul, Is.EqualTo(5));
+            });
+            l = await Array.Empty<int>().SelectAsync(async (x, _) =>
+            {
+                await Task.CompletedTask;
+                return x;
+            }, token).CountAsync(token).ConfigureAwait(false);
+            ul = await Array.Empty<int>().SelectAsync(async (x, _) =>
+            {
+                await Task.CompletedTask;
+                return x;
+            }, token).CountLongAsync(token).ConfigureAwait(false);
+            Multiple(() =>
+            {
+                That(l, Is.EqualTo(0));
+                That(ul, Is.EqualTo(0));
+            });
         }
 
         [Test]

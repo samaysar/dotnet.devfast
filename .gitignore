@@ -398,4 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Docs
-Dot.Net*.xml
+DevFast.Net*.xml

@@ -1,7 +1,24 @@
+DevFast.Net.Extensions 0.1.1
+
+ 1. New feature - Adding following new extension methods in DevFast.Net.Extensions.SystemTypes.Enumerables:
+			- CountAsync<T>(this IAsyncEnumerable<T>, CancellationToken, bool)
+			- CountLongAsync<T>(this IAsyncEnumerable<T>, CancellationToken, bool)
+			- SelectAsync<TIn,TOut>(this IAsyncEnumerable<TIn>, Func<TIn,CancellationToken,TOut>, CancellationToken, bool)
+			- WhereAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,bool>, CancellationToken, bool)
+
+ 2. Modifications - Using ValueTask, instead of Task, on following extension methods of DevFast.Net.Extensions.SystemTypes.Enumerables:
+			- ForEachAsync<T>(this IEnumerable<T>, Func<T,CancellationToken,ValueTask>, CancellationToken, bool)
+			- SelectAsync<TIn,TOut>(this IEnumerable<TIn>, Func<TIn,CancellationToken,ValueTask<TOut>>, CancellationToken, bool)
+			- ForEachAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,ValueTask>, CancellationToken, bool)
+			- SelectAsync<TIn,TOut>(this IAsyncEnumerable<TIn>, Func<TIn,CancellationToken,ValueTask<TOut>>, CancellationToken, bool)
+			- ToListAsync<T>(this IAsyncEnumerable<T>, CancellationToken, bool)
+			- WhereAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,ValueTask<bool>>, CancellationToken, bool)
+
+
 DevFast.Net.Extensions 0.1.0
 
  1. New feature - namespace DevFast.Net.Extensions.SystemTypes added, containing
-	A. Static Class ByteArrays with methods
+	A. Static Class ByteArrays with extensions methods
 			- CopyToSafe(this byte[], byte[], int, int, int)
 			- CopyToUnSafe(this byte[], byte[], int, int, int)
 			- DoubleByteCapacity(this byte[])
@@ -9,7 +26,7 @@ DevFast.Net.Extensions 0.1.0
 			- EnsureByteCapacity(this byte[], int)
 			- LiftNCopySafe(this byte[], int, int, int)
 			- LiftNCopyUnSafe(this byte[], int, int, int)
-	B. Static Class Enumerables with methods
+	B. Static Class Enumerables with extensions methods
 			- ForEach<T>(this IEnumerable<T>, Action<T,CancellationToken>, CancellationToken)
 			- ForEachAsync<T>(this IEnumerable<T>, Func<T,CancellationToken,Task>, CancellationToken, bool)
 			- SelectAsync<TIn,TOut>(this IEnumerable<TIn>, Func<TIn,CancellationToken,Task<TOut>>, CancellationToken, bool)

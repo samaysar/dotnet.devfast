@@ -1,12 +1,12 @@
-#### [Dot.Net.Text](index.md 'index')
+#### [DevFast.Net.Text](index.md 'index')
 
-## Dot.Net.Text Assembly
+## DevFast.Net.Text Assembly
 
-This assembly contains various well-tested, self-explained & easy to use extension methods
-to achieve optimized runtime performance with improved readability of the code.
+This assembly contains various well-tested & self-explained artifacts to work with
+[System.String](https://docs.microsoft.com/en-us/dotnet/api/System.String 'System.String') data-type.
 
 | Namespaces | |
 | :--- | :--- |
-| [Dot.Net.Text](Dot.Net.Text.md 'Dot.Net.Text') | |
-| [Dot.Net.Text.Json](Dot.Net.Text.Json.md 'Dot.Net.Text.Json') | |
-| [Dot.Net.Text.Json.Utf8](Dot.Net.Text.Json.Utf8.md 'Dot.Net.Text.Json.Utf8') | |
+| [DevFast.Net.Text](DevFast.Net.Text.md 'DevFast.Net.Text') | |
+| [DevFast.Net.Text.Json](DevFast.Net.Text.Json.md 'DevFast.Net.Text.Json') | |
+| [DevFast.Net.Text.Json.Utf8](DevFast.Net.Text.Json.Utf8.md 'DevFast.Net.Text.Json.Utf8') | |
