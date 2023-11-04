@@ -269,7 +269,7 @@ namespace DevFast.Net.Extensions.SystemTypes
         /// <param name="asyncCollection">Asynchronously Enumerable items</param>
         /// <param name="token">Cancellation token to pass to enumerator of <paramref name="asyncCollection"/></param>
         /// <param name="continueOnCapturedContext"><see langword="true"/> to attempt to marshal the continuation back to the original context captured; otherwise, <see langword="false"/>.</param>
-        public static async ValueTask<ulong> LongCountAsync<T>(this IAsyncEnumerable<T> asyncCollection,
+        public static async ValueTask<ulong> CountLongAsync<T>(this IAsyncEnumerable<T> asyncCollection,
             CancellationToken token = default,
             bool continueOnCapturedContext = false)
         {
