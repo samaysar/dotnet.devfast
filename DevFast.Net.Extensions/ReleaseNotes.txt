@@ -1,5 +1,11 @@
 DevFast.Net.Extensions 0.1.1
 
+ 1. New feature - Adding following new extension methods in DevFast.Net.Extensions.SystemTypes.Enumerables:
+			- CountAsync<T>(this IAsyncEnumerable<T>, CancellationToken, bool)
+			- LongCountAsync<T>(this IAsyncEnumerable<T>, CancellationToken, bool)
+			- SelectAsync<TIn,TOut>(this IAsyncEnumerable<TIn>, Func<TIn,CancellationToken,TOut>, CancellationToken, bool)
+			- WhereAsync<T>(this IAsyncEnumerable<T>, Func<T,CancellationToken,bool>, CancellationToken, bool)
+
  2. Modifications - Using ValueTask, instead of Task, on following extension methods of DevFast.Net.Extensions.SystemTypes.Enumerables:
 			- ForEachAsync<T>(this IEnumerable<T>, Func<T,CancellationToken,ValueTask>, CancellationToken, bool)
 			- SelectAsync<TIn,TOut>(this IEnumerable<TIn>, Func<TIn,CancellationToken,ValueTask<TOut>>, CancellationToken, bool)
