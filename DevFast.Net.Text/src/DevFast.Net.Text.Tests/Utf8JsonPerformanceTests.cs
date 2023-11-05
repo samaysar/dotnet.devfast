@@ -88,11 +88,128 @@ namespace DevFast.Net.Text.Tests
             await MeasureNPrintAsync<ExpandoObject>(m, nameof(BigArrayOfAvgComplexExpandoObject));
         }
 
-        private async Task MeasureNPrintAsync<T>(Stream m, string op)
+        [Test]
+        public async Task BigArrayOfSimpleObjectArray()
+        {
+            await using var m = new MemoryStream();
+            await Enumerable.Repeat(new[] { new B(), new B(), new B() }, TotalElements / 3).PushJson().AndWriteStreamAsync(m);
+            await MeasureNPrintAsync<B[]>(m, nameof(BigArrayOfSimpleObjectArray));
+        }
+
+        [Test]
+        public async Task BigArrayOfSimpleExpandoObjectArray()
+        {
+            await using var m = new MemoryStream();
+            await Enumerable.Repeat(new[] { new B(), new B(), new B() }, TotalElements / 3).PushJson().AndWriteStreamAsync(m);
+            await MeasureNPrintAsync<ExpandoObject[]>(m, nameof(BigArrayOfSimpleExpandoObjectArray));
+        }
+
+        [Test]
+        public async Task BigArrayOfAvgComplexObjectArray()
+        {
+            await using var m = new MemoryStream();
+            await Enumerable.Repeat(new[] { new C(), new C(), new C() }, TotalElements / 3).PushJson().AndWriteStreamAsync(m);
+            await MeasureNPrintAsync<C[]>(m, nameof(BigArrayOfAvgComplexObjectArray));
+        }
+
+        [Test]
+        public async Task BigArrayOfAvgComplexExpandoObjectArray()
+        {
+            await using var m = new MemoryStream();
+            await Enumerable.Repeat(new[] { new C(), new C(), new C() }, TotalElements / 3).PushJson().AndWriteStreamAsync(m);
+            await MeasureNPrintAsync<ExpandoObject[]>(m, nameof(BigArrayOfAvgComplexExpandoObjectArray));
+        }
+
+        [Test]
+        public async Task BigArrayOfComplexObjectArray()
+        {
+            await using var m = new MemoryStream();
+            await Enumerable.Repeat(new[] { new A(), new A(), new A() }, TotalElements / 3).PushJson().AndWriteStreamAsync(m);
+            await MeasureNPrintAsync<A[]>(m, nameof(BigArrayOfComplexObjectArray));
+        }
+
+        [Test]
+        public async Task BigArrayOfComplexExpandoObjectArray()
+        {
+            await using var m = new MemoryStream();
+            await Enumerable.Repeat(new[] { new A(), new A(), new A() }, TotalElements / 3).PushJson().AndWriteStreamAsync(m);
+            await MeasureNPrintAsync<ExpandoObject[]>(m, nameof(BigArrayOfComplexExpandoObjectArray));
+        }
+
+        [Test]
+        public async Task FileBasedOneMillionSimpleObjectArray()
+        {
+            var name = Guid.NewGuid().ToString("N") + ".json";
+            await using (var m = new FileStream(name,
+                FileMode.Create,
+                FileAccess.Write,
+                FileShare.None,
+                4 * 1024 * 1024,
+                FileOptions.WriteThrough | FileOptions.Asynchronous))
+            {
+                await Enumerable.Repeat(new B(), 1_000_000).PushJson().AndWriteStreamAsync(m);
+                Console.WriteLine($"Size: {m.Position / 1024 / 1024}MB");
+            }
+            await using var mm = new FileStream(name,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.None,
+                8 * 1024,
+                FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
+            await MeasureNPrintAsync<B>(mm, nameof(FileBasedOneMillionSimpleObjectArray), 1, 8 * 1024);
+        }
+
+        [Test]
+        public async Task FileBasedOneMillionAvgComplexObjectArray()
+        {
+            var name = Guid.NewGuid().ToString("N") + ".json";
+            await using (var m = new FileStream(name,
+                             FileMode.Create,
+                             FileAccess.Write,
+                             FileShare.None,
+                             4 * 1024 * 1024,
+                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+            {
+                await Enumerable.Repeat(new C(), 1_000_000).PushJson().AndWriteStreamAsync(m);
+                Console.WriteLine($"Size: {m.Position / 1024 / 1024}MB");
+            }
+            await using var mm = new FileStream(name,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.None,
+                8 * 1024,
+                FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
+            await MeasureNPrintAsync<C>(mm, nameof(FileBasedOneMillionAvgComplexObjectArray), 1, 8 * 1024);
+        }
+
+        [Test]
+        public async Task FileBasedOneMillionComplexObjectArray()
+        {
+            var name = Guid.NewGuid().ToString("N") + ".json";
+            await using (var m = new FileStream(name,
+                             FileMode.Create,
+                             FileAccess.Write,
+                             FileShare.None,
+                             4 * 1024 * 1024,
+                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+            {
+                await Enumerable.Repeat(new A(), 1_000_000).PushJson().AndWriteStreamAsync(m);
+                Console.WriteLine($"Size: {m.Position / 1024 / 1024}MB");
+            }
+            await using var mm = new FileStream(name,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.None,
+                8 * 1024,
+                FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
+            await MeasureNPrintAsync<A>(mm, nameof(FileBasedOneMillionComplexObjectArray), 1, 8 * 1024);
+        }
+
+        private async Task MeasureNPrintAsync<T>(Stream m, string op, int loop = TotalLoop, int ib = 512)
         {
             var l = 0;
             var sw = Stopwatch.StartNew();
-            for (var i = 0; i < TotalLoop; i++)
+            for (var i = 0; i < loop; i++)
             {
                 m.Seek(0, SeekOrigin.Begin);
                 l = m.Pull(false).AndParseJsonArray<T>().Count();
@@ -102,10 +219,10 @@ namespace DevFast.Net.Text.Tests
 
             int c = 0;
             sw.Restart();
-            for (var i = 0; i < TotalLoop; i++)
+            for (var i = 0; i < loop; i++)
             {
                 m.Seek(0, SeekOrigin.Begin);
-                await using var r = await JsonReader.CreateAsync(m, CancellationToken.None);
+                await using var r = await JsonReader.CreateAsync(m, CancellationToken.None, ib);
                 l = await r.EnumerateRawJsonArrayElementAsync(true, CancellationToken.None)
                     .SelectAsync((x, _) => Utf8Json.JsonSerializer.Deserialize<T>(x.Value))
                     .CountAsync();
