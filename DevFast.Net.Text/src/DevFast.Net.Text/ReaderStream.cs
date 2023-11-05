@@ -90,10 +90,6 @@ namespace DevFast.Net.Text
 
         public async ValueTask<bool> MoveNextAsync(CancellationToken token, int steps = 1)
         {
-            if(_currentPosition >= 221180)
-            {
-                _ = 1;
-            }
             _current += steps;
             _currentPosition += steps;
             return _current < _end || await TryIncreasingBufferAsync(token).ConfigureAwait(false);
