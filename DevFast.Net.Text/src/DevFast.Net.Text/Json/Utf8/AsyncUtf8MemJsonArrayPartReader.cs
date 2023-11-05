@@ -43,7 +43,7 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <summary>
         /// Total number of <see cref="byte"/>s observed by the reader since the very beginning (0-based position).
         /// </summary>
-        public long Position => _current;
+        public long Position => Math.Min(_current, _end);
 
         /// <summary>
         /// Current capacity as total number of <see cref="byte"/>s.
