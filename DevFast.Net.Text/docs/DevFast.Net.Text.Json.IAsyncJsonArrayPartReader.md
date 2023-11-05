@@ -17,7 +17,8 @@ System.IAsyncDisposable
 ```
 
 Derived  
-&#8627; [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader')
+&#8627; [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader')  
+&#8627; [AsyncUtf8MemJsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader')
 
 Implements [System.IAsyncDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable 'System.IAsyncDisposable')
 ### Properties
@@ -76,7 +77,7 @@ Any standard JSON serializer can be used to deserialize [Value](DevFast.Net.Text
 to obtain an instance of corresponding .Net type.
 
 ```csharp
-System.Collections.Generic.IAsyncEnumerable<DevFast.Net.Text.Json.RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, System.Threading.CancellationToken token);
+System.Collections.Generic.IAsyncEnumerable<DevFast.Net.Text.Json.RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -101,9 +102,9 @@ Cancellation token to observe.
 
 [JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')
 
-<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(System.Threading.CancellationToken,bool)'></a>
+<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(bool,System.Threading.CancellationToken)'></a>
 
-## IAsyncJsonArrayPartReader.GetCurrentRawAsync(CancellationToken, bool) Method
+## IAsyncJsonArrayPartReader.GetCurrentRawAsync(bool, CancellationToken) Method
 
 Reads the current JSON element as [RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson'). If reaches [EoJ](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.EoJ 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.EoJ') or
 encounters [ArrayEndByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ArrayEndByte 'DevFast.Net.Text.Json.JsonConst.ArrayEndByte'), returned [Type](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Type 'DevFast.Net.Text.Json.RawJson.Type') is
@@ -114,22 +115,22 @@ to parse well-structured JSON stream over this method.
 This method is to parse non-standard chain of JSON elements separated by ',' (or not).
 
 ```csharp
-System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.RawJson> GetCurrentRawAsync(System.Threading.CancellationToken token, bool withVerify=true);
+System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.RawJson> GetCurrentRawAsync(bool withVerify=true, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
-<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(System.Threading.CancellationToken,bool).token'></a>
-
-`token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
-
-Cancellation token to observe.
-
-<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(System.Threading.CancellationToken,bool).withVerify'></a>
+<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(bool,System.Threading.CancellationToken).withVerify'></a>
 
 `withVerify` [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
 [true](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') to verify the presence of ',' or ']' (but not ',]')
             after successfully parsing the current JSON element; [false](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') otherwise.
+
+<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(bool,System.Threading.CancellationToken).token'></a>
+
+`token` [System.Threading.CancellationToken](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.CancellationToken 'System.Threading.CancellationToken')
+
+Cancellation token to observe.
 
 #### Returns
 [System.Threading.Tasks.ValueTask&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')[RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')
@@ -149,7 +150,7 @@ Otherwise, it returns [false](https://docs.microsoft.com/en-us/dotnet/csharp/lan
 reader position is maintained on the current byte.
 
 ```csharp
-System.Threading.Tasks.ValueTask<bool> ReadIsBeginArrayAsync(System.Threading.CancellationToken token);
+System.Threading.Tasks.ValueTask<bool> ReadIsBeginArrayAsync(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -173,7 +174,7 @@ reader position is maintained on the current byte and an error
 (of type [JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')) is thrown.
 
 ```csharp
-System.Threading.Tasks.ValueTask ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken token);
+System.Threading.Tasks.ValueTask ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -201,7 +202,7 @@ Otherwise, it returns [false](https://docs.microsoft.com/en-us/dotnet/csharp/lan
 reader position is maintained on the current byte.
 
 ```csharp
-System.Threading.Tasks.ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, System.Threading.CancellationToken token);
+System.Threading.Tasks.ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 

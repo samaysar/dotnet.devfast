@@ -1,4 +1,7 @@
-﻿namespace DevFast.Net.Text.Json.Utf8
+﻿using System.Runtime.CompilerServices;
+using DevFast.Net.Extensions.SystemTypes;
+
+namespace DevFast.Net.Text.Json.Utf8
 {
     /// <summary>
     /// Class implementing <see cref="IAsyncJsonArrayPartReader"/> for standard Utf-8 JSON data encoding
@@ -11,18 +14,17 @@
     public sealed class AsyncUtf8MemJsonArrayPartReader : IAsyncJsonArrayPartReader
     {
         private readonly bool _disposeStream;
+        private readonly int _end;
         private MemoryStream? _stream;
-        private ArraySegment<byte> _buffer;
-        private int _begin, _current;
+        private byte[] _buffer;
+        private int _current;
 
-        private AsyncUtf8MemJsonArrayPartReader(MemoryStream stream, bool disposeStream)
+        internal AsyncUtf8MemJsonArrayPartReader(MemoryStream stream, ArraySegment<byte> internalSegment, bool disposeStream)
         {
             _stream = stream;
-            if(!stream.TryGetBuffer(out _buffer))
-            {
-                throw new UnauthorizedAccessException("Memory stream buffer is not exposed!");
-            }
-            _current = _begin = _buffer.Offset;
+            _buffer = internalSegment.Array!;
+            _current = internalSegment.Offset;
+            _end = internalSegment.Offset + internalSegment.Count;
             _disposeStream = disposeStream;
         }
 
@@ -30,7 +32,7 @@
         /// <see langword="true"/> indicating that reader has reached end of JSON input,
         /// otherwise <see langword="false"/>.
         /// </summary>
-        public bool EoJ => _stream == null && _current == _buffer.Count;
+        public bool EoJ => !InRange;
 
         /// <summary>
         /// <see cref="byte"/> value of current position of reader. <see langword="null"/> when
@@ -42,31 +44,481 @@
         /// Total number of <see cref="byte"/>s observed by the reader since the very beginning (0-based position).
         /// </summary>
         public long Position => _current;
-        private bool InRange => _current < _buffer.Count;
+        private bool InRange => _current < _end;
 
-        public IAsyncEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, CancellationToken token)
+        /// <summary>
+        /// Provides a convenient way to asynchronously enumerate over elements of a JSON array (one at a time).
+        /// For every iteration, such mechanism produces <see cref="RawJson"/>, where <see cref="RawJson.Value"/> represents
+        /// entire value-form (including structural characters, string quotes etc.) of such an individual
+        /// element &amp; <see cref="RawJson.Type"/> indicates underlying JSON element type. 
+        /// Any standard JSON serializer can be used to deserialize <see cref="RawJson.Value"/>
+        /// to obtain an instance of corresponding .Net type.
+        /// </summary>
+        /// <param name="ensureEoj"><see langword="false"/> to ignore leftover JSON after <see cref="JsonConst.ArrayEndByte"/>.
+        /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
+        /// single line and multiline comments are allowed after <see cref="JsonConst.ArrayEndByte"/> until <see cref="EoJ"/>.</param>
+        /// <param name="token">Cancellation token to observe.</param>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
+        public async IAsyncEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj,
+            [EnumeratorCancellation] CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            await ReadIsBeginArrayWithVerifyAsync(token).ConfigureAwait(false);
+            while (!await ReadIsEndArrayAsync(ensureEoj, token).ConfigureAwait(false))
+            {
+                var next = await GetCurrentRawAsync(true, token).ConfigureAwait(false);
+                if (next.Type == JsonType.Nothing)
+                {
+                    throw new JsonArrayPartParsingException($"Expected a valid JSON element or end of JSON array. " +
+                                                            $"0-Based Position = {Position}.");
+                }
+                yield return next;
+            }
         }
 
-        public ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token)
+        /// <summary>
+        /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it checks
+        /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances 
+        /// its current position to next <see cref="byte"/> in the sequence or to end of JSON. If the value does NOT match,
+        /// reader position is maintained on the current byte and an error 
+        /// (of type <see cref="JsonArrayPartParsingException"/>) is thrown.
+        /// </summary>
+        /// <param name="token">Cancellation token to observe</param>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
+        public async ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            if (!await ReadIsBeginArrayAsync(token).ConfigureAwait(false))
+            {
+                if (InRange)
+                {
+                    throw new JsonArrayPartParsingException("Invalid byte value for JSON begin-array. " +
+                                                            $"Expected = {JsonConst.ArrayBeginByte}, " +
+                                                            $"Found = {_buffer[_current]}, " +
+                                                            $"0-Based Position = {Position}.");
+                }
+                throw new JsonArrayPartParsingException("Reached end, unable to find JSON begin-array." +
+                                                        $"0-Based Position = {Position}.");
+            }
+        }
+        
+        /// <summary>
+        /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
+        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, 
+        /// then reader advances its current position to next <see cref="byte"/> in the sequence or to end of JSON.
+        /// Otherwise, it returns <see langword="false"/> when current byte is NOT <see cref="JsonConst.ArrayBeginByte"/> and
+        /// reader position is maintained on the current byte.
+        /// </summary>
+        /// <param name="token">Cancellation token to observe</param>
+        public ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token = default)
+        {
+            return ValueTask.FromResult(ReadIsGivenByte(JsonConst.ArrayBeginByte, token));
         }
 
-        public ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token)
+        /// <summary>
+        /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
+        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayEndByte"/>. If the value matches, 
+        /// then reader advances its current position to next <see cref="byte"/> in the sequence or to end of JSON.
+        /// Otherwise, it returns <see langword="false"/> when current byte is NOT <see cref="JsonConst.ArrayEndByte"/> and
+        /// reader position is maintained on the current byte.
+        /// </summary>
+        /// <param name="ensureEoj"><see langword="false"/> to ignore any text (JSON or not) after 
+        /// observing <see cref="JsonConst.ArrayEndByte"/>.
+        /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
+        /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>
+        /// <param name="token">Cancellation token to observe</param>
+        public ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token = default)
+
         {
-            throw new NotImplementedException();
+            var reply = ReadIsGivenByte(JsonConst.ArrayEndByte, token);
+            if (ensureEoj && reply)
+            {
+                //we need to make sure only comments exists or we reached EOJ!
+                SkipWhiteSpace();
+                if (!EoJ)
+                {
+                    throw new JsonArrayPartParsingException($"Expected End Of JSON after encountering ']'. " +
+                                                            $"0-Based Position = {Position}.");
+                }
+            }
+            return ValueTask.FromResult(reply);
         }
 
-        public ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token)
+        /// <summary>
+        /// Reads the current JSON element as <see cref="RawJson"/>. If reaches <see cref="EoJ"/> or
+        /// encounters <see cref="JsonConst.ArrayEndByte"/>, returned <see cref="RawJson.Type"/> is
+        /// <see cref="JsonType.Nothing"/>.
+        /// <para>
+        /// One should prefer <see cref="EnumerateRawJsonArrayElementAsync(bool, CancellationToken)"/>
+        /// to parse well-structured JSON stream over this method.
+        /// This method is to parse non-standard chain of JSON elements separated by ',' (or not).
+        /// </para>
+        /// </summary>
+        /// <param name="withVerify"><see langword="true"/> to verify the presence of ',' or ']' (but not ',]')
+        /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
+        /// <param name="token">Cancellation token to observe.</param>
+        /// <exception cref="JsonArrayPartParsingException"></exception>
+        public ValueTask<RawJson> GetCurrentRawAsync(bool withVerify = true, CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            SkipWhiteSpace();
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return ValueTask.FromResult(new RawJson(JsonType.Nothing, Array.Empty<byte>()));
+            var begin = _current;
+            var type = SkipUntilNextRaw();
+            token.ThrowIfCancellationRequested();
+            var currentRaw = new byte[_current - begin];
+            _buffer.CopyToUnSafe(currentRaw, begin, currentRaw.Length, 0);
+
+            if (withVerify)
+            {
+                ReadIsValueSeparationOrEndWithVerify(JsonConst.ArrayEndByte,
+                        "array",
+                        "',' or ']' (but not ',]')",
+                        token);
+            }
+            else
+            {
+                ReadIsGivenByte(JsonConst.ValueSeparatorByte, token);
+            }
+            return ValueTask.FromResult(new RawJson(type, currentRaw));
         }
 
-        public ValueTask<RawJson> GetCurrentRawAsync(CancellationToken token, bool withVerify = true)
+        private JsonType SkipUntilNextRaw()
         {
-            throw new NotImplementedException();
+            return _buffer[_current] switch
+            {
+                JsonConst.ArrayBeginByte => SkipArray(),
+                JsonConst.ObjectBeginByte => SkipObject(),
+                JsonConst.StringQuoteByte => SkipString(),
+                JsonConst.MinusSignByte => SkipNumberWithoutValidation(),
+                JsonConst.Number0Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number1Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number2Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number3Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number4Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number5Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number6Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number7Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number8Byte => SkipNumberWithoutValidation(),
+                JsonConst.Number9Byte => SkipNumberWithoutValidation(),
+                JsonConst.FirstOfTrueByte => SkipRueOfTrueWithoutValidation(),
+                JsonConst.FirstOfFalseByte => SkipAlseOfFalseWithoutValidation(),
+                JsonConst.FirstOfNullByte => SkipUllOfNullWithoutValidation(),
+                _ => throw new JsonArrayPartParsingException($"Invalid byte value for start of JSON element. " +
+                                                             $"Found = {_buffer[_current]}, " +
+                                                             $"0-Based Position = {Position}.")
+            };
+        }
+
+        private JsonType SkipArray()
+        {
+            if (NextWithEnsureCapacity())
+            {
+                SkipWhiteSpaceWithVerify("]");
+                while (_buffer[_current] != JsonConst.ArrayEndByte)
+                {
+                    SkipUntilNextRaw();
+                    ReadIsValueSeparationOrEndWithVerify(JsonConst.ArrayEndByte,
+                            "array",
+                            "',' or ']' (but not ',]')",
+                            default);
+                }
+                NextWithEnsureCapacity();
+                return JsonType.Arr;
+            }
+            throw new JsonArrayPartParsingException($"Reached end, unable to find valid JSON end-array (']'). " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private JsonType SkipObject()
+        {
+            if (NextWithEnsureCapacity())
+            {
+                SkipWhiteSpaceWithVerify("}");
+                while (_buffer[_current] != JsonConst.ObjectEndByte)
+                {
+                    if (_buffer[_current] != JsonConst.StringQuoteByte)
+                    {
+                        throw new JsonArrayPartParsingException($"Invalid byte value for start of Object Property Name. " +
+                                                                $"Expected = {JsonConst.StringQuoteByte}, " +
+                                                                $"Found = {_buffer[_current]}, " +
+                                                                $"0-Based Position = {Position}.");
+                    }
+                    SkipString();
+                    SkipWhiteSpaceWithVerify(":");
+                    _current--;
+                    NextExpectedOrThrow(JsonConst.NameSeparatorByte, "Object property");
+                    SkipWhiteSpaceWithVerify("Object property value");
+                    SkipUntilNextRaw();
+                    ReadIsValueSeparationOrEndWithVerify(JsonConst.ObjectEndByte,
+                            "Object property",
+                            "',' or '}' (but not ',}')", 
+                            default);
+                }
+                NextWithEnsureCapacity();
+                return JsonType.Obj;
+            }
+            throw new JsonArrayPartParsingException($"Reached end, unable to find valid JSON end-object ('}}'). " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private JsonType SkipString()
+        {
+            while (NextWithEnsureCapacity())
+            {
+                switch (_buffer[_current])
+                {
+                    case JsonConst.ReverseSlashByte:
+                        if (NextWithEnsureCapacity())
+                        {
+                            switch (_buffer[_current])
+                            {
+                                case JsonConst.ReverseSlashByte:
+                                case JsonConst.ForwardSlashByte:
+                                case JsonConst.StringQuoteByte:
+                                case JsonConst.LastOfBackspaceInStringByte:
+                                case JsonConst.FirstOfFalseByte:
+                                case JsonConst.FirstOfNullByte:
+                                case JsonConst.FirstOfTrueByte:
+                                case JsonConst.LastOfCarriageReturnInStringByte:
+                                    continue;
+                                case JsonConst.SecondOfHexDigitInStringByte:
+                                    //JsonSerializer must handle validation!
+                                    //we skip 4 bytes
+                                    if (NextWithEnsureCapacity(4))
+                                    {
+                                        continue;
+                                    }
+                                    throw new JsonArrayPartParsingException($"Reached end, unable to find valid Hex-Digits. " +
+                                                                   $"0-Based Position = {Position}.");
+                                default:
+                                    throw new JsonArrayPartParsingException($"Bad JSON escape. " +
+                                        $"Expected = \\{JsonConst.ReverseSlashByte} or " +
+                                        $"\\{JsonConst.ForwardSlashByte} or " +
+                                        $"\\{JsonConst.StringQuoteByte} or " +
+                                        $"\\{JsonConst.LastOfBackspaceInStringByte} or " +
+                                        $"\\{JsonConst.FirstOfFalseByte} or " +
+                                        $"\\{JsonConst.FirstOfNullByte} or " +
+                                        $"\\{JsonConst.FirstOfTrueByte} or " +
+                                        $"\\{JsonConst.LastOfCarriageReturnInStringByte} or " +
+                                        $"\\{JsonConst.SecondOfHexDigitInStringByte}4Hex, " +
+                                        $"Found = \\{_buffer[_current]}, " +
+                                        $"0-Based Position = {Position}.");
+                            }
+                        }
+                        throw new JsonArrayPartParsingException($"Reached end, unable to find valid escape character. " +
+                                                       $"0-Based Position = {Position}.");
+                    case JsonConst.StringQuoteByte:
+                        NextWithEnsureCapacity();
+                        return JsonType.Str;
+                }
+            }
+            throw new JsonArrayPartParsingException($"Reached end, unable to find end-of-string quote '\"'. " +
+                                           $"0-Based Position = {Position}.");
+        }
+
+        private JsonType SkipNumberWithoutValidation()
+        {
+            //we just take everything until begin of next token (even if number is not valid!)
+            //number parsing rules are too much to write here
+            //Serializer will do its job during deserialization
+            while (NextWithEnsureCapacity())
+            {
+                switch (_buffer[_current])
+                {
+                    case JsonConst.MinusSignByte:
+                    case JsonConst.PlusSignByte:
+                    case JsonConst.ExponentLowerByte:
+                    case JsonConst.ExponentUpperByte:
+                    case JsonConst.DecimalPointByte:
+                    case JsonConst.Number0Byte:
+                    case JsonConst.Number1Byte:
+                    case JsonConst.Number2Byte:
+                    case JsonConst.Number3Byte:
+                    case JsonConst.Number4Byte:
+                    case JsonConst.Number5Byte:
+                    case JsonConst.Number6Byte:
+                    case JsonConst.Number7Byte:
+                    case JsonConst.Number8Byte:
+                    case JsonConst.Number9Byte:
+                        continue;
+                    default: return JsonType.Num;
+                }
+            }
+            return JsonType.Num;
+        }
+
+        private JsonType SkipRueOfTrueWithoutValidation()
+        {
+            //JsonSerializer must handle literal validation!
+            //we skip 3 bytes
+            if (NextWithEnsureCapacity(3))
+            {
+                //this one to move the pointer forward, we don't care
+                //about EoF, that's handled by next read!
+                NextWithEnsureCapacity();
+                return JsonType.Bool;
+            }
+            throw new JsonArrayPartParsingException($"Reached end while parsing 'true' literal. " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private JsonType SkipAlseOfFalseWithoutValidation()
+        {
+            //JsonSerializer must handle literal validation!
+            //we skip 4 bytes
+            if (NextWithEnsureCapacity(4))
+            {
+                //this one to move the pointer forward, we don't care
+                //about EoF, that's handled by next read!
+                NextWithEnsureCapacity();
+                return JsonType.Bool;
+            }
+            throw new JsonArrayPartParsingException($"Reached end while parsing 'false' literal. " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private JsonType SkipUllOfNullWithoutValidation()
+        {
+            //JsonSerializer must handle literal validation!
+            //we skip 3 bytes
+            if (NextWithEnsureCapacity(3))
+            {
+                //this one to move the pointer forward, we don't care
+                //about EoF, that's handled by next read!
+                NextWithEnsureCapacity();
+                return JsonType.Null;
+            }
+            throw new JsonArrayPartParsingException($"Reached end while parsing 'null' literal. " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private void ReadIsValueSeparationOrEndWithVerify(byte end, string partOf, string expected, CancellationToken token)
+        {
+            if (ReadIsValueSeparationOrEnd(end, token)) return;
+            if (InRange)
+            {
+                throw new JsonArrayPartParsingException($"Invalid byte value for '{partOf}'. " +
+                                                        $"Expected = {expected}, " +
+                                                        $"Found = {_buffer[_current]}, " +
+                                                        $"0-Based Position = {Position}.");
+            }
+            throw new JsonArrayPartParsingException($"Reached end, unable to find '{end}'. " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private bool ReadIsValueSeparationOrEnd(byte end, CancellationToken token)
+        {
+            SkipWhiteSpace();
+            if (!InRange) return false;
+            if (_buffer[_current] == end) return true;
+            if (_buffer[_current] != JsonConst.ValueSeparatorByte) return false;
+            _current++;
+            SkipWhiteSpace();
+            token.ThrowIfCancellationRequested();
+            return InRange && _buffer[_current] != end;
+        }
+
+        private bool ReadIsGivenByte(byte match, CancellationToken token)
+        {
+            SkipWhiteSpace();
+            token.ThrowIfCancellationRequested();
+            if (!InRange || _buffer[_current] != match) return false;
+            _current++;
+            return true;
+        }
+
+        private void SkipWhiteSpaceWithVerify(string jsonToken)
+        {
+            SkipWhiteSpace();
+            if (!InRange)
+                throw new JsonArrayPartParsingException($"Reached end, expected to find '{jsonToken}'. " +
+                                                        $"0-Based Position = {Position}.");
+        }
+
+        private void NextExpectedOrThrow(byte expected, string partOf)
+        {
+            if (NextWithEnsureCapacity() && _buffer[_current] == expected) return;
+            if (InRange)
+            {
+                throw new JsonArrayPartParsingException($"Invalid byte value while parsing '{partOf}'. " +
+                                                        $"Expected = {expected}, " +
+                                                        $"Found = {_buffer[_current]}, " +
+                                                        $"0-Based Position = {Position}.");
+            }
+            throw new JsonArrayPartParsingException($"Reached end while parsing '{partOf}'. " +
+                                                    $"Expected = {expected}, " +
+                                                    $"0-Based Position = {Position}.");
+        }
+
+        private void SkipWhiteSpace()
+        {
+            while (InRange)
+            {
+                switch (_buffer[_current])
+                {
+                    case JsonConst.SpaceByte:
+                    case JsonConst.HorizontalTabByte:
+                    case JsonConst.NewLineByte:
+                    case JsonConst.CarriageReturnByte:
+                        NextWithEnsureCapacity();
+                        continue;
+                    case JsonConst.ForwardSlashByte:
+                        if (!NextWithEnsureCapacity())
+                        {
+                            throw new JsonArrayPartParsingException("Reached end. " +
+                                                           "Can not find correct comment format " +
+                                                           "(neither single line comment token '//' " +
+                                                           "nor multi-line comment token '/*').");
+                        }
+                        ReadComment();
+                        continue;
+                    default: return;
+                }
+            }
+        }
+
+        private void ReadComment()
+        {
+            switch (_buffer[_current])
+            {
+                case JsonConst.ForwardSlashByte:
+                    while (NextWithEnsureCapacity())
+                    {
+                        if (_buffer[_current] != JsonConst.CarriageReturnByte &&
+                            _buffer[_current] != JsonConst.NewLineByte) continue;
+                        NextWithEnsureCapacity();
+                        return;
+                    }
+                    //we don't throw if we reach EoJ, we consider comment ended there!
+                    //so we get out. If any other token was expected, further parsing will throw
+                    //proper error.
+                    break;  
+                case JsonConst.AsteriskByte:
+                    while (NextWithEnsureCapacity())
+                    {
+                        if (_buffer[_current] != JsonConst.AsteriskByte) continue;
+                        if (NextWithEnsureCapacity() &&
+                            _buffer[_current] == JsonConst.ForwardSlashByte)
+                        {
+                            NextWithEnsureCapacity();
+                            return;
+                        }
+                        _current--;
+                    }
+                    //we need to throw error even if we reached EoJ
+                    //coz the comment was not properly terminated!
+                    throw new JsonArrayPartParsingException("Reached end. " +
+                                                   "Can not find end token of multi line comment(*/).");
+                default:
+                    throw new JsonArrayPartParsingException("Can not find correct comment format. " +
+                        "Found single forward-slash '/' when expected " +
+                        "either single line comment token '//' or multi-line comment token '/*'. " +
+                        $"0-Based Position = {Position}.");
+            }
+        }
+
+        private bool NextWithEnsureCapacity(int count = 1)
+        {
+            _current += count;
+            return InRange;
         }
 
         /// <summary>
@@ -74,13 +526,9 @@
         /// </summary>
         public async ValueTask DisposeAsync()
         {
-            await DisposeStreamAsync().ConfigureAwait(false);
-        }
-
-        private async ValueTask DisposeStreamAsync()
-        {
             if (_stream != null && _disposeStream) await _stream.DisposeAsync().ConfigureAwait(false);
             _stream = null;
+            _buffer = Array.Empty<byte>();
         }
     }
 }

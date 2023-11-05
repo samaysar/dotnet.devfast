@@ -6,6 +6,7 @@
 | :--- | :--- |
 | [JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException') | Represents error that occurred while parsing parts of a JSON array. |
 | [JsonConst](DevFast.Net.Text.Json.JsonConst.md 'DevFast.Net.Text.Json.JsonConst') | Static class holding constant or fixed values for JSON text processing. |
+| [JsonReader](DevFast.Net.Text.Json.JsonReader.md 'DevFast.Net.Text.Json.JsonReader') | Static class to create JSON reader instance. |
 
 | Structs | |
 | :--- | :--- |

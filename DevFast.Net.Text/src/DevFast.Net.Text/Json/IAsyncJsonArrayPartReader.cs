@@ -41,7 +41,7 @@
         /// single line and multiline comments are allowed after <see cref="JsonConst.ArrayEndByte"/> until <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe.</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        IAsyncEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, CancellationToken token);
+        IAsyncEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, CancellationToken token = default);
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
@@ -51,7 +51,7 @@
         /// reader position is maintained on the current byte.
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
-        ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token);
+        ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token = default);
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it checks
@@ -62,7 +62,7 @@
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token);
+        ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token = default);
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
@@ -76,7 +76,7 @@
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe</param>
-        ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token);
+        ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token = default);
 
         /// <summary>
         /// Reads the current JSON element as <see cref="RawJson"/>. If reaches <see cref="EoJ"/> or
@@ -88,10 +88,10 @@
         /// This method is to parse non-standard chain of JSON elements separated by ',' (or not).
         /// </para>
         /// </summary>
-        /// <param name="token">Cancellation token to observe.</param>
         /// <param name="withVerify"><see langword="true"/> to verify the presence of ',' or ']' (but not ',]')
         /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
+        /// <param name="token">Cancellation token to observe.</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        ValueTask<RawJson> GetCurrentRawAsync(CancellationToken token, bool withVerify = true);
+        ValueTask<RawJson> GetCurrentRawAsync(bool withVerify = true, CancellationToken token = default);
     }
 }
