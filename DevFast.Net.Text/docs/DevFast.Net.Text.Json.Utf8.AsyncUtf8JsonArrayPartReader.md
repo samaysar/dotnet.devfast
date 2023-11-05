@@ -15,6 +15,7 @@ DevFast.Net.Text.Json.IAsyncJsonArrayPartReader,
 System.IAsyncDisposable
 ```
 - *Properties*
+  - **[Capacity](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Capacity 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Capacity')**
   - **[Current](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Current 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Current')**
   - **[EoJ](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EoJ 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EoJ')**
   - **[Position](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Position 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Position')**
@@ -44,6 +45,21 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 
 Implements [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader'), [System.IAsyncDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable 'System.IAsyncDisposable')
 ### Properties
+
+<a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Capacity'></a>
+
+## AsyncUtf8JsonArrayPartReader.Capacity Property
+
+Current capacity as total number of [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')s.
+
+```csharp
+public int Capacity { get; }
+```
+
+Implements [Capacity](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.Capacity 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.Capacity')
+
+#### Property Value
+[System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
 
 <a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Current'></a>
 

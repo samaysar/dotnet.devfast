@@ -20,7 +20,7 @@ namespace DevFast.Net.Text.Json
         /// current instance of <see cref="IAsyncJsonArrayPartReader"/> itself disposing or
         /// when <paramref name="stream"/> is completely read; <see langword="false"/> otherwise.</param>
         public static async ValueTask<IAsyncJsonArrayPartReader> CreateAsync(Stream stream,
-            CancellationToken token,
+            CancellationToken token = default,
             int size = JsonConst.RawUtf8JsonPartReaderMinBuffer,
             bool disposeStream = false)
         {

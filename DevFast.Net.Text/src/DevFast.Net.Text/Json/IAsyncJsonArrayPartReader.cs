@@ -29,6 +29,11 @@
         long Position { get; }
 
         /// <summary>
+        /// Current capacity as total number of <see cref="byte"/>s.
+        /// </summary>
+        int Capacity { get; }
+
+        /// <summary>
         /// Provides a convenient way to asynchronously enumerate over elements of a JSON array (one at a time).
         /// For every iteration, such mechanism produces <see cref="RawJson"/>, where <see cref="RawJson.Value"/> represents
         /// entire value-form (including structural characters, string quotes etc.) of such an individual

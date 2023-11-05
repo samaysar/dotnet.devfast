@@ -15,6 +15,7 @@ DevFast.Net.Text.Json.IAsyncJsonArrayPartReader,
 System.IAsyncDisposable
 ```
 - *Properties*
+  - **[Capacity](DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Capacity 'DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Capacity')**
   - **[Current](DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Current 'DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Current')**
   - **[EoJ](DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.EoJ 'DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.EoJ')**
   - **[Position](DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Position 'DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Position')**
@@ -44,6 +45,21 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 
 Implements [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader'), [System.IAsyncDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable 'System.IAsyncDisposable')
 ### Properties
+
+<a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Capacity'></a>
+
+## AsyncUtf8MemJsonArrayPartReader.Capacity Property
+
+Current capacity as total number of [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')s.
+
+```csharp
+public int Capacity { get; }
+```
+
+Implements [Capacity](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.Capacity 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.Capacity')
+
+#### Property Value
+[System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
 
 <a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8MemJsonArrayPartReader.Current'></a>
 

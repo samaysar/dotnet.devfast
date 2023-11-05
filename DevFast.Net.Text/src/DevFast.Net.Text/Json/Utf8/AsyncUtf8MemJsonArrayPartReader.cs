@@ -44,6 +44,12 @@ namespace DevFast.Net.Text.Json.Utf8
         /// Total number of <see cref="byte"/>s observed by the reader since the very beginning (0-based position).
         /// </summary>
         public long Position => _current;
+
+        /// <summary>
+        /// Current capacity as total number of <see cref="byte"/>s.
+        /// </summary>
+        public int Capacity => _buffer.Length;
+
         private bool InRange => _current < _end;
 
         /// <summary>
@@ -245,6 +251,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     SkipWhiteSpaceWithVerify(":");
                     _current--;
                     NextExpectedOrThrow(JsonConst.NameSeparatorByte, "Object property");
+                    _current++;
                     SkipWhiteSpaceWithVerify("Object property value");
                     SkipUntilNextRaw();
                     ReadIsValueSeparationOrEndWithVerify(JsonConst.ObjectEndByte,

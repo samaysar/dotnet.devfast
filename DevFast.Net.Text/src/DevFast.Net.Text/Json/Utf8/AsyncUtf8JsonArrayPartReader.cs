@@ -46,6 +46,12 @@ namespace DevFast.Net.Text.Json.Utf8
         /// Total number of <see cref="byte"/>s observed by the reader since the very beginning (0-based position).
         /// </summary>
         public long Position => _bytesConsumed + (_current - _begin);
+
+        /// <summary>
+        /// Current capacity as total number of <see cref="byte"/>s.
+        /// </summary>
+        public int Capacity => _buffer.Length;
+
         private bool InRange => _current < _end;
 
         /// <summary>
@@ -247,6 +253,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     await SkipWhiteSpaceWithVerifyAsync(":", token).ConfigureAwait(false);
                     _current--;
                     await NextExpectedOrThrowAsync(JsonConst.NameSeparatorByte, token, "Object property").ConfigureAwait(false);
+                    _current++;
                     await SkipWhiteSpaceWithVerifyAsync("Object property value", token).ConfigureAwait(false);
                     await SkipUntilNextRawAsync(token).ConfigureAwait(false);
                     await ReadIsValueSeparationOrEndWithVerifyAsync(JsonConst.ObjectEndByte,

@@ -29,7 +29,7 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 Convenient method, to create well initialized instance of type [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader').
 
 ```csharp
-public static System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.IAsyncJsonArrayPartReader> CreateAsync(System.IO.Stream stream, System.Threading.CancellationToken token, int size=512, bool disposeStream=false);
+public static System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.IAsyncJsonArrayPartReader> CreateAsync(System.IO.Stream stream, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), int size=512, bool disposeStream=false);
 ```
 #### Parameters
 

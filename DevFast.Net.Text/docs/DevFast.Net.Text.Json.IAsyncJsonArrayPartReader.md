@@ -23,6 +23,19 @@ Derived
 Implements [System.IAsyncDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable 'System.IAsyncDisposable')
 ### Properties
 
+<a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.Capacity'></a>
+
+## IAsyncJsonArrayPartReader.Capacity Property
+
+Current capacity as total number of [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')s.
+
+```csharp
+int Capacity { get; }
+```
+
+#### Property Value
+[System.Int32](https://docs.microsoft.com/en-us/dotnet/api/System.Int32 'System.Int32')
+
 <a name='DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.Current'></a>
 
 ## IAsyncJsonArrayPartReader.Current Property
