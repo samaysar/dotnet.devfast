@@ -156,7 +156,7 @@ namespace DevFast.Net.Text.Tests
                 FileShare.None,
                 8 * 1024,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            await MeasureNPrintAsync<B>(mm, nameof(FileBasedOneMillionSimpleObjectArray), 1, 8 * 1024);
+            await MeasureNPrintAsync<B>(mm, nameof(FileBasedOneMillionSimpleObjectArray), 3, 8 * 1024);
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace DevFast.Net.Text.Tests
                 FileShare.None,
                 8 * 1024,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            await MeasureNPrintAsync<A>(mm, nameof(FileBasedOneMillionComplexObjectArray), 1, 8 * 1024);
+            await MeasureNPrintAsync<A>(mm, nameof(FileBasedOneMillionComplexObjectArray), 3, 8 * 1024);
         }
 
         private async Task MeasureNPrintAsync<T>(Stream m, string op, int loop = TotalLoop, int ib = 512)
