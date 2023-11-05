@@ -617,12 +617,12 @@ namespace DevFast.Net.Text.Json.Utf8
         }
 
         /// <summary>
-        /// 
+        /// Asynchronous clean up by releasing resources.
         /// </summary>
-        /// <returns></returns>
         public async ValueTask DisposeAsync()
         {
             await DisposeStreamAsync().ConfigureAwait(false);
+            _buffer = Array.Empty<byte>();
         }
 
         private async ValueTask DisposeStreamAsync()
