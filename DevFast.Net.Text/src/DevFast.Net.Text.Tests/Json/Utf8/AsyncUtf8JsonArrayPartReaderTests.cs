@@ -16,11 +16,11 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             var e = new UTF8Encoding(withPreamble);
             await m.WriteAsync(e.GetPreamble());
             m.Seek(0, SeekOrigin.Begin);
-            await using (var r = await JsonReader.CreateAsync(m, CancellationToken.None, disposeStream: disposeInner))
+            using (var r = await JsonReader.CreateAsync(m, CancellationToken.None, disposeStream: disposeInner))
             {
-                That(await r.ReadIsBeginArrayAsync(), Is.False);
-                That(await r.ReadIsEndArrayAsync(false), Is.False);
-                var current = await r.GetCurrentRawAsync(default);
+                That(r.ReadIsBeginArrayAsync(), Is.False);
+                That(r.ReadIsEndArrayAsync(false), Is.False);
+                var current = r.GetCurrentRawAsync(default);
                 That(current.Value, Is.Empty);
                 That(current.Type, Is.EqualTo(JsonType.Nothing));
                 That(r.EoJ, Is.True);
@@ -42,18 +42,18 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             await m.WriteAsync(e.GetPreamble());
             await m.WriteAsync(new[] { JsonConst.ArrayBeginByte, JsonConst.ArrayEndByte });
             m.Seek(0, SeekOrigin.Begin);
-            await using (var r = await JsonReader.CreateAsync(m, CancellationToken.None, disposeStream: disposeInner))
+            using (var r = await JsonReader.CreateAsync(m, CancellationToken.None, disposeStream: disposeInner))
             {
-                That(await r.ReadIsBeginArrayAsync(), Is.True);
-                That(await r.ReadIsBeginArrayAsync(), Is.False);
-                var current = await r.GetCurrentRawAsync(default);
+                That(r.ReadIsBeginArrayAsync(), Is.True);
+                That(r.ReadIsBeginArrayAsync(), Is.False);
+                var current = r.GetCurrentRawAsync(default);
                 That(current.Value, Is.Empty);
                 That(current.Type, Is.EqualTo(JsonType.Nothing));
                 That(r.EoJ, Is.False);
                 That(r.Current, Is.EqualTo(JsonConst.ArrayEndByte));
-                That(await r.ReadIsEndArrayAsync(true), Is.True);
+                That(r.ReadIsEndArrayAsync(true), Is.True);
                 That(r.Current, Is.Null);
-                That(await r.ReadIsEndArrayAsync(false), Is.False);
+                That(r.ReadIsEndArrayAsync(false), Is.False);
                 That(r.EoJ, Is.True);
                 That(r.Position, Is.EqualTo(withPreamble ? 5 : 2));
             }

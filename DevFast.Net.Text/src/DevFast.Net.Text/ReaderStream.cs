@@ -1,5 +1,4 @@
-﻿using System;
-using DevFast.Net.Extensions.SystemTypes;
+﻿using DevFast.Net.Extensions.SystemTypes;
 
 namespace DevFast.Net.Text
 {
@@ -28,8 +27,6 @@ namespace DevFast.Net.Text
         public byte Current => _data[_current];
 
         public long Position => _currentPosition;
-
-        public bool InRange => _current < _end;
 
         public int Capacity()
         {
@@ -88,35 +85,33 @@ namespace DevFast.Net.Text
             _currentPosition--;
         }
 
-        public async ValueTask<bool> MoveNextAsync(CancellationToken token, int steps = 1)
+        public bool MoveNextAsync(CancellationToken token, int steps = 1)
         {
             _current += steps;
             _currentPosition += steps;
-            return _current < _end || await TryIncreasingBufferAsync(token).ConfigureAwait(false);
+            return _current < _end || TryIncreasingBufferAsync(token);
         }
 
-        public async ValueTask DisposeAsync()
+        public void DisposeAsync()
         {
-            await DisposeStreamAsync().ConfigureAwait(false);
+            DisposeStreamAsync();
             _beginNode = _currentNode = DataNode.Empty;
             _data = DataNode.Empty.Data;
         }
 
-        private async ValueTask<bool> TryIncreasingBufferAsync(CancellationToken token)
+        private bool TryIncreasingBufferAsync(CancellationToken token)
         {
             if (_stream == null) return false;
-            return _end == _data.Length ?
-                await AddNodeAsync(_stream, token).ConfigureAwait(false) :
-                await FillBufferAsync(_stream, token).ConfigureAwait(false);
+            return _end == _data.Length ? AddNodeAsync(_stream, token) : FillBufferAsync(_stream, token);
         }
 
-        private async ValueTask<bool> AddNodeAsync(Stream stream, CancellationToken token)
+        private bool AddNodeAsync(Stream stream, CancellationToken token)
         {
             var data = new byte[_data.Length];
-            var end = await stream.ReadAsync(data, token).ConfigureAwait(false);
+            var end = stream.ReadAsync(data, token).AsTask().GetAwaiter().GetResult();
             if (end == 0)
             {
-                await DisposeStreamAsync().ConfigureAwait(false);
+                DisposeStreamAsync();
                 return false;
             }
 
@@ -128,12 +123,12 @@ namespace DevFast.Net.Text
             return _current < _end;
         }
 
-        private async ValueTask<bool> FillBufferAsync(Stream stream, CancellationToken token)
+        private bool FillBufferAsync(Stream stream, CancellationToken token)
         {
-            var end = await stream.ReadAsync(_data.AsMemory(_end, _data.Length - _end), token).ConfigureAwait(false);
+            var end = stream.ReadAsync(_data.AsMemory(_end, _data.Length - _end), token).AsTask().GetAwaiter().GetResult();
             if (end == 0)
             {
-                await DisposeStreamAsync().ConfigureAwait(false);
+                DisposeStreamAsync();
                 return false;
             }
 
@@ -141,9 +136,9 @@ namespace DevFast.Net.Text
             return _current < _end;
         }
 
-        private async ValueTask DisposeStreamAsync()
+        private void DisposeStreamAsync()
         {
-            if (_stream != null && _disposeStream) await _stream.DisposeAsync().ConfigureAwait(false);
+            if (_stream != null && _disposeStream) _stream.Dispose();
             _stream = null;
         }
 

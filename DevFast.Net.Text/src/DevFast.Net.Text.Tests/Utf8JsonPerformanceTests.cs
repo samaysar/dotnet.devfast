@@ -209,26 +209,30 @@ namespace DevFast.Net.Text.Tests
         {
             var l = 0;
             var sw = Stopwatch.StartNew();
+            sw.Stop();
+            sw.Reset();
             for (var i = 0; i < loop; i++)
             {
                 m.Seek(0, SeekOrigin.Begin);
-                l = m.Pull(false).AndParseJsonArray<T>().Count();
+                sw.Start();
+                l = m.Pull(false).AndParseJsonArray<T>(bufferSize:ib).Count();
+                sw.Stop();
             }
-            sw.Stop();
             Console.WriteLine($"[{op}] Count:{l}, Time:{sw.ElapsedMilliseconds}");
 
             int c = 0;
-            sw.Restart();
+            sw.Reset();
             for (var i = 0; i < loop; i++)
             {
                 m.Seek(0, SeekOrigin.Begin);
-                await using var r = await JsonReader.CreateAsync(m, CancellationToken.None, ib);
-                l = await r.EnumerateRawJsonArrayElementAsync(true, CancellationToken.None)
-                    .SelectAsync((x, _) => Utf8Json.JsonSerializer.Deserialize<T>(x.Value))
-                    .CountAsync();
+                sw.Start();
+                using var r = await JsonReader.CreateAsync(m, CancellationToken.None, ib);
+                l = r.EnumerateRawJsonArrayElementAsync(true, CancellationToken.None)
+                    .Select((x, _) => Utf8Json.JsonSerializer.Deserialize<T>(x.Value))
+                    .Count();
+                sw.Stop();
                 c = r.Capacity;
             }
-            sw.Stop();
             Console.WriteLine($"[{op}] Count:{l}, Time:{sw.ElapsedMilliseconds}, Cap: {c}");
         }
 

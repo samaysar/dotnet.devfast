@@ -12,7 +12,7 @@ or newline '\n') and multiline comments (starting with '/*' and ending with '*/'
 ```csharp
 public sealed class AsyncUtf8JsonArrayPartReader :
 DevFast.Net.Text.Json.IAsyncJsonArrayPartReader,
-System.IAsyncDisposable
+System.IDisposable
 ```
 - *Properties*
   - **[Capacity](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Capacity 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Capacity')**
@@ -20,7 +20,7 @@ System.IAsyncDisposable
   - **[EoJ](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EoJ 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EoJ')**
   - **[Position](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Position 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Position')**
 - *Methods*
-  - **[DisposeAsync()](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.DisposeAsync() 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.DisposeAsync()')**
+  - **[Dispose()](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Dispose() 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Dispose()')**
   - **[EnumerateRawJsonArrayElementAsync(bool, CancellationToken)](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EnumerateRawJsonArrayElementAsync(bool,System.Threading.CancellationToken) 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EnumerateRawJsonArrayElementAsync(bool, System.Threading.CancellationToken)')**
   - **[GetCurrentRawAsync(bool, CancellationToken)](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.GetCurrentRawAsync(bool,System.Threading.CancellationToken) 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.GetCurrentRawAsync(bool, System.Threading.CancellationToken)')**
   - **[ReadIsBeginArrayAsync(CancellationToken)](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md#DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.ReadIsBeginArrayAsync(System.Threading.CancellationToken) 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.ReadIsBeginArrayAsync(System.Threading.CancellationToken)')**
@@ -38,12 +38,12 @@ or newline '\n') and multiline comments (starting with '/*' and ending with '*/'
 ```csharp
 public sealed class AsyncUtf8JsonArrayPartReader :
 DevFast.Net.Text.Json.IAsyncJsonArrayPartReader,
-System.IAsyncDisposable
+System.IDisposable
 ```
 
 Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.Object 'System.Object') &#129106; AsyncUtf8JsonArrayPartReader
 
-Implements [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader'), [System.IAsyncDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable 'System.IAsyncDisposable')
+Implements [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader'), [System.IDisposable](https://docs.microsoft.com/en-us/dotnet/api/System.IDisposable 'System.IDisposable')
 ### Properties
 
 <a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Capacity'></a>
@@ -109,20 +109,17 @@ Implements [Position](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast
 [System.Int64](https://docs.microsoft.com/en-us/dotnet/api/System.Int64 'System.Int64')
 ### Methods
 
-<a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.DisposeAsync()'></a>
+<a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.Dispose()'></a>
 
-## AsyncUtf8JsonArrayPartReader.DisposeAsync() Method
+## AsyncUtf8JsonArrayPartReader.Dispose() Method
 
 Asynchronous clean up by releasing resources.
 
 ```csharp
-public System.Threading.Tasks.ValueTask DisposeAsync();
+public void Dispose();
 ```
 
-Implements [DisposeAsync()](https://docs.microsoft.com/en-us/dotnet/api/System.IAsyncDisposable.DisposeAsync 'System.IAsyncDisposable.DisposeAsync')
-
-#### Returns
-[System.Threading.Tasks.ValueTask](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask 'System.Threading.Tasks.ValueTask')
+Implements [Dispose()](https://docs.microsoft.com/en-us/dotnet/api/System.IDisposable.Dispose 'System.IDisposable.Dispose')
 
 <a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.EnumerateRawJsonArrayElementAsync(bool,System.Threading.CancellationToken)'></a>
 
@@ -136,7 +133,7 @@ Any standard JSON serializer can be used to deserialize [Value](DevFast.Net.Text
 to obtain an instance of corresponding .Net type.
 
 ```csharp
-public System.Collections.Generic.IAsyncEnumerable<DevFast.Net.Text.Json.RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
+public System.Collections.Generic.IEnumerable<DevFast.Net.Text.Json.RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -157,7 +154,7 @@ Cancellation token to observe.
 Implements [EnumerateRawJsonArrayElementAsync(bool, CancellationToken)](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.EnumerateRawJsonArrayElementAsync(bool,System.Threading.CancellationToken) 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.EnumerateRawJsonArrayElementAsync(bool, System.Threading.CancellationToken)')
 
 #### Returns
-[System.Collections.Generic.IAsyncEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')[RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IAsyncEnumerable-1 'System.Collections.Generic.IAsyncEnumerable`1')
+[System.Collections.Generic.IEnumerable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1 'System.Collections.Generic.IEnumerable`1')[RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Collections.Generic.IEnumerable-1 'System.Collections.Generic.IEnumerable`1')
 
 #### Exceptions
 
@@ -176,7 +173,7 @@ to parse well-structured JSON stream over this method.
 This method is to parse non-standard chain of JSON elements separated by ',' (or not).
 
 ```csharp
-public System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.RawJson> GetCurrentRawAsync(bool withVerify=true, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
+public DevFast.Net.Text.Json.RawJson GetCurrentRawAsync(bool withVerify=true, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -196,7 +193,7 @@ Cancellation token to observe.
 Implements [GetCurrentRawAsync(bool, CancellationToken)](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(bool,System.Threading.CancellationToken) 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.GetCurrentRawAsync(bool, System.Threading.CancellationToken)')
 
 #### Returns
-[System.Threading.Tasks.ValueTask&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')[RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')
+[RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson')
 
 #### Exceptions
 
@@ -213,7 +210,7 @@ Otherwise, it returns [false](https://docs.microsoft.com/en-us/dotnet/csharp/lan
 reader position is maintained on the current byte.
 
 ```csharp
-public System.Threading.Tasks.ValueTask<bool> ReadIsBeginArrayAsync(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
+public bool ReadIsBeginArrayAsync(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -226,7 +223,7 @@ Cancellation token to observe
 Implements [ReadIsBeginArrayAsync(CancellationToken)](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.ReadIsBeginArrayAsync(System.Threading.CancellationToken) 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.ReadIsBeginArrayAsync(System.Threading.CancellationToken)')
 
 #### Returns
-[System.Threading.Tasks.ValueTask&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
 <a name='DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken)'></a>
 
@@ -239,7 +236,7 @@ reader position is maintained on the current byte and an error
 (of type [JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')) is thrown.
 
 ```csharp
-public System.Threading.Tasks.ValueTask ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
+public void ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -250,9 +247,6 @@ public System.Threading.Tasks.ValueTask ReadIsBeginArrayWithVerifyAsync(System.T
 Cancellation token to observe
 
 Implements [ReadIsBeginArrayWithVerifyAsync(CancellationToken)](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken) 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.ReadIsBeginArrayWithVerifyAsync(System.Threading.CancellationToken)')
-
-#### Returns
-[System.Threading.Tasks.ValueTask](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask 'System.Threading.Tasks.ValueTask')
 
 #### Exceptions
 
@@ -269,7 +263,7 @@ Otherwise, it returns [false](https://docs.microsoft.com/en-us/dotnet/csharp/lan
 reader position is maintained on the current byte.
 
 ```csharp
-public System.Threading.Tasks.ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
+public bool ReadIsEndArrayAsync(bool ensureEoj, System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
 ```
 #### Parameters
 
@@ -291,4 +285,4 @@ Cancellation token to observe
 Implements [ReadIsEndArrayAsync(bool, CancellationToken)](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md#DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.ReadIsEndArrayAsync(bool,System.Threading.CancellationToken) 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.ReadIsEndArrayAsync(bool, System.Threading.CancellationToken)')
 
 #### Returns
-[System.Threading.Tasks.ValueTask&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')
+[System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')

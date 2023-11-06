@@ -65,13 +65,13 @@ namespace DevFast.Net.Text.Json.Utf8
         /// single line and multiline comments are allowed after <see cref="JsonConst.ArrayEndByte"/> until <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe.</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        public async IAsyncEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj,
-            [EnumeratorCancellation] CancellationToken token = default)
+        public IEnumerable<RawJson> EnumerateRawJsonArrayElementAsync(bool ensureEoj,
+            CancellationToken token = default)
         {
-            await ReadIsBeginArrayWithVerifyAsync(token).ConfigureAwait(false);
-            while (!await ReadIsEndArrayAsync(ensureEoj, token).ConfigureAwait(false))
+            ReadIsBeginArrayWithVerifyAsync(token);
+            while (!ReadIsEndArrayAsync(ensureEoj, token))
             {
-                var next = await GetCurrentRawAsync(true, token).ConfigureAwait(false);
+                var next = GetCurrentRawAsync(true, token);
                 if (next.Type == JsonType.Nothing)
                 {
                     throw new JsonArrayPartParsingException($"Expected a valid JSON element or end of JSON array. " +
@@ -90,9 +90,9 @@ namespace DevFast.Net.Text.Json.Utf8
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        public async ValueTask ReadIsBeginArrayWithVerifyAsync(CancellationToken token = default)
+        public void ReadIsBeginArrayWithVerifyAsync(CancellationToken token = default)
         {
-            if (!await ReadIsBeginArrayAsync(token).ConfigureAwait(false))
+            if (!ReadIsBeginArrayAsync(token))
             {
                 if (InRange)
                 {
@@ -114,9 +114,9 @@ namespace DevFast.Net.Text.Json.Utf8
         /// reader position is maintained on the current byte.
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
-        public ValueTask<bool> ReadIsBeginArrayAsync(CancellationToken token = default)
+        public bool ReadIsBeginArrayAsync(CancellationToken token = default)
         {
-            return ValueTask.FromResult(ReadIsGivenByte(JsonConst.ArrayBeginByte, token));
+            return ReadIsGivenByte(JsonConst.ArrayBeginByte, token);
         }
 
         /// <summary>
@@ -131,8 +131,7 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe</param>
-        public ValueTask<bool> ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token = default)
-
+        public bool ReadIsEndArrayAsync(bool ensureEoj, CancellationToken token = default)
         {
             var reply = ReadIsGivenByte(JsonConst.ArrayEndByte, token);
             if (ensureEoj && reply)
@@ -145,7 +144,7 @@ namespace DevFast.Net.Text.Json.Utf8
                                                             $"0-Based Position = {Position}.");
                 }
             }
-            return ValueTask.FromResult(reply);
+            return reply;
         }
 
         /// <summary>
@@ -162,10 +161,10 @@ namespace DevFast.Net.Text.Json.Utf8
         /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
         /// <param name="token">Cancellation token to observe.</param>
         /// <exception cref="JsonArrayPartParsingException"></exception>
-        public ValueTask<RawJson> GetCurrentRawAsync(bool withVerify = true, CancellationToken token = default)
+        public RawJson GetCurrentRawAsync(bool withVerify = true, CancellationToken token = default)
         {
             SkipWhiteSpace();
-            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return ValueTask.FromResult(new RawJson(JsonType.Nothing, Array.Empty<byte>()));
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Nothing, Array.Empty<byte>());
             var begin = _current;
             var type = SkipUntilNextRaw();
             token.ThrowIfCancellationRequested();
@@ -183,7 +182,7 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 ReadIsGivenByte(JsonConst.ValueSeparatorByte, token);
             }
-            return ValueTask.FromResult(new RawJson(type, currentRaw));
+            return new RawJson(type, currentRaw);
         }
 
         private JsonType SkipUntilNextRaw()
@@ -531,9 +530,9 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <summary>
         /// Asynchronous clean up by releasing resources.
         /// </summary>
-        public async ValueTask DisposeAsync()
+        public void Dispose()
         {
-            if (_stream != null && _disposeStream) await _stream.DisposeAsync().ConfigureAwait(false);
+            if (_stream != null && _disposeStream) _stream.Dispose();
             _stream = null;
             _buffer = Array.Empty<byte>();
         }
