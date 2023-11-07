@@ -227,7 +227,7 @@ namespace DevFast.Net.Text.Tests
                 m.Seek(0, SeekOrigin.Begin);
                 sw.Start();
                 using var r = await JsonReader.CreateAsync(m, CancellationToken.None, ib);
-                l = r.EnumerateRawJsonArrayElementAsync(true, CancellationToken.None)
+                l = r.EnumerateJsonArray(true, CancellationToken.None)
                     .Select((x, _) => Utf8Json.JsonSerializer.Deserialize<T>(x.Value))
                     .Count();
                 sw.Stop();

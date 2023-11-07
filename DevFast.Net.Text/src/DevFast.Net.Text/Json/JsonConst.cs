@@ -8,7 +8,7 @@ namespace DevFast.Net.Text.Json
     public static class JsonConst
     {        
         /// <summary>
-        /// Minimum buffer size of <see cref="AsyncUtf8JsonArrayPartReader"/>.
+        /// Minimum buffer size of <see cref="JsonArrayReader"/>.
         /// </summary>
         public const int RawUtf8JsonPartReaderMinBuffer = 512;
 

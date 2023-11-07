@@ -26,10 +26,10 @@ Inheritance [System.Object](https://docs.microsoft.com/en-us/dotnet/api/System.O
 
 ## JsonReader.CreateAsync(Stream, CancellationToken, int, bool) Method
 
-Convenient method, to create well initialized instance of type [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader').
+Convenient method, to create well initialized instance of type [IJsonArrayReader](DevFast.Net.Text.Json.IJsonArrayReader.md 'DevFast.Net.Text.Json.IJsonArrayReader').
 
 ```csharp
-public static System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.IAsyncJsonArrayPartReader> CreateAsync(System.IO.Stream stream, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), int size=512, bool disposeStream=false);
+public static System.Threading.Tasks.ValueTask<DevFast.Net.Text.Json.IJsonArrayReader> CreateAsync(System.IO.Stream stream, System.Threading.CancellationToken token=default(System.Threading.CancellationToken), int size=512, bool disposeStream=false);
 ```
 #### Parameters
 
@@ -57,8 +57,8 @@ Initial size of underlying byte buffer. Any value less than
 `disposeStream` [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
 [true](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') to dispose [stream](DevFast.Net.Text.Json.JsonReader.md#DevFast.Net.Text.Json.JsonReader.CreateAsync(System.IO.Stream,System.Threading.CancellationToken,int,bool).stream 'DevFast.Net.Text.Json.JsonReader.CreateAsync(System.IO.Stream, System.Threading.CancellationToken, int, bool).stream') when either
-            current instance of [IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader') itself disposing or
+            current instance of [IJsonArrayReader](DevFast.Net.Text.Json.IJsonArrayReader.md 'DevFast.Net.Text.Json.IJsonArrayReader') itself disposing or
             when [stream](DevFast.Net.Text.Json.JsonReader.md#DevFast.Net.Text.Json.JsonReader.CreateAsync(System.IO.Stream,System.Threading.CancellationToken,int,bool).stream 'DevFast.Net.Text.Json.JsonReader.CreateAsync(System.IO.Stream, System.Threading.CancellationToken, int, bool).stream') is completely read; [false](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/bool') otherwise.
 
 #### Returns
-[System.Threading.Tasks.ValueTask&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')[IAsyncJsonArrayPartReader](DevFast.Net.Text.Json.IAsyncJsonArrayPartReader.md 'DevFast.Net.Text.Json.IAsyncJsonArrayPartReader')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')
+[System.Threading.Tasks.ValueTask&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')[IJsonArrayReader](DevFast.Net.Text.Json.IJsonArrayReader.md 'DevFast.Net.Text.Json.IJsonArrayReader')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.Threading.Tasks.ValueTask-1 'System.Threading.Tasks.ValueTask`1')

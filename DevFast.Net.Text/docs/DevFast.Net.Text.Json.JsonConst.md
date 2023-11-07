@@ -451,7 +451,7 @@ public const byte PlusSignByte = 43;
 
 ## JsonConst.RawUtf8JsonPartReaderMinBuffer Field
 
-Minimum buffer size of [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader').
+Minimum buffer size of [JsonArrayReader](DevFast.Net.Text.Json.Utf8.JsonArrayReader.md 'DevFast.Net.Text.Json.Utf8.JsonArrayReader').
 
 ```csharp
 public const int RawUtf8JsonPartReaderMinBuffer = 512;
