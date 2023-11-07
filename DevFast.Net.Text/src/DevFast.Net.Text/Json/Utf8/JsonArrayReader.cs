@@ -427,7 +427,6 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             SkipWhiteSpace(token);
             if (!InRange || _buffer[_current] != match) return false;
-            NextWithEnsureCapacity(token);
             ReDefineBuffer(1, token);
             return true;
         }
@@ -537,9 +536,9 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             IncreaseConsumption(offsetIncrement);
             if (_stream == null) return;
-            if (_current >= (_buffer.Length + 1) / 2)
+            if (_current > ((_buffer.Length * 13)/16))
             {
-                _end -= _current;
+                _end = Math.Max(0, _end - _current);
                 if (_end > 0) _buffer.LiftNCopyUnSafe(_current, _end, 0);
                 _current = _begin = 0;
             }
@@ -549,7 +548,7 @@ namespace DevFast.Net.Text.Json.Utf8
         private bool TryIncreasingBuffer(CancellationToken token)
         {
             if (_stream == null) return false;
-            if (_end == _buffer.Length) _buffer = _buffer.DoubleByteCapacity();
+            if (_end == _buffer.Length || _current >= _buffer.Length) _buffer = _buffer.DoubleByteCapacity();
             return FillBuffer(token);
         }
 

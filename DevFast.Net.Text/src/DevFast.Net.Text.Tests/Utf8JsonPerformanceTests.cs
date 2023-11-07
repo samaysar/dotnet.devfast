@@ -191,7 +191,7 @@ namespace DevFast.Net.Text.Tests
                              FileAccess.Write,
                              FileShare.None,
                              4 * 1024 * 1024,
-                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+                             FileOptions.Asynchronous))
             {
                 await Enumerable.Repeat(new A(), 1_000_000).PushJson().AndWriteStreamAsync(m);
                 Console.WriteLine($"Size: {m.Position / 1024 / 1024}MB");
@@ -202,23 +202,23 @@ namespace DevFast.Net.Text.Tests
                 FileShare.None,
                 8 * 1024,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            await MeasureNPrintAsync<A>(mm, nameof(FileBasedOneMillionComplexObjectArray), 3, 8 * 1024);
+            await MeasureNPrintAsync<A>(mm, nameof(FileBasedOneMillionComplexObjectArray), 3);
         }
 
         private async Task MeasureNPrintAsync<T>(Stream m, string op, int loop = TotalLoop, int ib = 512)
         {
             var l = 0;
             var sw = Stopwatch.StartNew();
-            sw.Stop();
-            sw.Reset();
-            for (var i = 0; i < loop; i++)
-            {
-                m.Seek(0, SeekOrigin.Begin);
-                sw.Start();
-                l = m.Pull(false).AndParseJsonArray<T>(bufferSize:ib).Count();
-                sw.Stop();
-            }
-            Console.WriteLine($"[{op}] Count:{l}, Time:{sw.ElapsedMilliseconds}");
+            //sw.Stop();
+            //sw.Reset();
+            //for (var i = 0; i < loop; i++)
+            //{
+            //    m.Seek(0, SeekOrigin.Begin);
+            //    sw.Start();
+            //    l = m.Pull(false).AndParseJsonArray<T>(bufferSize:ib).Count();
+            //    sw.Stop();
+            //}
+            //Console.WriteLine($"[{op}] Count:{l}, Time:{sw.ElapsedMilliseconds}");
 
             int c = 0;
             sw.Reset();
