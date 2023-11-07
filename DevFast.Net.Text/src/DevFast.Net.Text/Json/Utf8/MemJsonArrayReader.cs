@@ -98,7 +98,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 {
                     throw new JsonArrayPartParsingException("Invalid byte value for JSON begin-array. " +
                                                             $"Expected = {JsonConst.ArrayBeginByte}, " +
-                                                            $"Found = {(char)_buffer[_current]}, " +
+                                                            $"Found = {(char)Current!}, " +
                                                             $"0-Based Position = {Position}.");
                 }
                 throw new JsonArrayPartParsingException("Reached end, unable to find JSON begin-array." +
@@ -206,7 +206,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 JsonConst.FirstOfFalseByte => SkipAlseOfFalse(),
                 JsonConst.FirstOfNullByte => SkipUllOfNull(),
                 _ => throw new JsonArrayPartParsingException($"Invalid byte value for start of JSON element. " +
-                                                             $"Found = {_buffer[_current]}, " +
+                                                             $"Found = {(char)Current!}, " +
                                                              $"0-Based Position = {Position}.")
             };
         }
@@ -237,7 +237,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 {
                     throw new JsonArrayPartParsingException($"Invalid byte value for start of Object Property Name. " +
                                                             $"Expected = {JsonConst.StringQuoteByte}, " +
-                                                            $"Found = {_buffer[_current]}, " +
+                                                            $"Found = {(char)Current!}, " +
                                                             $"0-Based Position = {Position}.");
                 }
                 SkipString();
@@ -296,7 +296,7 @@ namespace DevFast.Net.Text.Json.Utf8
                                         $"\\{JsonConst.FirstOfTrueByte} or " +
                                         $"\\{JsonConst.LastOfCarriageReturnInStringByte} or " +
                                         $"\\{JsonConst.SecondOfHexDigitInStringByte}4Hex, " +
-                                        $"Found = \\{_buffer[_current]}, " +
+                                        $"Found = \\{(char)Current!}, " +
                                         $"0-Based Position = {Position}.");
                             }
                         }
@@ -394,7 +394,7 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 throw new JsonArrayPartParsingException($"Invalid byte value for '{partOf}'. " +
                                                         $"Expected = {expected}, " +
-                                                        $"Found = {_buffer[_current]}, " +
+                                                        $"Found = {(char)Current!}, " +
                                                         $"0-Based Position = {Position}.");
             }
             throw new JsonArrayPartParsingException($"Reached end, unable to find '{end}'. " +
@@ -437,7 +437,7 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 throw new JsonArrayPartParsingException($"Invalid byte value while parsing '{partOf}'. " +
                                                         $"Expected = {expected}, " +
-                                                        $"Found = {_buffer[_current]}, " +
+                                                        $"Found = {(char)Current!}, " +
                                                         $"0-Based Position = {Position}.");
             }
             throw new JsonArrayPartParsingException($"Reached end while parsing '{partOf}'. " +
@@ -479,8 +479,8 @@ namespace DevFast.Net.Text.Json.Utf8
                 case JsonConst.ForwardSlashByte:
                     while (NextWithEnsureCapacity())
                     {
-                        if (_buffer[_current] != JsonConst.CarriageReturnByte &&
-                            _buffer[_current] != JsonConst.NewLineByte) continue;
+                        var current = _buffer[_current];
+                        if (current != JsonConst.CarriageReturnByte && current != JsonConst.NewLineByte) continue;
                         NextWithEnsureCapacity();
                         return;
                     }

@@ -113,7 +113,7 @@ Implements [Position](DevFast.Net.Text.Json.IJsonArrayReader.md#DevFast.Net.Text
 
 ## JsonArrayReader.Dispose() Method
 
-Asynchronous clean up by releasing resources.
+Clean up by releasing resources.
 
 ```csharp
 public void Dispose();
@@ -125,7 +125,7 @@ Implements [Dispose()](https://docs.microsoft.com/en-us/dotnet/api/System.IDispo
 
 ## JsonArrayReader.EnumerateJsonArray(bool, CancellationToken) Method
 
-Provides a convenient way to asynchronously enumerate over elements of a JSON array (one at a time).
+Provides a convenient way to enumerate over elements of a JSON array (one at a time).
 For every iteration, such mechanism produces [RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson'), where [Value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Value 'DevFast.Net.Text.Json.RawJson.Value') represents
 entire value-form (including structural characters, string quotes etc.) of such an individual
 element & [Type](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Type 'DevFast.Net.Text.Json.RawJson.Type') indicates underlying JSON element type. 
