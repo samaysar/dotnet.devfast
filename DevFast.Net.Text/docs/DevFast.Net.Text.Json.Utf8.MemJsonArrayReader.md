@@ -253,7 +253,7 @@ Implements [ReadIsEndArray(bool, CancellationToken)](DevFast.Net.Text.Json.IJson
 ## MemJsonArrayReader.ReadRaw(bool, CancellationToken) Method
 
 Reads the current JSON element as [RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson'). If it reaches [EoJ](DevFast.Net.Text.Json.Utf8.MemJsonArrayReader.md#DevFast.Net.Text.Json.Utf8.MemJsonArrayReader.EoJ 'DevFast.Net.Text.Json.Utf8.MemJsonArrayReader.EoJ') or
-encounters [ArrayEndByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ArrayEndByte 'DevFast.Net.Text.Json.JsonConst.ArrayEndByte'), it returns [Nothing](DevFast.Net.Text.Json.JsonType.md#DevFast.Net.Text.Json.JsonType.Nothing 'DevFast.Net.Text.Json.JsonType.Nothing') as
+encounters [ArrayEndByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ArrayEndByte 'DevFast.Net.Text.Json.JsonConst.ArrayEndByte'), it returns [Undefined](DevFast.Net.Text.Json.JsonType.md#DevFast.Net.Text.Json.JsonType.Undefined 'DevFast.Net.Text.Json.JsonType.Undefined') as
 [Type](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Type 'DevFast.Net.Text.Json.RawJson.Type').
 
 One should prefer [EnumerateJsonArray(bool, CancellationToken)](DevFast.Net.Text.Json.Utf8.MemJsonArrayReader.md#DevFast.Net.Text.Json.Utf8.MemJsonArrayReader.EnumerateJsonArray(bool,System.Threading.CancellationToken) 'DevFast.Net.Text.Json.Utf8.MemJsonArrayReader.EnumerateJsonArray(bool, System.Threading.CancellationToken)') to parse well-structured JSON stream over this method.

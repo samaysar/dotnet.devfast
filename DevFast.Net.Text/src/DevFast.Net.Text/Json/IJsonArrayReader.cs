@@ -85,7 +85,7 @@
 
         /// <summary>
         /// Reads the current JSON element as <see cref="RawJson"/>. If it reaches <see cref="EoJ"/> or
-        /// encounters <see cref="JsonConst.ArrayEndByte"/>, it returns <see cref="JsonType.Nothing"/> as
+        /// encounters <see cref="JsonConst.ArrayEndByte"/>, it returns <see cref="JsonType.Undefined"/> as
         /// <see cref="RawJson.Type"/>.
         /// <para>
         /// One should prefer <see cref="EnumerateJsonArray"/> to parse well-structured JSON stream over this method.

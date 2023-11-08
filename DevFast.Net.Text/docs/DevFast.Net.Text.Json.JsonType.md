@@ -23,17 +23,11 @@ Array/collection of other JSON types, containing everything including & in-betwe
 
 JSON 'true' or 'false' literal.
 
-<a name='DevFast.Net.Text.Json.JsonType.Nothing'></a>
-
-`Nothing` 0
-
-Absence of any other JSON types. Normally represents end of JSON data or absence of value.
-
 <a name='DevFast.Net.Text.Json.JsonType.Null'></a>
 
 `Null` 6
 
-JSON 'null' literal (NOT same as [Nothing](DevFast.Net.Text.Json.JsonType.md#DevFast.Net.Text.Json.JsonType.Nothing 'DevFast.Net.Text.Json.JsonType.Nothing')).
+JSON 'null' literal (NOT same as [Undefined](DevFast.Net.Text.Json.JsonType.md#DevFast.Net.Text.Json.JsonType.Undefined 'DevFast.Net.Text.Json.JsonType.Undefined')).
 
 <a name='DevFast.Net.Text.Json.JsonType.Num'></a>
 
@@ -52,3 +46,9 @@ JSON object containing everything including & in-between '{' and '}'.
 `Str` 4
 
 JSON string value containing everything including and in-between '"' and '"'.
+
+<a name='DevFast.Net.Text.Json.JsonType.Undefined'></a>
+
+`Undefined` 0
+
+Absence of any other JSON types. Normally represents end of JSON data or absence of value.

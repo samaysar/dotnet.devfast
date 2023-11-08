@@ -1,4 +1,4 @@
-﻿//----------- We will revisit this class when implementing broadcast stream
+﻿//----------- We will revisit this class when implementing broadcast stream, would move to Io module
 //using DevFast.Net.Extensions.SystemTypes;
 
 //namespace DevFast.Net.Text

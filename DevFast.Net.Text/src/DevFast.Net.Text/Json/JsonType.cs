@@ -9,7 +9,7 @@
         /// <summary>
         /// Absence of any other JSON types. Normally represents end of JSON data or absence of value.
         /// </summary>
-        Nothing = 0,
+        Undefined = 0,
         /// <summary>
         /// JSON object containing everything including &amp; in-between '{' and '}'.
         /// </summary>
@@ -28,7 +28,7 @@
         Str = 4,
         /// <summary>JSON 'true' or 'false' literal.</summary>
         Bool = 5,
-        /// <summary>JSON 'null' literal (NOT same as <see cref="Nothing"/>).</summary>
+        /// <summary>JSON 'null' literal (NOT same as <see cref="Undefined"/>).</summary>
         Null = 6
     }
 }

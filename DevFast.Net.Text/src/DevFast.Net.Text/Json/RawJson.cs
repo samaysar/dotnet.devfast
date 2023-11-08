@@ -4,7 +4,7 @@
     /// Raw JSON output that provide a valid <see cref="JsonType"/> and corresponding
     /// <see cref="Value"/>.
     /// <para>
-    /// When <see cref="Type"/> is <see cref="JsonType.Nothing"/>, <see cref="Value"/> is
+    /// When <see cref="Type"/> is <see cref="JsonType.Undefined"/>, <see cref="Value"/> is
     /// an empty <see cref="byte"/> array.
     /// </para>
     /// </summary>
@@ -27,7 +27,7 @@
         public JsonType Type { get; }
 
         /// <summary>
-        /// Raw JSON value. When <see cref="Type"/> is <see cref="JsonType.Nothing"/>, <see cref="Value"/> is
+        /// Raw JSON value. When <see cref="Type"/> is <see cref="JsonType.Undefined"/>, <see cref="Value"/> is
         /// an empty <see cref="byte"/> array.
         /// </summary>
 #pragma warning disable CA1819

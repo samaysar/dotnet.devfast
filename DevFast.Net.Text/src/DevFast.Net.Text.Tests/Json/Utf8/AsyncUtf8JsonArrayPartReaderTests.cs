@@ -16,13 +16,13 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             var e = new UTF8Encoding(withPreamble);
             await m.WriteAsync(e.GetPreamble());
             m.Seek(0, SeekOrigin.Begin);
-            using (var r = await JsonReader.CreateAsync(m, CancellationToken.None, disposeStream: disposeInner))
+            using (var r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: disposeInner))
             {
                 That(r.ReadIsBeginArray(), Is.False);
                 That(r.ReadIsEndArray(false), Is.False);
                 var current = r.ReadRaw(default);
                 That(current.Value, Is.Empty);
-                That(current.Type, Is.EqualTo(JsonType.Nothing));
+                That(current.Type, Is.EqualTo(JsonType.Undefined));
                 That(r.EoJ, Is.True);
                 That(r.Current, Is.Null);
                 That(r.Position, Is.EqualTo(withPreamble ? 3 : 0));
@@ -42,13 +42,13 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             await m.WriteAsync(e.GetPreamble());
             await m.WriteAsync(new[] { JsonConst.ArrayBeginByte, JsonConst.ArrayEndByte });
             m.Seek(0, SeekOrigin.Begin);
-            using (var r = await JsonReader.CreateAsync(m, CancellationToken.None, disposeStream: disposeInner))
+            using (var r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: disposeInner))
             {
                 That(r.ReadIsBeginArray(), Is.True);
                 That(r.ReadIsBeginArray(), Is.False);
                 var current = r.ReadRaw(default);
                 That(current.Value, Is.Empty);
-                That(current.Type, Is.EqualTo(JsonType.Nothing));
+                That(current.Type, Is.EqualTo(JsonType.Undefined));
                 That(r.EoJ, Is.False);
                 That(r.Current, Is.EqualTo(JsonConst.ArrayEndByte));
                 That(r.ReadIsEndArray(true), Is.True);

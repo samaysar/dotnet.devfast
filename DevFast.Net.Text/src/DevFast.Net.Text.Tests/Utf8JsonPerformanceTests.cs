@@ -200,8 +200,8 @@ namespace DevFast.Net.Text.Tests
                 FileMode.Open,
                 FileAccess.Read,
                 FileShare.None,
-                8 * 1024,
-                FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
+                1024 * 1024,
+                FileOptions.SequentialScan | FileOptions.Asynchronous );
             await MeasureNPrintAsync<A>(mm, nameof(FileBasedOneMillionComplexObjectArray), 3);
         }
 
@@ -226,7 +226,7 @@ namespace DevFast.Net.Text.Tests
             {
                 m.Seek(0, SeekOrigin.Begin);
                 sw.Start();
-                using var r = await JsonReader.CreateAsync(m, CancellationToken.None, ib);
+                using var r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, ib);
                 l = r.EnumerateJsonArray(true, CancellationToken.None)
                     .Select((x, _) => Utf8Json.JsonSerializer.Deserialize<T>(x.Value))
                     .Count();

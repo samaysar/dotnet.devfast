@@ -75,7 +75,7 @@ namespace DevFast.Net.Text.Json.Utf8
             while (!ReadIsEndArray(ensureEoj, token))
             {
                 var next = ReadRaw(true, token);
-                if (next.Type == JsonType.Nothing)
+                if (next.Type == JsonType.Undefined)
                 {
                     throw new JsonArrayPartParsingException($"Expected a valid JSON element or end of JSON array. " +
                         $"0-Based Position = {Position}.");
@@ -153,7 +153,7 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <summary>
         /// Reads the current JSON element as <see cref="RawJson"/>. If reaches <see cref="EoJ"/> or
         /// encounters <see cref="JsonConst.ArrayEndByte"/>, returned <see cref="RawJson.Type"/> is
-        /// <see cref="JsonType.Nothing"/>.
+        /// <see cref="JsonType.Undefined"/>.
         /// <para>
         /// One should prefer <see cref="EnumerateJsonArray"/>
         /// to parse well-structured JSON stream over this method.
@@ -167,7 +167,7 @@ namespace DevFast.Net.Text.Json.Utf8
         public RawJson ReadRaw(bool withVerify = true, CancellationToken token = default)
         {
             SkipWhiteSpace(token);
-            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Nothing, Array.Empty<byte>());
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Undefined, Array.Empty<byte>());
             ReDefineBuffer(0, token);
             var type = SkipUntilNextRaw(token);
             var currentRaw = new byte[_current - _begin];
@@ -554,6 +554,8 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private bool FillBuffer(CancellationToken token)
         {
+            //awaiting here kills the performance for the moment, we need to have a bounded capacity
+            //stream (should go in DevFast.Net.Io module) otherwise we keep this sync version for the moment!
             var end = _stream!.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).AsTask().GetAwaiter().GetResult();
             if (end == 0)
             {

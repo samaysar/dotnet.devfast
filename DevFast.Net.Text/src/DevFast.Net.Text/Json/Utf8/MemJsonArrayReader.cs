@@ -72,7 +72,7 @@ namespace DevFast.Net.Text.Json.Utf8
             while (!ReadIsEndArray(ensureEoj, token))
             {
                 var next = ReadRaw(true, token);
-                if (next.Type == JsonType.Nothing)
+                if (next.Type == JsonType.Undefined)
                 {
                     throw new JsonArrayPartParsingException($"Expected a valid JSON element or end of JSON array. " +
                                                             $"0-Based Position = {Position}.");
@@ -149,7 +149,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         /// <summary>
         /// Reads the current JSON element as <see cref="RawJson"/>. If it reaches <see cref="EoJ"/> or
-        /// encounters <see cref="JsonConst.ArrayEndByte"/>, it returns <see cref="JsonType.Nothing"/> as
+        /// encounters <see cref="JsonConst.ArrayEndByte"/>, it returns <see cref="JsonType.Undefined"/> as
         /// <see cref="RawJson.Type"/>.
         /// <para>
         /// One should prefer <see cref="EnumerateJsonArray"/> to parse well-structured JSON stream over this method.
@@ -163,7 +163,7 @@ namespace DevFast.Net.Text.Json.Utf8
         public RawJson ReadRaw(bool withVerify = true, CancellationToken token = default)
         {
             SkipWhiteSpace();
-            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Nothing, Array.Empty<byte>());
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Undefined, Array.Empty<byte>());
             var begin = _current;
             var type = SkipUntilNextRaw();
             token.ThrowIfCancellationRequested();
