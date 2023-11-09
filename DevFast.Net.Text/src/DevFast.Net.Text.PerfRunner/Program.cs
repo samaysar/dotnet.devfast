@@ -26,11 +26,11 @@
         private static async Task RunAsync()
         {
             await SimpleArray.RunInMemoryAsync();
-            await ObjectArray.RunInMemoryAsync();
-            await ArrayOfArray.RunInMemoryAsync();
+            //await ObjectArray.RunInMemoryAsync();
+            //await ArrayOfArray.RunInMemoryAsync();
             await SimpleArray.RunFromFileAsync();
-            await ObjectArray.RunFromFileAsync();
-            await ArrayOfArray.RunFromFileAsync();
+            //await ObjectArray.RunFromFileAsync();
+            //await ArrayOfArray.RunFromFileAsync();
         }
     }
 }
