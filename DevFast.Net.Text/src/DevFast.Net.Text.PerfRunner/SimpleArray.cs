@@ -1,8 +1,4 @@
-﻿using Dot.Net.DevFast.Extensions.StreamPipeExt;
-using System.Diagnostics;
-using System.Xml.Schema;
-
-namespace DevFast.Net.Text.PerfRunner
+﻿namespace DevFast.Net.Text.PerfRunner
 {
     public static class SimpleArray
     {
@@ -27,9 +23,7 @@ namespace DevFast.Net.Text.PerfRunner
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await using var m = new MemoryStream();
             await Enumerable.Range(0, MeasurePerf.TotalElements).PushJson().AndWriteStreamAsync(m);
-            MeasurePerf.MeasureOnNewton<int>(m);
-            MeasurePerf.MeasureOnUtf8Json<int>(m);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<int>(m);
+            await MeasurePerf.MeasureInMemory<int>(m);
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync();
         }
@@ -41,9 +35,7 @@ namespace DevFast.Net.Text.PerfRunner
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await using var m = new MemoryStream();
             await Enumerable.Repeat(MeasurePerf.LongStr, MeasurePerf.TotalElements).PushJson().AndWriteStreamAsync(m);
-            MeasurePerf.MeasureOnNewton<string>(m);
-            MeasurePerf.MeasureOnUtf8Json<string>(m);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<string>(m);
+            await MeasurePerf.MeasureInMemory<string>(m);
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync();
         }
@@ -55,9 +47,7 @@ namespace DevFast.Net.Text.PerfRunner
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await using var m = new MemoryStream();
             await Enumerable.Repeat(MeasurePerf.ShortStr, MeasurePerf.TotalElements).PushJson().AndWriteStreamAsync(m);
-            MeasurePerf.MeasureOnNewton<string>(m);
-            MeasurePerf.MeasureOnUtf8Json<string>(m);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<string>(m);
+            await MeasurePerf.MeasureInMemory<string>(m);
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync();
         }
@@ -70,7 +60,7 @@ namespace DevFast.Net.Text.PerfRunner
                              FileAccess.Write,
                              FileShare.None,
                              1024 * 1024,
-                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+                             FileOptions.Asynchronous))
             {
                 await Console.Out.WriteLineAsync("----------------------------------------------------");
                 await Console.Out.WriteLineAsync($"-- FILE Array of {MeasurePerf.TotalElements * MeasurePerf.TotalElements} INT --");
@@ -86,8 +76,7 @@ namespace DevFast.Net.Text.PerfRunner
                 FileShare.None,
                 1024 * 1024,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            MeasurePerf.MeasureOnNewton<int>(mm, 3);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<int>(mm, 3);
+            await MeasurePerf.MeasureFile<int>(mm);
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync();
         }
@@ -100,7 +89,7 @@ namespace DevFast.Net.Text.PerfRunner
                              FileAccess.Write,
                              FileShare.None,
                              1024 * 1024,
-                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+                             FileOptions.Asynchronous))
             {
                 await Console.Out.WriteLineAsync("----------------------------------------------------");
                 await Console.Out.WriteLineAsync($"-- FILE Array of {MeasurePerf.TotalElements * MeasurePerf.TotalElements} Big String <Len:{MeasurePerf.LongStr.Length}> --");
@@ -116,8 +105,7 @@ namespace DevFast.Net.Text.PerfRunner
                 FileShare.None,
                 1024 * 1024,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            MeasurePerf.MeasureOnNewton<string>(mm, 3);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<string>(mm, 3);
+            await MeasurePerf.MeasureFile<string>(mm);
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync();
         }
@@ -130,7 +118,7 @@ namespace DevFast.Net.Text.PerfRunner
                              FileAccess.Write,
                              FileShare.None,
                              1024 * 1024,
-                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+                             FileOptions.Asynchronous))
             {
                 await Console.Out.WriteLineAsync("----------------------------------------------------");
                 await Console.Out.WriteLineAsync($"-- FILE Array of {MeasurePerf.TotalElements * MeasurePerf.TotalElements} Short String <Len:{MeasurePerf.ShortStr.Length}> --");
@@ -146,8 +134,7 @@ namespace DevFast.Net.Text.PerfRunner
                 FileShare.None,
                 1024 * 1024,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            MeasurePerf.MeasureOnNewton<string>(mm, 3);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<string>(mm, 3);
+            await MeasurePerf.MeasureFile<string>(mm);
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync();
         }

@@ -121,7 +121,7 @@ namespace DevFast.Net.Text.Tests
                 FileAccess.Write,
                 FileShare.None,
                 4 * 1024 * 1024,
-                FileOptions.WriteThrough | FileOptions.Asynchronous))
+                FileOptions.Asynchronous))
             {
                 await Enumerable.Repeat(new B(), 1_000_000).PushJson().AndWriteStreamAsync(m);
                 Console.WriteLine($"Size: {m.Position / 1024 / 1024}MB");
@@ -144,7 +144,7 @@ namespace DevFast.Net.Text.Tests
                              FileAccess.Write,
                              FileShare.None,
                              4 * 1024 * 1024,
-                             FileOptions.WriteThrough | FileOptions.Asynchronous))
+                             FileOptions.Asynchronous))
             {
                 await Enumerable.Repeat(new C(), 1_000_000).PushJson().AndWriteStreamAsync(m);
                 Console.WriteLine($"Size: {m.Position / 1024 / 1024}MB");
