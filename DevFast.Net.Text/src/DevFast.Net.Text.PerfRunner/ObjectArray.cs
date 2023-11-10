@@ -19,6 +19,7 @@
 
         static async Task MemoryBigArrayOfSimpleObject()
         {
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(new B(), Newtonsoft.Json.Formatting.Indented));
             await Console.Out.WriteLineAsync("----------------------------------------------------");
             await Console.Out.WriteLineAsync($"-- IN-Memory Array of {MeasurePerf.TotalElements} SimpleObject --");
             await Console.Out.WriteLineAsync("----------------------------------------------------");

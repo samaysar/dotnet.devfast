@@ -1,4 +1,7 @@
-﻿namespace DevFast.Net.Text.PerfRunner
+﻿using Dot.Net.DevFast.Extensions.JsonExt;
+using Newtonsoft.Json;
+
+namespace DevFast.Net.Text.PerfRunner
 {
     public static class SimpleArray
     {

@@ -1,4 +1,6 @@
-﻿namespace DevFast.Net.Text.PerfRunner
+﻿using DevFast.Net.Extensions.SystemTypes;
+
+namespace DevFast.Net.Text.PerfRunner
 {
     public static class MeasurePerf
     {
@@ -12,21 +14,96 @@
         public static async Task MeasureInMemory<T>(MemoryStream m, int loop = TotalLoop, int ib = BufferSize)
         {
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            MeasurePerf.MeasureOnNewton<T>(m, loop, ib);
+            MeasureOnJil<T>(m, loop, ib);
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            MeasurePerf.MeasureOnDevFastNewton<T>(m, loop, ib);
+            await MeasureOnDevFastJil<T>(m, loop, ib);
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            MeasurePerf.MeasureOnUtf8Json<T>(m, loop);
+            MeasureOnNewton<T>(m, loop, ib);
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<T>(m, loop, ib);
+            MeasureOnDevFastNewton<T>(m, loop, ib);
+            GC.Collect(2, GCCollectionMode.Forced, true, true);
+            MeasureOnUtf8Json<T>(m, loop);
+            GC.Collect(2, GCCollectionMode.Forced, true, true);
+            await MeasureOnDevFastUtf8Json<T>(m, loop, ib);
+            GC.Collect(2, GCCollectionMode.Forced, true, true);
+            await MeasureOnSystemJson<T>(m, loop, ib);
         }
 
         public static async Task MeasureFile<T>(Stream m, int loop = TotalFileLoop, int ib = BufferSize)
         {
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            MeasurePerf.MeasureOnDevFastNewton<T>(m, loop, ib);
+            await MeasureOnDevFastJil<T>(m, loop, ib);
             GC.Collect(2, GCCollectionMode.Forced, true, true);
-            await MeasurePerf.MeasureOnDevFastUtf8Json<T>(m, loop, ib);
+            MeasureOnDevFastNewton<T>(m, loop, ib);
+            GC.Collect(2, GCCollectionMode.Forced, true, true);
+            await MeasureOnDevFastUtf8Json<T>(m, loop, ib);
+            GC.Collect(2, GCCollectionMode.Forced, true, true);
+            await MeasureOnSystemJson<T>(m, loop, ib);
+        }
+
+        static async Task MeasureOnSystemJson<T>(Stream m, int loop, int ib)
+        {
+            var l = 0;
+            var sw = Stopwatch.StartNew();
+            sw.Stop();
+            sw.Reset();
+            for (var i = 0; i < loop; i++)
+            {
+                m.Seek(0, SeekOrigin.Begin);
+                sw.Start();
+                l += await System.Text.Json.JsonSerializer.DeserializeAsyncEnumerable<T>(m).CountAsync();
+                sw.Stop();
+            }
+            Console.WriteLine($"SYSTEM-JSON: Loop: {loop}, Array Len:{l / loop}, Time:{sw.Elapsed.TotalMilliseconds / loop} ms per loop");
+        }
+
+        static void MeasureOnJil<T>(MemoryStream m, int loop, int ib)
+        {
+            var l = 0;
+            var sw = Stopwatch.StartNew();
+            sw.Stop();
+            sw.Reset();
+            for (var i = 0; i < loop; i++)
+            {
+                m.Seek(0, SeekOrigin.Begin);
+                sw.Start();
+                l += Jil.JSON.Deserialize<T[]>(new StreamReader(m, System.Text.Encoding.UTF8, true, ib, true), new Jil.Options(dateFormat: Jil.DateTimeFormat.ISO8601)).Length;
+                sw.Stop();
+            }
+            Console.WriteLine($"JIL: Loop: {loop}, Array Len:{l / loop}, Time:{sw.Elapsed.TotalMilliseconds / loop} ms per loop");
+        }
+
+        static async Task MeasureOnDevFastJil<T>(Stream m, int loop, int ib)
+        {
+            var l = 0;
+            var sw = Stopwatch.StartNew();
+            sw.Stop();
+            sw.Reset();
+            for (var i = 0; i < loop; i++)
+            {
+                m.Seek(0, SeekOrigin.Begin);
+                sw.Start();
+                using var r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, ib);
+                l += r.EnumerateJsonArray(true, CancellationToken.None)
+                    .Select((x, _) =>
+                    {
+                        try
+                        {
+                            return Jil.JSON.Deserialize<T>(
+                                new StreamReader(new MemoryStream(x.Value), System.Text.Encoding.UTF8, true, ib, true),
+                                new Jil.Options(dateFormat: Jil.DateTimeFormat.ISO8601));
+                        }
+                        catch
+                        {
+                            //do nothing
+                        }
+                        return default;
+                    })
+                    .Count();
+                sw.Stop();
+                sw.Stop();
+            }
+            Console.WriteLine($"DEVFAST+JIL: Loop: {loop}, Array Len:{l / loop}, Time:{sw.Elapsed.TotalMilliseconds / loop} ms per loop");
         }
 
         static void MeasureOnNewton<T>(MemoryStream m, int loop, int ib)

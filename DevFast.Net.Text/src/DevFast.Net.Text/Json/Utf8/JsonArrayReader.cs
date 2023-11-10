@@ -144,6 +144,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 if(!EoJ)
                 {
                     throw new JsonArrayPartParsingException($"Expected End Of JSON after encountering ']'. " +
+                                                            $"Found = {(char)Current!}, " +
                                                             $"0-Based Position = {Position}.");
                 }
             }
