@@ -6,8 +6,6 @@
     /// Parsing of such elements produces <see cref="RawJson"/> representing entire value-form 
     /// (including structural characters, string quotes etc.) as <see cref="RawJson.Value"/>, of single element at a time, 
     /// of a known <see cref="JsonType"/>.
-    /// For the moment implementation should avoid any kind of deserialization and, for that, should use other standard
-    /// JSON deserialization libraries.
     /// </summary>
     public interface IJsonArrayReader : IDisposable
     {

@@ -1,10 +1,12 @@
-﻿using System.Text;
-using DevFast.Net.Text.Json.Utf8;
+﻿using DevFast.Net.Extensions.SystemTypes;
+using Dot.Net.DevFast.Extensions;
+using Dot.Net.DevFast.Extensions.StringExt;
+using System.Text;
 
 namespace DevFast.Net.Text.Tests.Json.Utf8
 {
     [TestFixture]
-    public class AsyncUtf8JsonArrayPartReaderTests
+    public class MemJsonArrayReaderTests
     {
         [TestCase(true, false)]
         [TestCase(false, false)]
@@ -59,6 +61,14 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             }
             if (disposeInner) Throws<ObjectDisposedException>(() => m.Write(new byte[] { 1 }));
             else That(m.Length, Is.EqualTo(withPreamble ? 5 : 2));
+        }
+
+        [Test]
+        public void Toto()
+        {
+            var ae = Enumerable.Repeat(int.MaxValue, 1_000_000_000).SelectAsync((x, _) => ValueTask.FromResult(x));
+            using (var m = "My_Json_File.json".ToFileInfo().CreateStream(FileMode.Create))
+                System.Text.Json.JsonSerializer.SerializeAsync(m, ae, new System.Text.Json.JsonSerializerOptions.Default).Wait();
         }
     }
 }

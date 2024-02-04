@@ -8,8 +8,6 @@ with the possibility to parse individual elements (as defined in [JsonType](DevF
 Parsing of such elements produces [RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson') representing entire value-form 
 (including structural characters, string quotes etc.) as [Value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Value 'DevFast.Net.Text.Json.RawJson.Value'), of single element at a time, 
 of a known [JsonType](DevFast.Net.Text.Json.JsonType.md 'DevFast.Net.Text.Json.JsonType').
-For the moment implementation should avoid any kind of deserialization and, for that, should use other standard
-JSON deserialization libraries.
 
 ```csharp
 public interface IJsonArrayReader :
