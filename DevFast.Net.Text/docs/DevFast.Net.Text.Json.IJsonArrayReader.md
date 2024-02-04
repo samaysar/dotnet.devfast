@@ -195,6 +195,10 @@ Cancellation token to observe
 #### Returns
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
+#### Exceptions
+
+[System.Text.Json.JsonException](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonException 'System.Text.Json.JsonException')
+
 <a name='DevFast.Net.Text.Json.IJsonArrayReader.ReadRaw(bool,System.Threading.CancellationToken)'></a>
 
 ## IJsonArrayReader.ReadRaw(bool, CancellationToken) Method

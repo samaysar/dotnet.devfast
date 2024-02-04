@@ -404,7 +404,7 @@ namespace DevFast.Net.Text.Json.Utf8
                                                         $"Found = {(char)Current!}, " +
                                                         $"0-Based Position = {Position}.");
             }
-            throw new JsonException($"Reached end, unable to find '{end}'. " +
+            throw new JsonException($"Reached end, unable to find '{(char)end}'. " +
                                                     $"0-Based Position = {Position}.");
         }
 

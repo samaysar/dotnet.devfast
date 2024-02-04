@@ -248,6 +248,10 @@ Implements [ReadIsEndArray(bool, CancellationToken)](DevFast.Net.Text.Json.IJson
 #### Returns
 [System.Boolean](https://docs.microsoft.com/en-us/dotnet/api/System.Boolean 'System.Boolean')
 
+#### Exceptions
+
+[System.Text.Json.JsonException](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonException 'System.Text.Json.JsonException')
+
 <a name='DevFast.Net.Text.Json.Utf8.JsonArrayReader.ReadRaw(bool,System.Threading.CancellationToken)'></a>
 
 ## JsonArrayReader.ReadRaw(bool, CancellationToken) Method
