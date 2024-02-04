@@ -111,7 +111,7 @@ Cancellation token to observe.
 
 #### Exceptions
 
-[JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')
+[System.Text.Json.JsonException](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonException 'System.Text.Json.JsonException')
 
 <a name='DevFast.Net.Text.Json.IJsonArrayReader.ReadIsBeginArray(System.Threading.CancellationToken)'></a>
 
@@ -145,7 +145,7 @@ Call makes reader skip all the irrelevant whitespaces (comments included). Once 
 if value is [ArrayBeginByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ArrayBeginByte 'DevFast.Net.Text.Json.JsonConst.ArrayBeginByte'). If the value matches, then reader advances 
 its current position to next [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte') in the sequence or to end of JSON. If the value does NOT match,
 reader position is maintained on the current byte and an error 
-(of type [JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')) is thrown.
+(of type [System.Text.Json.JsonException](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonException 'System.Text.Json.JsonException')) is thrown.
 
 ```csharp
 void ReadIsBeginArrayWithVerify(System.Threading.CancellationToken token=default(System.Threading.CancellationToken));
@@ -160,7 +160,7 @@ Cancellation token to observe
 
 #### Exceptions
 
-[JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')
+[System.Text.Json.JsonException](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonException 'System.Text.Json.JsonException')
 
 <a name='DevFast.Net.Text.Json.IJsonArrayReader.ReadIsEndArray(bool,System.Threading.CancellationToken)'></a>
 
@@ -229,4 +229,4 @@ Cancellation token to observe.
 
 #### Exceptions
 
-[JsonArrayPartParsingException](DevFast.Net.Text.Json.JsonArrayPartParsingException.md 'DevFast.Net.Text.Json.JsonArrayPartParsingException')
+[System.Text.Json.JsonException](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonException 'System.Text.Json.JsonException')

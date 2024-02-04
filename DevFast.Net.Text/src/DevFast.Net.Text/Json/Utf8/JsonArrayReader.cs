@@ -1,7 +1,5 @@
-﻿using DevFast.Net.Extensions.SystemTypes;
-using System;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Text.Json;
+using DevFast.Net.Extensions.SystemTypes;
 
 namespace DevFast.Net.Text.Json.Utf8
 {
@@ -59,7 +57,7 @@ namespace DevFast.Net.Text.Json.Utf8
         /// Provides a convenient way to enumerate over elements of a JSON array (one at a time).
         /// For every iteration, such mechanism produces <see cref="RawJson"/>, where <see cref="RawJson.Value"/> represents
         /// entire value-form (including structural characters, string quotes etc.) of such an individual
-        /// element &amp; <see cref="RawJson.Type"/> indicates underlying JSON element type. 
+        /// element &amp; <see cref="RawJson.Type"/> indicates underlying JSON element type.
         /// Any standard JSON serializer can be used to deserialize <see cref="RawJson.Value"/>
         /// to obtain an instance of corresponding .Net type.
         /// </summary>
@@ -67,7 +65,7 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed after <see cref="JsonConst.ArrayEndByte"/> until <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe.</param>
-        /// <exception cref="JsonArrayPartParsingException"></exception>
+        /// <exception cref="JsonException"></exception>
         public IEnumerable<RawJson> EnumerateJsonArray(bool ensureEoj,
             CancellationToken token = default)
         {
@@ -77,7 +75,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 var next = ReadRaw(true, token);
                 if (next.Type == JsonType.Undefined)
                 {
-                    throw new JsonArrayPartParsingException($"Expected a valid JSON element or end of JSON array. " +
+                    throw new JsonException("Expected a valid JSON element or end of JSON array. " +
                         $"0-Based Position = {Position}.");
                 }
                 yield return next;
@@ -86,32 +84,32 @@ namespace DevFast.Net.Text.Json.Utf8
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it checks
-        /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances 
+        /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances
         /// its current position to next <see cref="byte"/> in the sequence or to end of JSON. If the value does NOT match,
-        /// reader position is maintained on the current byte and an error 
-        /// (of type <see cref="JsonArrayPartParsingException"/>) is thrown.
+        /// reader position is maintained on the current byte and an error
+        /// (of type <see cref="JsonException"/>) is thrown.
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
-        /// <exception cref="JsonArrayPartParsingException"></exception>
+        /// <exception cref="JsonException"></exception>
         public void ReadIsBeginArrayWithVerify(CancellationToken token = default)
         {
             if (!ReadIsBeginArray(token))
             {
                 if (InRange)
                 {
-                    throw new JsonArrayPartParsingException("Invalid byte value for JSON begin-array. " +
+                    throw new JsonException("Invalid byte value for JSON begin-array. " +
                                                             $"Expected = {JsonConst.ArrayBeginByte}, " +
                                                             $"Found = {(char)Current!}, " +
                                                             $"0-Based Position = {Position}.");
                 }
-                throw new JsonArrayPartParsingException("Reached end, unable to find JSON begin-array." +
+                throw new JsonException("Reached end, unable to find JSON begin-array." +
                                                         $"0-Based Position = {Position}.");
             }
         }
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
-        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, 
+        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches,
         /// then reader advances its current position to next <see cref="byte"/> in the sequence or to end of JSON.
         /// Otherwise, it returns <see langword="false"/> when current byte is NOT <see cref="JsonConst.ArrayBeginByte"/> and
         /// reader position is maintained on the current byte.
@@ -124,12 +122,12 @@ namespace DevFast.Net.Text.Json.Utf8
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
-        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayEndByte"/>. If the value matches, 
+        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayEndByte"/>. If the value matches,
         /// then reader advances its current position to next <see cref="byte"/> in the sequence or to end of JSON.
         /// Otherwise, it returns <see langword="false"/> when current byte is NOT <see cref="JsonConst.ArrayEndByte"/> and
         /// reader position is maintained on the current byte.
         /// </summary>
-        /// <param name="ensureEoj"><see langword="false"/> to ignore any text (JSON or not) after 
+        /// <param name="ensureEoj"><see langword="false"/> to ignore any text (JSON or not) after
         /// observing <see cref="JsonConst.ArrayEndByte"/>.
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>
@@ -143,7 +141,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 SkipWhiteSpace(token);
                 if(!EoJ)
                 {
-                    throw new JsonArrayPartParsingException($"Expected End Of JSON after encountering ']'. " +
+                    throw new JsonException("Expected End Of JSON after encountering ']'. " +
                                                             $"Found = {(char)Current!}, " +
                                                             $"0-Based Position = {Position}.");
                 }
@@ -164,11 +162,11 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <param name="withVerify"><see langword="true"/> to verify the presence of ',' or ']' (but not ',]')
         /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
         /// <param name="token">Cancellation token to observe.</param>
-        /// <exception cref="JsonArrayPartParsingException"></exception>
+        /// <exception cref="JsonException"></exception>
         public RawJson ReadRaw(bool withVerify = true, CancellationToken token = default)
         {
             SkipWhiteSpace(token);
-            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Undefined, Array.Empty<byte>());
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Undefined, []);
             ReDefineBuffer(0, token);
             var type = SkipUntilNextRaw(token);
             var currentRaw = new byte[_current - _begin];
@@ -209,7 +207,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 JsonConst.FirstOfTrueByte => SkipRueOfTrue(token),
                 JsonConst.FirstOfFalseByte => SkipAlseOfFalse(token),
                 JsonConst.FirstOfNullByte => SkipUllOfNull(token),
-                _ => throw new JsonArrayPartParsingException($"Invalid byte value for start of JSON element. " +
+                _ => throw new JsonException("Invalid byte value for start of JSON element. " +
                                                              $"Found = {(char)Current!}, " +
                                                              $"0-Based Position = {Position}.")
             };
@@ -231,7 +229,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 NextWithEnsureCapacity(token);
                 return JsonType.Arr;
             }
-            throw new JsonArrayPartParsingException($"Reached end, unable to find valid JSON end-array (']'). " +
+            throw new JsonException("Reached end, unable to find valid JSON end-array (']'). " +
                                            $"0-Based Position = {Position}.");
         }
 
@@ -244,7 +242,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 {
                     if (_buffer[_current] != JsonConst.StringQuoteByte)
                     {
-                        throw new JsonArrayPartParsingException($"Invalid byte value for start of Object Property Name. " +
+                        throw new JsonException("Invalid byte value for start of Object Property Name. " +
                             $"Expected = {JsonConst.StringQuoteByte}, " +
                             $"Found = {(char)Current!}, " +
                             $"0-Based Position = {Position}.");
@@ -264,7 +262,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 NextWithEnsureCapacity(token);
                 return JsonType.Obj;
             }
-            throw new JsonArrayPartParsingException($"Reached end, unable to find valid JSON end-object ('}}'). " +
+            throw new JsonException("Reached end, unable to find valid JSON end-object ('}}'). " +
                                            $"0-Based Position = {Position}.");
         }
 
@@ -295,10 +293,10 @@ namespace DevFast.Net.Text.Json.Utf8
                                     {
                                         continue;
                                     }
-                                    throw new JsonArrayPartParsingException($"Reached end, unable to find valid Hex-Digits. " +
+                                    throw new JsonException("Reached end, unable to find valid Hex-Digits. " +
                                                                    $"0-Based Position = {Position}.");
                                 default:
-                                    throw new JsonArrayPartParsingException($"Bad JSON escape. " +
+                                    throw new JsonException("Bad JSON escape. " +
                                         $"Expected = \\{JsonConst.ReverseSlashByte} or " +
                                         $"\\{JsonConst.ForwardSlashByte} or " +
                                         $"\\{JsonConst.StringQuoteByte} or " +
@@ -312,14 +310,14 @@ namespace DevFast.Net.Text.Json.Utf8
                                         $"0-Based Position = {Position}.");
                             }
                         }
-                        throw new JsonArrayPartParsingException($"Reached end, unable to find valid escape character. " +
+                        throw new JsonException("Reached end, unable to find valid escape character. " +
                                                        $"0-Based Position = {Position}.");
                     case JsonConst.StringQuoteByte:
                         NextWithEnsureCapacity(token);
                         return JsonType.Str;
                 }
             }
-            throw new JsonArrayPartParsingException($"Reached end, unable to find end-of-string quote '\"'. " +
+            throw new JsonException("Reached end, unable to find end-of-string quote '\"'. " +
                                            $"0-Based Position = {Position}.");
         }
 
@@ -365,7 +363,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 NextWithEnsureCapacity(token);
                 return JsonType.Bool;
             }
-            throw new JsonArrayPartParsingException($"Reached end while parsing 'true' literal. " +
+            throw new JsonException("Reached end while parsing 'true' literal. " +
                                                     $"0-Based Position = {Position}.");
         }
 
@@ -380,7 +378,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 NextWithEnsureCapacity(token);
                 return JsonType.Bool;
             }
-            throw new JsonArrayPartParsingException($"Reached end while parsing 'false' literal. " +
+            throw new JsonException("Reached end while parsing 'false' literal. " +
                                                     $"0-Based Position = {Position}.");
         }
 
@@ -395,7 +393,7 @@ namespace DevFast.Net.Text.Json.Utf8
                 NextWithEnsureCapacity(token);
                 return JsonType.Null;
             }
-            throw new JsonArrayPartParsingException($"Reached end while parsing 'null' literal. " +
+            throw new JsonException("Reached end while parsing 'null' literal. " +
                                                     $"0-Based Position = {Position}.");
         }
 
@@ -404,12 +402,12 @@ namespace DevFast.Net.Text.Json.Utf8
             if (ReadIsValueSeparationOrEnd(end, token)) return;
             if (InRange)
             {
-                throw new JsonArrayPartParsingException($"Invalid byte value for '{partOf}'. " +
+                throw new JsonException($"Invalid byte value for '{partOf}'. " +
                                                         $"Expected = {expected}, " +
                                                         $"Found = {(char)Current!}, " +
                                                         $"0-Based Position = {Position}.");
             }
-            throw new JsonArrayPartParsingException($"Reached end, unable to find '{end}'. " +
+            throw new JsonException($"Reached end, unable to find '{end}'. " +
                                                     $"0-Based Position = {Position}.");
         }
 
@@ -436,8 +434,10 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             SkipWhiteSpace(token);
             if (!InRange)
-                throw new JsonArrayPartParsingException($"Reached end, expected to find '{jsonToken}'. " +
+            {
+                throw new JsonException($"Reached end, expected to find '{jsonToken}'. " +
                                                $"0-Based Position = {Position}.");
+            }
         }
 
         private void NextExpectedOrThrow(byte expected, CancellationToken token, string partOf)
@@ -445,12 +445,12 @@ namespace DevFast.Net.Text.Json.Utf8
             if (NextWithEnsureCapacity(token) && _buffer[_current] == expected) return;
             if (InRange)
             {
-                throw new JsonArrayPartParsingException($"Invalid byte value while parsing '{partOf}'. " +
+                throw new JsonException($"Invalid byte value while parsing '{partOf}'. " +
                                                         $"Expected = {expected}, " +
                                                         $"Found = {(char)Current!}, " +
                                                         $"0-Based Position = {Position}.");
             }
-            throw new JsonArrayPartParsingException($"Reached end while parsing '{partOf}'. " +
+            throw new JsonException($"Reached end while parsing '{partOf}'. " +
                                                     $"Expected = {expected}, " +
                                                     $"0-Based Position = {Position}.");
         }
@@ -470,7 +470,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     case JsonConst.ForwardSlashByte:
                         if (!NextWithEnsureCapacity(token))
                         {
-                            throw new JsonArrayPartParsingException("Reached end. " +
+                            throw new JsonException("Reached end. " +
                                                            "Can not find correct comment format " +
                                                            "(neither single line comment token '//' " +
                                                            "nor multi-line comment token '/*').");
@@ -512,10 +512,10 @@ namespace DevFast.Net.Text.Json.Utf8
                     }
                     //we need to throw error even if we reached EoJ
                     //coz the comment was not properly terminated!
-                    throw new JsonArrayPartParsingException("Reached end. " +
+                    throw new JsonException("Reached end. " +
                                                    "Can not find end token of multi line comment(*/).");
                 default:
-                    throw new JsonArrayPartParsingException("Can not find correct comment format. " +
+                    throw new JsonException("Can not find correct comment format. " +
                         "Found single forward-slash '/' when expected " +
                         "either single line comment token '//' or multi-line comment token '/*'. " +
                         $"0-Based Position = {Position}.");
@@ -581,7 +581,7 @@ namespace DevFast.Net.Text.Json.Utf8
         public void Dispose()
         {
             DisposeStream();
-            _buffer = Array.Empty<byte>();
+            _buffer = [];
         }
 
         private void DisposeStream()

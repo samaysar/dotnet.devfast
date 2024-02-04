@@ -20,14 +20,17 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             m.Seek(0, SeekOrigin.Begin);
             using (var r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: disposeInner))
             {
-                That(r.ReadIsBeginArray(), Is.False);
-                That(r.ReadIsEndArray(false), Is.False);
-                var current = r.ReadRaw(default);
-                That(current.Value, Is.Empty);
-                That(current.Type, Is.EqualTo(JsonType.Undefined));
-                That(r.EoJ, Is.True);
-                That(r.Current, Is.Null);
-                That(r.Position, Is.EqualTo(withPreamble ? 3 : 0));
+                Assert.Multiple(() =>
+                {
+                    That(r.ReadIsBeginArray(), Is.False);
+                    That(r.ReadIsEndArray(false), Is.False);
+                    var current = r.ReadRaw(default);
+                    That(current.Value, Is.Empty);
+                    That(current.Type, Is.EqualTo(JsonType.Undefined));
+                    That(r.EoJ, Is.True);
+                    That(r.Current, Is.Null);
+                    That(r.Position, Is.EqualTo(withPreamble ? 3 : 0));
+                });
             }
             if (disposeInner) Throws<ObjectDisposedException>(() => m.Write(new byte[] { 1 }));
             else That(m.Length, Is.EqualTo(withPreamble ? 3 : 0));
@@ -49,26 +52,21 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
                 That(r.ReadIsBeginArray(), Is.True);
                 That(r.ReadIsBeginArray(), Is.False);
                 var current = r.ReadRaw(default);
-                That(current.Value, Is.Empty);
-                That(current.Type, Is.EqualTo(JsonType.Undefined));
-                That(r.EoJ, Is.False);
-                That(r.Current, Is.EqualTo(JsonConst.ArrayEndByte));
-                That(r.ReadIsEndArray(true), Is.True);
-                That(r.Current, Is.Null);
-                That(r.ReadIsEndArray(false), Is.False);
-                That(r.EoJ, Is.True);
-                That(r.Position, Is.EqualTo(withPreamble ? 5 : 2));
+                Assert.Multiple(() =>
+                {
+                    That(current.Value, Is.Empty);
+                    That(current.Type, Is.EqualTo(JsonType.Undefined));
+                    That(r.EoJ, Is.False);
+                    That(r.Current, Is.EqualTo(JsonConst.ArrayEndByte));
+                    That(r.ReadIsEndArray(true), Is.True);
+                    That(r.Current, Is.Null);
+                    That(r.ReadIsEndArray(false), Is.False);
+                    That(r.EoJ, Is.True);
+                    That(r.Position, Is.EqualTo(withPreamble ? 5 : 2));
+                });
             }
             if (disposeInner) Throws<ObjectDisposedException>(() => m.Write(new byte[] { 1 }));
             else That(m.Length, Is.EqualTo(withPreamble ? 5 : 2));
-        }
-
-        [Test]
-        public void Toto()
-        {
-            var ae = Enumerable.Repeat(int.MaxValue, 1_000_000_000).SelectAsync((x, _) => ValueTask.FromResult(x));
-            using (var m = "My_Json_File.json".ToFileInfo().CreateStream(FileMode.Create))
-                System.Text.Json.JsonSerializer.SerializeAsync(m, ae, new System.Text.Json.JsonSerializerOptions.Default).Wait();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace DevFast.Net.Text.Json.NamingPolicy
         private JsonLongSnakeCaseNamingPolicy() { }
 
         /// <summary>
-        /// Converts provided <paramref name="name"/> to snake-case 
+        /// Converts provided <paramref name="name"/> to snake-case
         /// (ex: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc).
         /// </summary>
         /// <param name="name">String value to convert to snake-case.</param>

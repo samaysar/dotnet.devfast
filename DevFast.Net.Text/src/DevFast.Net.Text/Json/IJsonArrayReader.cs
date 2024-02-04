@@ -1,4 +1,6 @@
-﻿namespace DevFast.Net.Text.Json
+﻿using System.Text.Json;
+
+namespace DevFast.Net.Text.Json
 {
     /// <summary>
     /// Interface dictating implementation of parsing individual items of a JSON Array 
@@ -43,7 +45,7 @@
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed after <see cref="JsonConst.ArrayEndByte"/> until <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe.</param>
-        /// <exception cref="JsonArrayPartParsingException"></exception>
+        /// <exception cref="JsonException"></exception>
         IEnumerable<RawJson> EnumerateJsonArray(bool ensureEoj, CancellationToken token = default);
 
         /// <summary>
@@ -51,10 +53,10 @@
         /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances 
         /// its current position to next <see cref="byte"/> in the sequence or to end of JSON. If the value does NOT match,
         /// reader position is maintained on the current byte and an error 
-        /// (of type <see cref="JsonArrayPartParsingException"/>) is thrown.
+        /// (of type <see cref="JsonException"/>) is thrown.
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
-        /// <exception cref="JsonArrayPartParsingException"></exception>
+        /// <exception cref="JsonException"></exception>
         void ReadIsBeginArrayWithVerify(CancellationToken token = default);
 
         /// <summary>
@@ -93,7 +95,7 @@
         /// <param name="withVerify"><see langword="true"/> to verify the presence of ',' or ']' (but not ',]')
         /// after successfully parsing the current JSON element; <see langword="false"/> otherwise.</param>
         /// <param name="token">Cancellation token to observe.</param>
-        /// <exception cref="JsonArrayPartParsingException"></exception>
+        /// <exception cref="JsonException"></exception>
         RawJson ReadRaw(bool withVerify = true, CancellationToken token = default);
     }
 }

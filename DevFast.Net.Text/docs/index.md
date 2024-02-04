@@ -9,4 +9,5 @@ This assembly contains various well-tested & self-explained artifacts to work wi
 | :--- | :--- |
 | [DevFast.Net.Text](DevFast.Net.Text.md 'DevFast.Net.Text') | |
 | [DevFast.Net.Text.Json](DevFast.Net.Text.Json.md 'DevFast.Net.Text.Json') | |
+| [DevFast.Net.Text.Json.NamingPolicy](DevFast.Net.Text.Json.NamingPolicy.md 'DevFast.Net.Text.Json.NamingPolicy') | |
 | [DevFast.Net.Text.Json.Utf8](DevFast.Net.Text.Json.Utf8.md 'DevFast.Net.Text.Json.Utf8') | |
