@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using DevFast.Net.Text.Json.Utf8;
 
 namespace DevFast.Net.Text.Json

@@ -4,7 +4,7 @@
 ## JsonIdemCaseNamingPolicy Class
 
 Class implements [System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy') to provide Identical (i.e. no change) names
-(ex: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc) for JSON data.
+(e.g.: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc) for JSON data.
 
 ```csharp
 public sealed class JsonIdemCaseNamingPolicy : System.Text.Json.JsonNamingPolicy
@@ -17,7 +17,7 @@ public sealed class JsonIdemCaseNamingPolicy : System.Text.Json.JsonNamingPolicy
 ## JsonIdemCaseNamingPolicy Class
 
 Class implements [System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy') to provide Identical (i.e. no change) names
-(ex: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc) for JSON data.
+(e.g.: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc) for JSON data.
 
 ```csharp
 public sealed class JsonIdemCaseNamingPolicy : System.Text.Json.JsonNamingPolicy
@@ -45,7 +45,7 @@ public static System.Text.Json.JsonNamingPolicy IdemCase { get; }
 ## JsonIdemCaseNamingPolicy.ConvertName(string) Method
 
 Does NOT convert provided [name](DevFast.Net.Text.Json.NamingPolicy.JsonIdemCaseNamingPolicy.md#DevFast.Net.Text.Json.NamingPolicy.JsonIdemCaseNamingPolicy.ConvertName(string).name 'DevFast.Net.Text.Json.NamingPolicy.JsonIdemCaseNamingPolicy.ConvertName(string).name') and returns the
-value as it is (ex: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc).
+value as it is (e.g.: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc).
 
 ```csharp
 public override string ConvertName(string name);

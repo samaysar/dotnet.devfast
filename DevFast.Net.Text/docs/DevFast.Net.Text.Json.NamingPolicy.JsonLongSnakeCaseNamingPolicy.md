@@ -4,7 +4,7 @@
 ## JsonLongSnakeCaseNamingPolicy Class
 
 Class implements [System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy') to provide long Snake-Case names
-(ex: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc) for JSON data.
+(e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc) for JSON data.
 
 ```csharp
 public sealed class JsonLongSnakeCaseNamingPolicy : System.Text.Json.JsonNamingPolicy
@@ -17,7 +17,7 @@ public sealed class JsonLongSnakeCaseNamingPolicy : System.Text.Json.JsonNamingP
 ## JsonLongSnakeCaseNamingPolicy Class
 
 Class implements [System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy') to provide long Snake-Case names
-(ex: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc) for JSON data.
+(e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc) for JSON data.
 
 ```csharp
 public sealed class JsonLongSnakeCaseNamingPolicy : System.Text.Json.JsonNamingPolicy
@@ -45,7 +45,7 @@ public static System.Text.Json.JsonNamingPolicy LongSnakeCase { get; }
 ## JsonLongSnakeCaseNamingPolicy.ConvertName(string) Method
 
 Converts provided [name](DevFast.Net.Text.Json.NamingPolicy.JsonLongSnakeCaseNamingPolicy.md#DevFast.Net.Text.Json.NamingPolicy.JsonLongSnakeCaseNamingPolicy.ConvertName(string).name 'DevFast.Net.Text.Json.NamingPolicy.JsonLongSnakeCaseNamingPolicy.ConvertName(string).name') to snake-case
-(ex: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc).
+(e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc).
 
 ```csharp
 public override string ConvertName(string name);

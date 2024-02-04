@@ -2,6 +2,8 @@
 
 ## DevFast.Net.Text.Json Namespace
 
+Under this [namespace](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/namespace 'https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/namespace') various JSON data related artifacts are implemented.
+
 | Classes | |
 | :--- | :--- |
 | [JsonConst](DevFast.Net.Text.Json.JsonConst.md 'DevFast.Net.Text.Json.JsonConst') | Static class holding constant or fixed values for JSON text processing. |

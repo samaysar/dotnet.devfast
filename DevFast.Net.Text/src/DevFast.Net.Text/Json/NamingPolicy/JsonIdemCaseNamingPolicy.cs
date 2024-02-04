@@ -4,7 +4,7 @@ namespace DevFast.Net.Text.Json.NamingPolicy
 {
     /// <summary>
     /// Class implements <see cref="JsonNamingPolicy" /> to provide Identical (i.e. no change) names
-    /// (ex: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc) for JSON data.
+    /// (e.g.: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc) for JSON data.
     /// </summary>
     public sealed class JsonIdemCaseNamingPolicy : JsonNamingPolicy
     {
@@ -17,7 +17,7 @@ namespace DevFast.Net.Text.Json.NamingPolicy
 
         /// <summary>
         /// Does NOT convert provided <paramref name="name"/> and returns the
-        /// value as it is (ex: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc).
+        /// value as it is (e.g.: AbcDef to AbcDef, MyTKiBd to MyTKiBd, ABC to ABC etc).
         /// </summary>
         /// <param name="name">String value to convert.</param>
         public override string ConvertName(string name) => name;

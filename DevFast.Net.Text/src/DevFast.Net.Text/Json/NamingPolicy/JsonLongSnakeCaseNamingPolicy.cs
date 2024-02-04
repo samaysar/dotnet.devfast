@@ -5,7 +5,7 @@ namespace DevFast.Net.Text.Json.NamingPolicy
 {
     /// <summary>
     /// Class implements <see cref="JsonNamingPolicy" /> to provide long Snake-Case names
-    /// (ex: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc) for JSON data.
+    /// (e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc) for JSON data.
     /// </summary>
     public sealed class JsonLongSnakeCaseNamingPolicy : JsonNamingPolicy
     {
@@ -18,14 +18,13 @@ namespace DevFast.Net.Text.Json.NamingPolicy
 
         /// <summary>
         /// Converts provided <paramref name="name"/> to snake-case
-        /// (ex: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc).
+        /// (e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc).
         /// </summary>
         /// <param name="name">String value to convert to snake-case.</param>
         public override string ConvertName(string name)
         {
-            if (string.IsNullOrWhiteSpace(name)) return name;
+            if (string.IsNullOrEmpty(name)) return name;
 
-            name = name.Trim();
             var sb = new StringBuilder(name.Length * 2);
             sb.Append(char.ToLowerInvariant(name[0]));
 

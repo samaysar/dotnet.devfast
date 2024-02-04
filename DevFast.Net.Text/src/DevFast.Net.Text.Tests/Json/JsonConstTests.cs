@@ -1,8 +1,22 @@
-﻿namespace DevFast.Net.Text.Tests.Json
+﻿using DevFast.Net.Text.Json.NamingPolicy;
+
+namespace DevFast.Net.Text.Tests.Json
 {
     [TestFixture]
     public class JsonConstTests
     {
+        [Test]
+        public void Instances_Are_Consistent()
+        {
+            Multiple(() =>
+            {
+                That(ReferenceEquals(JsonConst.CamelCase, JsonNamingPolicy.CamelCase), Is.True);
+                That(ReferenceEquals(JsonConst.LongSnakeCase, JsonLongSnakeCaseNamingPolicy.LongSnakeCase), Is.True);
+                That(ReferenceEquals(JsonConst.SnakeCase, JsonSnakeCaseNamingPolicy.SnakeCase), Is.True);
+                That(ReferenceEquals(JsonConst.IdemCase, JsonIdemCaseNamingPolicy.IdemCase), Is.True);
+            });
+        }
+
         [Test]
         public void Values_Are_Consistent()
         {

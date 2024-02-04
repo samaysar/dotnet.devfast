@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text.Json;
+﻿using System.Text.Json;
 using DevFast.Net.Extensions.SystemTypes;
 
 namespace DevFast.Net.Text.Json.Utf8

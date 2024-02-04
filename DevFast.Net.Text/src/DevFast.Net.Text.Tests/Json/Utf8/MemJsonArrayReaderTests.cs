@@ -1,9 +1,4 @@
-﻿using DevFast.Net.Extensions.SystemTypes;
-using Dot.Net.DevFast.Extensions;
-using Dot.Net.DevFast.Extensions.StringExt;
-using System.Text;
-
-namespace DevFast.Net.Text.Tests.Json.Utf8
+﻿namespace DevFast.Net.Text.Tests.Json.Utf8
 {
     [TestFixture]
     public class MemJsonArrayReaderTests
@@ -20,7 +15,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             m.Seek(0, SeekOrigin.Begin);
             using (var r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: disposeInner))
             {
-                Assert.Multiple(() =>
+                Multiple(() =>
                 {
                     That(r.ReadIsBeginArray(), Is.False);
                     That(r.ReadIsEndArray(false), Is.False);
@@ -52,7 +47,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
                 That(r.ReadIsBeginArray(), Is.True);
                 That(r.ReadIsBeginArray(), Is.False);
                 var current = r.ReadRaw(default);
-                Assert.Multiple(() =>
+                Multiple(() =>
                 {
                     That(current.Value, Is.Empty);
                     That(current.Type, Is.EqualTo(JsonType.Undefined));
