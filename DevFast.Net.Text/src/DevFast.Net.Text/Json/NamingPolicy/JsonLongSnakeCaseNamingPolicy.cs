@@ -29,22 +29,16 @@ namespace DevFast.Net.Text.Json.NamingPolicy
             var sb = new StringBuilder(name.Length * 2);
             sb.Append(char.ToLowerInvariant(name[0]));
 
-            var prevUpper = char.IsUpper(name[0]);
             for (int i = 1; i < name.Length; i++)
             {
                 var c = name[i];
                 if (char.IsUpper(c))
                 {
-                    if (!prevUpper)
-                    {
-                        sb.Append('_');
-                    }
+                    sb.Append('_');
                     sb.Append(char.ToLowerInvariant(c));
-                    prevUpper = true;
                 }
                 else
                 {
-                    prevUpper = false;
                     sb.Append(c);
                 }
             }
