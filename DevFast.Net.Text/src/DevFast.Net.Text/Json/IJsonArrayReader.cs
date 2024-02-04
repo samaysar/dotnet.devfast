@@ -81,6 +81,7 @@ namespace DevFast.Net.Text.Json
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe</param>
+        /// <exception cref="JsonException"></exception>
         bool ReadIsEndArray(bool ensureEoj, CancellationToken token = default);
 
         /// <summary>

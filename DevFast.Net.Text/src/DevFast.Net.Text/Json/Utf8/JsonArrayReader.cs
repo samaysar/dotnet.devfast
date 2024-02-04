@@ -72,13 +72,11 @@ namespace DevFast.Net.Text.Json.Utf8
             ReadIsBeginArrayWithVerify(token);
             while (!ReadIsEndArray(ensureEoj, token))
             {
-                var next = ReadRaw(true, token);
-                if (next.Type == JsonType.Undefined)
-                {
-                    throw new JsonException("Expected a valid JSON element or end of JSON array. " +
-                        $"0-Based Position = {Position}.");
-                }
-                yield return next;
+                RawJson next = ReadRaw(true, token);
+                yield return next.Type == JsonType.Undefined
+                    ? throw new JsonException("Expected a valid JSON element or end of JSON array. " +
+                        $"0-Based Position = {Position}.")
+                    : next;
             }
         }
 
@@ -132,14 +130,15 @@ namespace DevFast.Net.Text.Json.Utf8
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>
         /// <param name="token">Cancellation token to observe</param>
+        /// <exception cref="JsonException"></exception>
         public bool ReadIsEndArray(bool ensureEoj, CancellationToken token = default)
         {
-            var reply = ReadIsGivenByte(JsonConst.ArrayEndByte, token);
-            if(ensureEoj && reply)
+            bool reply = ReadIsGivenByte(JsonConst.ArrayEndByte, token);
+            if (ensureEoj && reply)
             {
                 //we need to make sure only comments exists or we reached EOJ!
                 SkipWhiteSpace(token);
-                if(!EoJ)
+                if (!EoJ)
                 {
                     throw new JsonException("Expected End Of JSON after encountering ']'. " +
                                                             $"Found = {(char)Current!}, " +
@@ -166,10 +165,14 @@ namespace DevFast.Net.Text.Json.Utf8
         public RawJson ReadRaw(bool withVerify = true, CancellationToken token = default)
         {
             SkipWhiteSpace(token);
-            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte) return new RawJson(JsonType.Undefined, []);
+            if (!InRange || _buffer[_current] == JsonConst.ArrayEndByte)
+            {
+                return new RawJson(JsonType.Undefined, []);
+            }
+
             ReDefineBuffer(0, token);
-            var type = SkipUntilNextRaw(token);
-            var currentRaw = new byte[_current - _begin];
+            JsonType type = SkipUntilNextRaw(token);
+            byte[] currentRaw = new byte[_current - _begin];
             _buffer.CopyToUnSafe(currentRaw, _begin, currentRaw.Length, 0);
 
             if (withVerify)
@@ -181,7 +184,7 @@ namespace DevFast.Net.Text.Json.Utf8
             }
             else
             {
-                ReadIsGivenByte(JsonConst.ValueSeparatorByte, token);
+                _ = ReadIsGivenByte(JsonConst.ValueSeparatorByte, token);
             }
             return new RawJson(type, currentRaw);
         }
@@ -220,13 +223,13 @@ namespace DevFast.Net.Text.Json.Utf8
                 SkipWhiteSpaceWithVerify("]", token);
                 while (_buffer[_current] != JsonConst.ArrayEndByte)
                 {
-                    SkipUntilNextRaw(token);
+                    _ = SkipUntilNextRaw(token);
                     ReadIsValueSeparationOrEndWithVerify(JsonConst.ArrayEndByte,
                             "array",
                             "',' or ']' (but not ',]')",
                             token);
                 }
-                NextWithEnsureCapacity(token);
+                _ = NextWithEnsureCapacity(token);
                 return JsonType.Arr;
             }
             throw new JsonException("Reached end, unable to find valid JSON end-array (']'). " +
@@ -247,19 +250,19 @@ namespace DevFast.Net.Text.Json.Utf8
                             $"Found = {(char)Current!}, " +
                             $"0-Based Position = {Position}.");
                     }
-                    SkipString(token);
+                    _ = SkipString(token);
                     SkipWhiteSpaceWithVerify(":", token);
                     _current--;
                     NextExpectedOrThrow(JsonConst.NameSeparatorByte, token, "Object property");
-                    NextWithEnsureCapacity(token);
+                    _ = NextWithEnsureCapacity(token);
                     SkipWhiteSpaceWithVerify("Object property value", token);
-                    SkipUntilNextRaw(token);
+                    _ = SkipUntilNextRaw(token);
                     ReadIsValueSeparationOrEndWithVerify(JsonConst.ObjectEndByte,
                             "Object property",
                             "',' or '}' (but not ',}')",
                             token);
                 }
-                NextWithEnsureCapacity(token);
+                _ = NextWithEnsureCapacity(token);
                 return JsonType.Obj;
             }
             throw new JsonException("Reached end, unable to find valid JSON end-object ('}}'). " +
@@ -313,7 +316,7 @@ namespace DevFast.Net.Text.Json.Utf8
                         throw new JsonException("Reached end, unable to find valid escape character. " +
                                                        $"0-Based Position = {Position}.");
                     case JsonConst.StringQuoteByte:
-                        NextWithEnsureCapacity(token);
+                        _ = NextWithEnsureCapacity(token);
                         return JsonType.Str;
                 }
             }
@@ -360,7 +363,7 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 //this one to move the pointer forward, we don't care
                 //about EoF, that's handled by next read!
-                NextWithEnsureCapacity(token);
+                _ = NextWithEnsureCapacity(token);
                 return JsonType.Bool;
             }
             throw new JsonException("Reached end while parsing 'true' literal. " +
@@ -375,7 +378,7 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 //this one to move the pointer forward, we don't care
                 //about EoF, that's handled by next read!
-                NextWithEnsureCapacity(token);
+                _ = NextWithEnsureCapacity(token);
                 return JsonType.Bool;
             }
             throw new JsonException("Reached end while parsing 'false' literal. " +
@@ -390,7 +393,7 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 //this one to move the pointer forward, we don't care
                 //about EoF, that's handled by next read!
-                NextWithEnsureCapacity(token);
+                _ = NextWithEnsureCapacity(token);
                 return JsonType.Null;
             }
             throw new JsonException("Reached end while parsing 'null' literal. " +
@@ -399,7 +402,11 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private void ReadIsValueSeparationOrEndWithVerify(byte end, string partOf, string expected, CancellationToken token)
         {
-            if (ReadIsValueSeparationOrEnd(end, token)) return;
+            if (ReadIsValueSeparationOrEnd(end, token))
+            {
+                return;
+            }
+
             if (InRange)
             {
                 throw new JsonException($"Invalid byte value for '{partOf}'. " +
@@ -414,10 +421,22 @@ namespace DevFast.Net.Text.Json.Utf8
         private bool ReadIsValueSeparationOrEnd(byte end, CancellationToken token)
         {
             SkipWhiteSpace(token);
-            if (!InRange) return false;
-            if (_buffer[_current] == end) return true;
-            if (_buffer[_current] != JsonConst.ValueSeparatorByte) return false;
-            NextWithEnsureCapacity(token);
+            if (!InRange)
+            {
+                return false;
+            }
+
+            if (_buffer[_current] == end)
+            {
+                return true;
+            }
+
+            if (_buffer[_current] != JsonConst.ValueSeparatorByte)
+            {
+                return false;
+            }
+
+            _ = NextWithEnsureCapacity(token);
             SkipWhiteSpace(token);
             return InRange && _buffer[_current] != end;
         }
@@ -425,7 +444,11 @@ namespace DevFast.Net.Text.Json.Utf8
         private bool ReadIsGivenByte(byte match, CancellationToken token)
         {
             SkipWhiteSpace(token);
-            if (!InRange || _buffer[_current] != match) return false;
+            if (!InRange || _buffer[_current] != match)
+            {
+                return false;
+            }
+
             ReDefineBuffer(1, token);
             return true;
         }
@@ -442,7 +465,11 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private void NextExpectedOrThrow(byte expected, CancellationToken token, string partOf)
         {
-            if (NextWithEnsureCapacity(token) && _buffer[_current] == expected) return;
+            if (NextWithEnsureCapacity(token) && _buffer[_current] == expected)
+            {
+                return;
+            }
+
             if (InRange)
             {
                 throw new JsonException($"Invalid byte value while parsing '{partOf}'. " +
@@ -465,7 +492,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     case JsonConst.HorizontalTabByte:
                     case JsonConst.NewLineByte:
                     case JsonConst.CarriageReturnByte:
-                        NextWithEnsureCapacity(token);
+                        _ = NextWithEnsureCapacity(token);
                         continue;
                     case JsonConst.ForwardSlashByte:
                         if (!NextWithEnsureCapacity(token))
@@ -489,9 +516,13 @@ namespace DevFast.Net.Text.Json.Utf8
                 case JsonConst.ForwardSlashByte:
                     while (NextWithEnsureCapacity(token))
                     {
-                        var current = _buffer[_current];
-                        if (current != JsonConst.CarriageReturnByte && current != JsonConst.NewLineByte) continue;
-                        NextWithEnsureCapacity(token);
+                        byte current = _buffer[_current];
+                        if (current is not JsonConst.CarriageReturnByte and not JsonConst.NewLineByte)
+                        {
+                            continue;
+                        }
+
+                        _ = NextWithEnsureCapacity(token);
                         return;
                     }
                     //we don't throw if we reach EoJ, we consider comment ended there!
@@ -501,11 +532,15 @@ namespace DevFast.Net.Text.Json.Utf8
                 case JsonConst.AsteriskByte:
                     while (NextWithEnsureCapacity(token))
                     {
-                        if (_buffer[_current] != JsonConst.AsteriskByte) continue;
+                        if (_buffer[_current] != JsonConst.AsteriskByte)
+                        {
+                            continue;
+                        }
+
                         if (NextWithEnsureCapacity(token) &&
                             _buffer[_current] == JsonConst.ForwardSlashByte)
                         {
-                            NextWithEnsureCapacity(token);
+                            _ = NextWithEnsureCapacity(token);
                             return;
                         }
                         _current--;
@@ -536,20 +571,39 @@ namespace DevFast.Net.Text.Json.Utf8
         private void ReDefineBuffer(int offsetIncrement, CancellationToken token)
         {
             IncreaseConsumption(offsetIncrement);
-            if (_stream == null) return;
-            if (_current > ((_buffer.Length * 13)/16))
+            if (_stream == null)
+            {
+                return;
+            }
+
+            if (_current > (_buffer.Length * 13 / 16))
             {
                 _end = Math.Max(0, _end - _current);
-                if (_end > 0) _buffer.LiftNCopyUnSafe(_current, _end, 0);
+                if (_end > 0)
+                {
+                    _buffer.LiftNCopyUnSafe(_current, _end, 0);
+                }
+
                 _current = _begin = 0;
             }
-            if (_end < _buffer.Length) FillBuffer(token);
+            if (_end < _buffer.Length)
+            {
+                _ = FillBuffer(token);
+            }
         }
 
         private bool TryIncreasingBuffer(CancellationToken token)
         {
-            if (_stream == null) return false;
-            if (_end == _buffer.Length || _current >= _buffer.Length) _buffer = _buffer.DoubleByteCapacity();
+            if (_stream == null)
+            {
+                return false;
+            }
+
+            if (_end == _buffer.Length || _current >= _buffer.Length)
+            {
+                _buffer = _buffer.DoubleByteCapacity();
+            }
+
             return FillBuffer(token);
         }
 
@@ -557,7 +611,7 @@ namespace DevFast.Net.Text.Json.Utf8
         {
             //awaiting here kills the performance for the moment, we need to have a bounded capacity
             //stream (should go in DevFast.Net.Io module) otherwise we keep this sync version for the moment!
-            var end = _stream!.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).AsTask().GetAwaiter().GetResult();
+            int end = _stream!.ReadAsync(_buffer.AsMemory(_end, _buffer.Length - _end), token).AsTask().GetAwaiter().GetResult();
             if (end == 0)
             {
                 DisposeStream();
@@ -571,7 +625,7 @@ namespace DevFast.Net.Text.Json.Utf8
         private void IncreaseConsumption(int offsetIncrement)
         {
             _current += offsetIncrement;
-            _bytesConsumed += (_current - _begin);
+            _bytesConsumed += _current - _begin;
             _begin = _current;
         }
 
@@ -586,7 +640,11 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private void DisposeStream()
         {
-            if (_stream != null && _disposeStream) _stream.Dispose();
+            if (_stream != null && _disposeStream)
+            {
+                _stream.Dispose();
+            }
+
             _stream = null;
         }
     }
