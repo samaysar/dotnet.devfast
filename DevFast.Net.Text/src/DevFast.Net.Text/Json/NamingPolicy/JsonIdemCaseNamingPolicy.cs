@@ -12,7 +12,7 @@ namespace DevFast.Net.Text.Json.NamingPolicy
         /// Returns the naming policy which does not change the name.
         /// </summary>
         public static JsonNamingPolicy IdemCase { get; } = new JsonIdemCaseNamingPolicy();
-        
+
         private JsonIdemCaseNamingPolicy() { }
 
         /// <summary>

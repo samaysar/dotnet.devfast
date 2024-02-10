@@ -3,10 +3,10 @@
 namespace DevFast.Net.Text.Json
 {
     /// <summary>
-    /// Interface dictating implementation of parsing individual items of a JSON Array 
+    /// Interface dictating implementation of parsing individual items of a JSON Array
     /// with the possibility to parse individual elements (as defined in <see cref="JsonType"/>) in a JSON sequence.
-    /// Parsing of such elements produces <see cref="RawJson"/> representing entire value-form 
-    /// (including structural characters, string quotes etc.) as <see cref="RawJson.Value"/>, of single element at a time, 
+    /// Parsing of such elements produces <see cref="RawJson"/> representing entire value-form
+    /// (including structural characters, string quotes etc.) as <see cref="RawJson.Value"/>, of single element at a time,
     /// of a known <see cref="JsonType"/>.
     /// </summary>
     public interface IJsonArrayReader : IDisposable
@@ -37,7 +37,7 @@ namespace DevFast.Net.Text.Json
         /// Provides a convenient way to enumerate over elements of a JSON array (one at a time).
         /// For every iteration, such mechanism produces <see cref="RawJson"/>, where <see cref="RawJson.Value"/> represents
         /// entire value-form (including structural characters, string quotes etc.) of such an individual
-        /// element &amp; <see cref="RawJson.Type"/> indicates underlying JSON element type. 
+        /// element &amp; <see cref="RawJson.Type"/> indicates underlying JSON element type.
         /// Any standard JSON serializer can be used to deserialize <see cref="RawJson.Value"/>
         /// to obtain an instance of corresponding .Net type.
         /// </summary>
@@ -50,9 +50,9 @@ namespace DevFast.Net.Text.Json
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it checks
-        /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances 
+        /// if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, then reader advances
         /// its current position to next <see cref="byte"/> in the sequence or to end of JSON. If the value does NOT match,
-        /// reader position is maintained on the current byte and an error 
+        /// reader position is maintained on the current byte and an error
         /// (of type <see cref="JsonException"/>) is thrown.
         /// </summary>
         /// <param name="token">Cancellation token to observe</param>
@@ -61,7 +61,7 @@ namespace DevFast.Net.Text.Json
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
-        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches, 
+        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayBeginByte"/>. If the value matches,
         /// then reader advances its current position to next <see cref="byte"/> in the sequence or to end of JSON.
         /// Otherwise, it returns <see langword="false"/> when current byte is NOT <see cref="JsonConst.ArrayBeginByte"/> and
         /// reader position is maintained on the current byte.
@@ -71,12 +71,12 @@ namespace DevFast.Net.Text.Json
 
         /// <summary>
         /// Call makes reader skip all the irrelevant whitespaces (comments included). Once done, it returns
-        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayEndByte"/>. If the value matches, 
+        /// <see langword="true"/> if value is <see cref="JsonConst.ArrayEndByte"/>. If the value matches,
         /// then reader advances its current position to next <see cref="byte"/> in the sequence or to end of JSON.
         /// Otherwise, it returns <see langword="false"/> when current byte is NOT <see cref="JsonConst.ArrayEndByte"/> and
         /// reader position is maintained on the current byte.
         /// </summary>
-        /// <param name="ensureEoj"><see langword="false"/> to ignore any text (JSON or not) after 
+        /// <param name="ensureEoj"><see langword="false"/> to ignore any text (JSON or not) after
         /// observing <see cref="JsonConst.ArrayEndByte"/>.
         /// <see langword="true"/> to ensure that no data is present after <see cref="JsonConst.ArrayEndByte"/>. However, both
         /// single line and multiline comments are allowed before <see cref="EoJ"/>.</param>

@@ -33,7 +33,7 @@ namespace DevFast.Net.Text.Json
             {
                 if (!ms.TryGetBuffer(out ArraySegment<byte> segment))
                 {
-                    throw new UnauthorizedAccessException("Stream buffer is not exposed!");
+                    throw new ArgumentException("Stream buffer is not exposed!");
                 }
                 int newOffSet = 0;
                 newOffSet = segment.Count >= bom.Length &&

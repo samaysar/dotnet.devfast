@@ -44,7 +44,7 @@ public static System.Text.Json.JsonNamingPolicy SnakeCase { get; }
 
 ## JsonSnakeCaseNamingPolicy.ConvertName(string) Method
 
-Converts provided [name](DevFast.Net.Text.Json.NamingPolicy.JsonSnakeCaseNamingPolicy.md#DevFast.Net.Text.Json.NamingPolicy.JsonSnakeCaseNamingPolicy.ConvertName(string).name 'DevFast.Net.Text.Json.NamingPolicy.JsonSnakeCaseNamingPolicy.ConvertName(string).name') to snake-case 
+Converts provided [name](DevFast.Net.Text.Json.NamingPolicy.JsonSnakeCaseNamingPolicy.md#DevFast.Net.Text.Json.NamingPolicy.JsonSnakeCaseNamingPolicy.ConvertName(string).name 'DevFast.Net.Text.Json.NamingPolicy.JsonSnakeCaseNamingPolicy.ConvertName(string).name') to snake-case
 (e.g.: AbcDef to abc_def, MyTKiBd to my_tki_bd, ABC to abc etc).
 
 ```csharp
