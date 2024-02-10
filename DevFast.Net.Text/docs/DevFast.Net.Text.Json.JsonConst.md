@@ -12,6 +12,7 @@ public static class JsonConst
   - **[ArrayBeginByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ArrayBeginByte 'DevFast.Net.Text.Json.JsonConst.ArrayBeginByte')**
   - **[ArrayEndByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ArrayEndByte 'DevFast.Net.Text.Json.JsonConst.ArrayEndByte')**
   - **[AsteriskByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.AsteriskByte 'DevFast.Net.Text.Json.JsonConst.AsteriskByte')**
+  - **[CamelCase](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.CamelCase 'DevFast.Net.Text.Json.JsonConst.CamelCase')**
   - **[CarriageReturnByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.CarriageReturnByte 'DevFast.Net.Text.Json.JsonConst.CarriageReturnByte')**
   - **[DecimalPointByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.DecimalPointByte 'DevFast.Net.Text.Json.JsonConst.DecimalPointByte')**
   - **[ExponentLowerByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ExponentLowerByte 'DevFast.Net.Text.Json.JsonConst.ExponentLowerByte')**
@@ -21,8 +22,10 @@ public static class JsonConst
   - **[FirstOfTrueByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.FirstOfTrueByte 'DevFast.Net.Text.Json.JsonConst.FirstOfTrueByte')**
   - **[ForwardSlashByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ForwardSlashByte 'DevFast.Net.Text.Json.JsonConst.ForwardSlashByte')**
   - **[HorizontalTabByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.HorizontalTabByte 'DevFast.Net.Text.Json.JsonConst.HorizontalTabByte')**
+  - **[IdemCase](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.IdemCase 'DevFast.Net.Text.Json.JsonConst.IdemCase')**
   - **[LastOfBackspaceInStringByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.LastOfBackspaceInStringByte 'DevFast.Net.Text.Json.JsonConst.LastOfBackspaceInStringByte')**
   - **[LastOfCarriageReturnInStringByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.LastOfCarriageReturnInStringByte 'DevFast.Net.Text.Json.JsonConst.LastOfCarriageReturnInStringByte')**
+  - **[LongSnakeCase](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.LongSnakeCase 'DevFast.Net.Text.Json.JsonConst.LongSnakeCase')**
   - **[MinusSignByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.MinusSignByte 'DevFast.Net.Text.Json.JsonConst.MinusSignByte')**
   - **[NameSeparatorByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.NameSeparatorByte 'DevFast.Net.Text.Json.JsonConst.NameSeparatorByte')**
   - **[NewLineByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.NewLineByte 'DevFast.Net.Text.Json.JsonConst.NewLineByte')**
@@ -42,6 +45,7 @@ public static class JsonConst
   - **[RawUtf8JsonPartReaderMinBuffer](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.RawUtf8JsonPartReaderMinBuffer 'DevFast.Net.Text.Json.JsonConst.RawUtf8JsonPartReaderMinBuffer')**
   - **[ReverseSlashByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ReverseSlashByte 'DevFast.Net.Text.Json.JsonConst.ReverseSlashByte')**
   - **[SecondOfHexDigitInStringByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.SecondOfHexDigitInStringByte 'DevFast.Net.Text.Json.JsonConst.SecondOfHexDigitInStringByte')**
+  - **[SnakeCase](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.SnakeCase 'DevFast.Net.Text.Json.JsonConst.SnakeCase')**
   - **[SpaceByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.SpaceByte 'DevFast.Net.Text.Json.JsonConst.SpaceByte')**
   - **[StringQuoteByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.StringQuoteByte 'DevFast.Net.Text.Json.JsonConst.StringQuoteByte')**
   - **[ValueSeparatorByte](DevFast.Net.Text.Json.JsonConst.md#DevFast.Net.Text.Json.JsonConst.ValueSeparatorByte 'DevFast.Net.Text.Json.JsonConst.ValueSeparatorByte')**
@@ -95,6 +99,19 @@ public const byte AsteriskByte = 42;
 
 #### Field Value
 [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')
+
+<a name='DevFast.Net.Text.Json.JsonConst.CamelCase'></a>
+
+## JsonConst.CamelCase Field
+
+Camel case JSON naming policy instance.
+
+```csharp
+public static readonly JsonNamingPolicy CamelCase;
+```
+
+#### Field Value
+[System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy')
 
 <a name='DevFast.Net.Text.Json.JsonConst.CarriageReturnByte'></a>
 
@@ -213,6 +230,19 @@ public const byte HorizontalTabByte = 9;
 #### Field Value
 [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')
 
+<a name='DevFast.Net.Text.Json.JsonConst.IdemCase'></a>
+
+## JsonConst.IdemCase Field
+
+Idem case (No-Change) JSON naming policy instance.
+
+```csharp
+public static readonly JsonNamingPolicy IdemCase;
+```
+
+#### Field Value
+[System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy')
+
 <a name='DevFast.Net.Text.Json.JsonConst.LastOfBackspaceInStringByte'></a>
 
 ## JsonConst.LastOfBackspaceInStringByte Field
@@ -238,6 +268,20 @@ public const byte LastOfCarriageReturnInStringByte = 114;
 
 #### Field Value
 [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')
+
+<a name='DevFast.Net.Text.Json.JsonConst.LongSnakeCase'></a>
+
+## JsonConst.LongSnakeCase Field
+
+Long Snake case JSON naming policy instance.
+e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc.
+
+```csharp
+public static readonly JsonNamingPolicy LongSnakeCase;
+```
+
+#### Field Value
+[System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy')
 
 <a name='DevFast.Net.Text.Json.JsonConst.MinusSignByte'></a>
 
@@ -451,7 +495,7 @@ public const byte PlusSignByte = 43;
 
 ## JsonConst.RawUtf8JsonPartReaderMinBuffer Field
 
-Minimum buffer size of [AsyncUtf8JsonArrayPartReader](DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader.md 'DevFast.Net.Text.Json.Utf8.AsyncUtf8JsonArrayPartReader').
+Minimum buffer size of [JsonArrayReader](DevFast.Net.Text.Json.Utf8.JsonArrayReader.md 'DevFast.Net.Text.Json.Utf8.JsonArrayReader').
 
 ```csharp
 public const int RawUtf8JsonPartReaderMinBuffer = 512;
@@ -485,6 +529,20 @@ public const byte SecondOfHexDigitInStringByte = 117;
 
 #### Field Value
 [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')
+
+<a name='DevFast.Net.Text.Json.JsonConst.SnakeCase'></a>
+
+## JsonConst.SnakeCase Field
+
+Snake case JSON naming policy instance.
+e.g.: AbcDef to abc_def, MyTKiBd to my_tki_bd, ABC to abc etc.
+
+```csharp
+public static readonly JsonNamingPolicy SnakeCase;
+```
+
+#### Field Value
+[System.Text.Json.JsonNamingPolicy](https://docs.microsoft.com/en-us/dotnet/api/System.Text.Json.JsonNamingPolicy 'System.Text.Json.JsonNamingPolicy')
 
 <a name='DevFast.Net.Text.Json.JsonConst.SpaceByte'></a>
 

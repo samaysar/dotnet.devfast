@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using DevFast.Net.Text.Json.Utf8;
 
 namespace DevFast.Net.Text
 {
@@ -11,6 +10,6 @@ namespace DevFast.Net.Text
         /// <summary>
         /// Instance of <see cref="Encoding.UTF8"/> encoding which will not emit BOM.
         /// </summary>
-        public static readonly Encoding Utf8NoBom = new UTF8Encoding(false);        
+        public static readonly Encoding Utf8NoBom = new UTF8Encoding(false);
     }
 }

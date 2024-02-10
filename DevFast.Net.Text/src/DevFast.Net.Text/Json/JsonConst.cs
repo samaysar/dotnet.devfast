@@ -1,4 +1,6 @@
-﻿using DevFast.Net.Text.Json.Utf8;
+﻿using System.Text.Json;
+using DevFast.Net.Text.Json.NamingPolicy;
+using DevFast.Net.Text.Json.Utf8;
 
 namespace DevFast.Net.Text.Json
 {
@@ -6,9 +8,31 @@ namespace DevFast.Net.Text.Json
     /// Static class holding constant or fixed values for JSON text processing.
     /// </summary>
     public static class JsonConst
-    {        
+    {
         /// <summary>
-        /// Minimum buffer size of <see cref="AsyncUtf8JsonArrayPartReader"/>.
+        /// Camel case JSON naming policy instance.
+        /// </summary>
+        public static readonly JsonNamingPolicy CamelCase = JsonNamingPolicy.CamelCase;
+
+        /// <summary>
+        /// Snake case JSON naming policy instance.
+        /// e.g.: AbcDef to abc_def, MyTKiBd to my_tki_bd, ABC to abc etc.
+        /// </summary>
+        public static readonly JsonNamingPolicy SnakeCase = JsonSnakeCaseNamingPolicy.SnakeCase;
+
+        /// <summary>
+        /// Long Snake case JSON naming policy instance.
+        /// e.g.: AbcDef to abc_def, MyTKiBd to my_t_ki_bd, ABC to a_b_c etc.
+        /// </summary>
+        public static readonly JsonNamingPolicy LongSnakeCase = JsonLongSnakeCaseNamingPolicy.LongSnakeCase;
+
+        /// <summary>
+        /// Idem case (No-Change) JSON naming policy instance.
+        /// </summary>
+        public static readonly JsonNamingPolicy IdemCase = JsonIdemCaseNamingPolicy.IdemCase;
+
+        /// <summary>
+        /// Minimum buffer size of <see cref="JsonArrayReader"/>.
         /// </summary>
         public const int RawUtf8JsonPartReaderMinBuffer = 512;
 
