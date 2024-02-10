@@ -100,7 +100,7 @@ namespace DevFast.Net.Text.Json.Utf8
                                                             $"Found = {(char)Current!}, " +
                                                             $"0-Based Position = {Position}.");
                 }
-                throw new JsonException("Reached end, unable to find JSON begin-array." +
+                throw new JsonException("Reached end, unable to find JSON begin-array. " +
                                                         $"0-Based Position = {Position}.");
             }
         }
@@ -141,8 +141,8 @@ namespace DevFast.Net.Text.Json.Utf8
                 if (!EoJ)
                 {
                     throw new JsonException("Expected End Of JSON after encountering ']'. " +
-                                                            $"Found = {(char)Current!}, " +
-                                                            $"0-Based Position = {Position}.");
+                                            $"Found = {(char)Current!}, " +
+                                            $"0-Based Position = {Position}.");
                 }
             }
             return reply;
@@ -246,7 +246,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     if (_buffer[_current] != JsonConst.StringQuoteByte)
                     {
                         throw new JsonException("Invalid byte value for start of Object Property Name. " +
-                            $"Expected = {JsonConst.StringQuoteByte}, " +
+                            $"Expected = {(char)JsonConst.StringQuoteByte}, " +
                             $"Found = {(char)Current!}, " +
                             $"0-Based Position = {Position}.");
                     }
@@ -296,19 +296,19 @@ namespace DevFast.Net.Text.Json.Utf8
                                     {
                                         continue;
                                     }
-                                    throw new JsonException("Reached end, unable to find valid Hex-Digits. " +
+                                    throw new JsonException("Reached end, unable to find 4 characters after Hex escape \\u. " +
                                                                    $"0-Based Position = {Position}.");
                                 default:
                                     throw new JsonException("Bad JSON escape. " +
-                                        $"Expected = \\{JsonConst.ReverseSlashByte} or " +
-                                        $"\\{JsonConst.ForwardSlashByte} or " +
-                                        $"\\{JsonConst.StringQuoteByte} or " +
-                                        $"\\{JsonConst.LastOfBackspaceInStringByte} or " +
-                                        $"\\{JsonConst.FirstOfFalseByte} or " +
-                                        $"\\{JsonConst.FirstOfNullByte} or " +
-                                        $"\\{JsonConst.FirstOfTrueByte} or " +
-                                        $"\\{JsonConst.LastOfCarriageReturnInStringByte} or " +
-                                        $"\\{JsonConst.SecondOfHexDigitInStringByte}4Hex, " +
+                                        $"Expected = \\{(char)JsonConst.ReverseSlashByte} or " +
+                                        $"\\{(char)JsonConst.ForwardSlashByte} or " +
+                                        $"\\{(char)JsonConst.StringQuoteByte} or " +
+                                        $"\\{(char)JsonConst.LastOfBackspaceInStringByte} or " +
+                                        $"\\{(char)JsonConst.FirstOfFalseByte} or " +
+                                        $"\\{(char)JsonConst.FirstOfNullByte} or " +
+                                        $"\\{(char)JsonConst.FirstOfTrueByte} or " +
+                                        $"\\{(char)JsonConst.LastOfCarriageReturnInStringByte} or " +
+                                        $"\\{(char)JsonConst.SecondOfHexDigitInStringByte}XXXX, " +
                                         $"Found = \\{(char)Current!}, " +
                                         $"0-Based Position = {Position}.");
                             }
@@ -414,7 +414,7 @@ namespace DevFast.Net.Text.Json.Utf8
                                                         $"Found = {(char)Current!}, " +
                                                         $"0-Based Position = {Position}.");
             }
-            throw new JsonException($"Reached end, unable to find '{end}'. " +
+            throw new JsonException($"Reached end, unable to find '{(char)end}'. " +
                                                     $"0-Based Position = {Position}.");
         }
 

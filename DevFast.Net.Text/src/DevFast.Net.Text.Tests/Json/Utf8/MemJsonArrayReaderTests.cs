@@ -154,7 +154,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
             JsonException? err = Throws<JsonException>(() => r.ReadIsEndArray(true));
             That(err, Is.Not.Null);
-            That(err.Message, Is.EqualTo("Expected End Of JSON after encountering ']'. 0-Based Position = 1."));
+            That(err.Message, Is.EqualTo("Expected End Of JSON after encountering ']'. Found = [, 0-Based Position = 1."));
         }
 
         [Test]
@@ -570,6 +570,23 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             m = new();
             e = new(false);
             await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)' '
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r21 = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => r21.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, expected to find '}'. 0-Based Position = 2."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
             //{\\a\n} => objectwith comments
             await m.WriteAsync(new[]
             {
@@ -601,6 +618,24 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             {
                 That(err, Is.Not.Null);
                 That(err.Message, Is.EqualTo("Reached end, expected to find ']'. 0-Based Position = 1."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'[',
+                (byte)' '
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr2 = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr2.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, expected to find ']'. 0-Based Position = 2."));
             });
         }
 

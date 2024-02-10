@@ -2,10 +2,18 @@
 {
     internal static class TestHelper
     {
-        public static byte[] ComplexRawJson()
-        {
-            return new UTF8Encoding(false).GetBytes(@"{
-                ""a"": [0,1,2,3,4,5,6,7,8,9],
+        public const string ComplexJson = @"{
+            ""a"": [0,1,2,3,4,5,6,7,8,9],
+            ""b"": null,
+            ""c"": true, /* Another comment
+                            until here */
+            ""d"": false,
+            ""e"": [{""a"":1},{""a"":2}], //comment
+            ""f"": 10.5,
+            ""g"": -1e5,
+            ""h"": ""x"",
+            ""i"": {
+                ""a"": [0,1,2,true,false,null,[1,2,3,4,5,6,7,8],7,{""a"":1,""b"":[0,1,2,2,3]},""\u1234""],
                 ""b"": null,
                 ""c"": true, /* Another comment
                                 until here */
@@ -13,11 +21,27 @@
                 ""e"": [{""a"":1},{""a"":2}], //comment
                 ""f"": 10.5,
                 ""g"": -1e5,
-                ""h"": ""x""
-            }");
+                ""h"": ""x"",
+                ""i"": {
+                    ""a"": [0,1,2,3,4,5,6,7,8,9],
+                    ""b"": null,
+                    ""c"": true, /* Another comment
+                                    until here */
+                    ""d"": false,
+                    ""e"": [{""a"":1},{""a"":2}], //comment
+                    ""f"": 10.5,
+                    ""g"": -1e5,
+                    ""h"": ""x""
+                }
+            }
+        }";
+
+        public static byte[] ComplexRawJson()
+        {
+            return new UTF8Encoding(false).GetBytes(ComplexJson);
         }
 
-        public static Stream GetReadableStreamWith(string data, bool withPreamble = false)
+        public static Stream GetReadableStreamWith(string data = ComplexJson, bool withPreamble = false)
         {
             FileStream f = new(Guid.NewGuid().ToString() + ".json",
                 FileMode.OpenOrCreate,
