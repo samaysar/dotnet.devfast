@@ -216,5 +216,437 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
                 ReadCommentHandling = JsonCommentHandling.Skip
             })!);
         }
+
+        [Test]
+        public async Task ReadRaw_Throws_Error_For_Invalid_Object()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{1} => invalid object
+            await m.WriteAsync(new[] { JsonConst.ObjectBeginByte, JsonConst.Number1Byte, JsonConst.ArrayEndByte });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Invalid byte value for start of Object Property Name. Expected = \", Found = 1, 0-Based Position = 1."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Passes_When_String_Contains_WhiteSpace_Characters_Or_Hex()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                JsonConst.StringQuoteByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.ForwardSlashByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.StringQuoteByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.LastOfBackspaceInStringByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.FirstOfFalseByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.FirstOfNullByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.FirstOfTrueByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.LastOfCarriageReturnInStringByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.SecondOfHexDigitInStringByte,
+                JsonConst.Number0Byte,
+                JsonConst.Number0Byte,
+                JsonConst.Number0Byte,
+                JsonConst.Number0Byte,
+                JsonConst.StringQuoteByte
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            RawJson str = r.ReadRaw(false);
+            That(str.Type, Is.EqualTo(JsonType.Str));
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_String_Contains_Invalid_Escape_Character()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                JsonConst.StringQuoteByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.Number1Byte,
+                JsonConst.StringQuoteByte
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Bad JSON escape. Expected = \\\\ or \\/ or \\\" or \\b or \\f or \\n or \\t or \\r or \\uXXXX, Found = \\1, 0-Based Position = 2."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                JsonConst.StringQuoteByte,
+                JsonConst.ReverseSlashByte,
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find valid escape character. 0-Based Position = 2."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_HexEscape_DoesNot_Followed_By_4_Characters()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                JsonConst.StringQuoteByte,
+                JsonConst.ReverseSlashByte,
+                JsonConst.SecondOfHexDigitInStringByte,
+                JsonConst.Number0Byte,
+                JsonConst.StringQuoteByte
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find 4 characters after Hex escape \\u. 0-Based Position = 5."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_String_Is_Not_Terminated_Before_End()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                JsonConst.StringQuoteByte,
+                JsonConst.Number0Byte
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find end-of-string quote '\"'. 0-Based Position = 2."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_True_Or_False_Are_Not_Terminated_Before_End()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'t',
+                (byte)'r',
+                (byte)'u' //missing 'e'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end while parsing 'true' literal. 0-Based Position = 3."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'f',
+                (byte)'a',
+                (byte)'l',
+                (byte)'s' //missing 'e'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end while parsing 'false' literal. 0-Based Position = 4."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_Null_Is_Not_Terminated_Before_End()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'n',
+                (byte)'u',
+                (byte)'l' //missing 'l'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end while parsing 'null' literal. 0-Based Position = 3."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_Array_Or_Object_Is_Not_Well_Terminated()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)'"',
+                (byte)'a',
+                (byte)'"',
+                (byte)':',
+                (byte)'1' //not closing '}'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find '}'. 0-Based Position = 6."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'[',
+                (byte)'1' //not closing ']'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find ']'. 0-Based Position = 2."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throw_Error_When_Array_Or_Object_Is_Not_Well_Formatted()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)'"',
+                (byte)'a',
+                (byte)'"',
+                (byte)':',
+                (byte)'1',
+                (byte)' ',//forgot ',' between 1 and next field's 
+                (byte)'"',
+                (byte)'b',
+                (byte)'"',
+                (byte)':',
+                (byte)'2',
+                (byte)'}'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Invalid byte value for 'Object property'. Expected = ',' or '}' (but not ',}'), Found = \", 0-Based Position = 7."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'[',
+                (byte)'1',
+                (byte)' ',//forgot ',' between 1 and next value
+                (byte)'1',
+                (byte)']'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Invalid byte value for 'array'. Expected = ',' or ']' (but not ',]'), Found = 1, 0-Based Position = 3."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throws_Error_When_Array_Or_Object_Is_Not_Well_Defined()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)'"',
+                (byte)'a',
+                (byte)'"',
+                (byte)':',
+                (byte)'1',
+                (byte)','
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find '}'. 0-Based Position = 7."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r1 = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => r1.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, expected to find '}'. 0-Based Position = 1."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'[',
+                (byte)'1',
+                (byte)','
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, unable to find ']'. 0-Based Position = 3."));
+            });
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'['
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr1 = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            err = Throws<JsonException>(() => rr1.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end, expected to find ']'. 0-Based Position = 1."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Passes_When_Array_Or_Object_Is_Well_Defined()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)'"',
+                (byte)'a',
+                (byte)'"',
+                (byte)':',
+                (byte)'1',
+                (byte)',',
+                (byte)'"',
+                (byte)'b',
+                (byte)'"',
+                (byte)':',
+                (byte)'2',
+                (byte)'}'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            RawJson d = r.ReadRaw(false);
+            That(d.Type, Is.EqualTo(JsonType.Obj));
+
+            m = new();
+            e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            //{\\a\n} => objectwith comments
+            await m.WriteAsync(new[]
+            {
+                (byte)'[',
+                (byte)'1',
+                (byte)',',//forgot ',' between 1 and next value
+                (byte)'1',
+                (byte)']'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            d = rr.ReadRaw(false);
+            That(d.Type, Is.EqualTo(JsonType.Arr));
+        }
     }
 }
