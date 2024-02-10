@@ -104,9 +104,9 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             _ = m.Seek(0, SeekOrigin.Begin);
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
             List<RawJson> dataPoints = r.EnumerateJsonArray(true).ToList();
-            That(dataPoints.Count, Is.EqualTo(1));
+            That(dataPoints, Has.Count.EqualTo(1));
             That(dataPoints[0].Type, Is.EqualTo(JsonType.Num));
-            That(dataPoints[0].Value.Length, Is.EqualTo(1));
+            That(dataPoints[0].Value, Has.Length.EqualTo(1));
             That(dataPoints[0].Value[0], Is.EqualTo(JsonConst.Number9Byte));
         }
 
@@ -119,7 +119,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             await m.WriteAsync(new[] { JsonConst.ArrayBeginByte });
             _ = m.Seek(0, SeekOrigin.Begin);
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
-            JsonException? err = Throws<JsonException>(() => r.EnumerateJsonArray(true).ToList());
+            JsonException err = Throws<JsonException>(() => r.EnumerateJsonArray(true).ToList())!;
             That(err, Is.Not.Null);
             That(err.Message, Is.EqualTo("Expected a valid JSON element or end of JSON array. 0-Based Position = 1."));
         }
@@ -136,7 +136,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             _ = m.Seek(0, SeekOrigin.Begin);
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
             r.ReadIsBeginArrayWithVerify();
-            JsonException? err = Throws<JsonException>(() => r.ReadIsBeginArrayWithVerify());
+            JsonException err = Throws<JsonException>(() => r.ReadIsBeginArrayWithVerify())!;
             That(err, Is.Not.Null);
             That(err.Message, Is.EqualTo(keepRange ?
                 "Invalid byte value for JSON begin-array. Expected = 91, Found = ], 0-Based Position = 1." :
@@ -152,7 +152,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             await m.WriteAsync(new[] { JsonConst.ArrayEndByte, JsonConst.ArrayBeginByte });
             _ = m.Seek(0, SeekOrigin.Begin);
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
-            JsonException? err = Throws<JsonException>(() => r.ReadIsEndArray(true));
+            JsonException err = Throws<JsonException>(() => r.ReadIsEndArray(true))!;
             That(err, Is.Not.Null);
             That(err.Message, Is.EqualTo("Expected End Of JSON after encountering ']'. Found = [, 0-Based Position = 1."));
         }
@@ -192,7 +192,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             await m.WriteAsync(new[] { JsonConst.SecondOfHexDigitInStringByte });
             _ = m.Seek(0, SeekOrigin.Begin);
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
-            JsonException? err = Throws<JsonException>(() => r.ReadRaw(false));
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
             Multiple(() =>
             {
                 That(err, Is.Not.Null);
@@ -786,7 +786,6 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             {
                 That(err, Is.Not.Null);
                 That(err.Message, Is.EqualTo("Reached end. Can not find end token of multi line comment(*/)."));
-
             });
         }
 

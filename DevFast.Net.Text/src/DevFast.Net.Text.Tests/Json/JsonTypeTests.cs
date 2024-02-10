@@ -10,7 +10,7 @@
             Multiple(() =>
             {
                 NotNull(typeValues);
-                That(typeValues.Length, Is.EqualTo(7));
+                That(typeValues, Has.Length.EqualTo(7));
                 var pos = 0;
                 That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Undefined"));
                 That(typeValues.GetValue(pos++)!.ToString(), Is.EqualTo("Obj"));

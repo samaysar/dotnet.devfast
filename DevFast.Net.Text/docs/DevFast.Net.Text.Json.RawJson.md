@@ -15,13 +15,20 @@ System.IEquatable<DevFast.Net.Text.Json.RawJson>
 ```
 
 Implements [System.IEquatable&lt;](https://docs.microsoft.com/en-us/dotnet/api/System.IEquatable-1 'System.IEquatable`1')[RawJson](DevFast.Net.Text.Json.RawJson.md 'DevFast.Net.Text.Json.RawJson')[&gt;](https://docs.microsoft.com/en-us/dotnet/api/System.IEquatable-1 'System.IEquatable`1')
+
+### Remarks
+Create an instance with JSON type and corresponding raw value.
 ### Constructors
 
 <a name='DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[])'></a>
 
 ## RawJson(JsonType, byte[]) Constructor
 
-Create an instance with JSON [type](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[]).type 'DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType, byte[]).type') and corresponding raw [value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[]).value 'DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType, byte[]).value').
+Raw JSON output that provide a valid [JsonType](DevFast.Net.Text.Json.JsonType.md 'DevFast.Net.Text.Json.JsonType') and corresponding
+[Value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Value 'DevFast.Net.Text.Json.RawJson.Value').
+
+When [Type](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Type 'DevFast.Net.Text.Json.RawJson.Type') is [Undefined](DevFast.Net.Text.Json.JsonType.md#DevFast.Net.Text.Json.JsonType.Undefined 'DevFast.Net.Text.Json.JsonType.Undefined'), [Value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Value 'DevFast.Net.Text.Json.RawJson.Value') is
+an empty [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte') array.
 
 ```csharp
 public RawJson(DevFast.Net.Text.Json.JsonType type, byte[] value);
@@ -32,16 +39,23 @@ public RawJson(DevFast.Net.Text.Json.JsonType type, byte[] value);
 
 `type` [JsonType](DevFast.Net.Text.Json.JsonType.md 'DevFast.Net.Text.Json.JsonType')
 
+[JsonType](DevFast.Net.Text.Json.JsonType.md 'DevFast.Net.Text.Json.JsonType') of the [value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[]).value 'DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType, byte[]).value')
+
 <a name='DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[]).value'></a>
 
 `value` [System.Byte](https://docs.microsoft.com/en-us/dotnet/api/System.Byte 'System.Byte')[[]](https://docs.microsoft.com/en-us/dotnet/api/System.Array 'System.Array')
+
+Byte sequence of the associated [JsonType](DevFast.Net.Text.Json.JsonType.md 'DevFast.Net.Text.Json.JsonType')
+
+### Remarks
+Create an instance with JSON [type](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[]).type 'DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType, byte[]).type') and corresponding raw [value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType,byte[]).value 'DevFast.Net.Text.Json.RawJson.RawJson(DevFast.Net.Text.Json.JsonType, byte[]).value').
 ### Properties
 
 <a name='DevFast.Net.Text.Json.RawJson.Type'></a>
 
 ## RawJson.Type Property
 
-JSON type of of raw [Value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Value 'DevFast.Net.Text.Json.RawJson.Value').
+JSON type of raw [Value](DevFast.Net.Text.Json.RawJson.md#DevFast.Net.Text.Json.RawJson.Value 'DevFast.Net.Text.Json.RawJson.Value').
 
 ```csharp
 public DevFast.Net.Text.Json.JsonType Type { get; }

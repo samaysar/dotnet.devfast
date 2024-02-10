@@ -8,30 +8,24 @@
     /// an empty <see cref="byte"/> array.
     /// </para>
     /// </summary>
-    public readonly struct RawJson : IEquatable<RawJson>
+    /// <remarks>
+    /// Create an instance with JSON <paramref name="type"/> and corresponding raw <paramref name="value"/>.
+    /// </remarks>
+    /// <param name="type"><see cref="JsonType"/> of the <paramref name="value"/></param>
+    /// <param name="value">Byte sequence of the associated <see cref="JsonType"/></param>
+    public readonly struct RawJson(JsonType type, byte[] value) : IEquatable<RawJson>
     {
         /// <summary>
-        /// Create an instance with JSON <paramref name="type"/> and corresponding raw <paramref name="value"/>.
+        /// JSON type of raw <see cref="Value"/>.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="value"></param>
-        public RawJson(JsonType type, byte[] value)
-        {
-            Type = type;
-            Value = value;
-        }
-
-        /// <summary>
-        /// JSON type of of raw <see cref="Value"/>.
-        /// </summary>
-        public JsonType Type { get; }
+        public JsonType Type { get; } = type;
 
         /// <summary>
         /// Raw JSON value. When <see cref="Type"/> is <see cref="JsonType.Undefined"/>, <see cref="Value"/> is
         /// an empty <see cref="byte"/> array.
         /// </summary>
 #pragma warning disable CA1819
-        public byte[] Value { get; }
+        public byte[] Value { get; } = value;
 #pragma warning restore CA1819
 
         /// <summary>

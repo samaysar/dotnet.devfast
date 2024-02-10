@@ -23,26 +23,30 @@ namespace DevFast.Net.Text.Json
             int size = JsonConst.RawUtf8JsonPartReaderMinBuffer,
             bool disposeStream = false)
         {
-            if (!stream.CanRead) throw new ArgumentException($"{nameof(stream)} should support Read operation!");
-            var bom = Encoding.UTF8.GetPreamble();
+            if (!stream.CanRead)
+            {
+                throw new ArgumentException($"{nameof(stream)} should support Read operation!");
+            }
+
+            byte[] bom = Encoding.UTF8.GetPreamble();
             if (stream is MemoryStream ms)
             {
-                if (!ms.TryGetBuffer(out var segment))
+                if (!ms.TryGetBuffer(out ArraySegment<byte> segment))
                 {
                     throw new UnauthorizedAccessException("Stream buffer is not exposed!");
                 }
-                var newOffSet = 0;
+                int newOffSet = 0;
                 newOffSet = segment.Count >= bom.Length &&
                             bom.All(b => b.Equals(segment[segment.Offset + newOffSet++])) ? bom.Length : 0;
-                return new MemJsonArrayReader(ms, 
-                    new ArraySegment<byte>(segment.Array!, segment.Offset + newOffSet, segment.Count - newOffSet), 
+                return new MemJsonArrayReader(ms,
+                    new ArraySegment<byte>(segment.Array!, segment.Offset + newOffSet, segment.Count - newOffSet),
                     disposeStream);
             }
             else
             {
-                var buffer = new byte[Math.Max(JsonConst.RawUtf8JsonPartReaderMinBuffer, size)];
+                byte[] buffer = new byte[Math.Max(JsonConst.RawUtf8JsonPartReaderMinBuffer, size)];
 #if NET7_0_OR_GREATER
-                var end = await stream.ReadAtLeastAsync(buffer,
+                int end = await stream.ReadAtLeastAsync(buffer,
                     buffer.Length / 2,
                     false,
                     token).ConfigureAwait(false);
@@ -58,11 +62,10 @@ namespace DevFast.Net.Text.Json
                     } while (newReads != 0 && end < bom.Length);
                 }
 #endif
-                var begin = 0;
+                int begin = 0;
                 begin = end >= bom.Length && bom.All(b => b.Equals(buffer[begin++])) ? bom.Length : 0;
                 return new JsonArrayReader(stream, buffer, begin, end, disposeStream);
             }
         }
-
     }
 }

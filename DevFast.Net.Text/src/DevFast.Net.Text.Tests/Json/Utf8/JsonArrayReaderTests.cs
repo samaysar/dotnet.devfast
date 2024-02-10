@@ -89,10 +89,13 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             await using Stream m = TestHelper.GetReadableStreamWith("[9]");
             using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
             List<RawJson> dataPoints = r.EnumerateJsonArray(true).ToList();
-            That(dataPoints.Count, Is.EqualTo(1));
-            That(dataPoints[0].Type, Is.EqualTo(JsonType.Num));
-            That(dataPoints[0].Value.Length, Is.EqualTo(1));
-            That(dataPoints[0].Value[0], Is.EqualTo(JsonConst.Number9Byte));
+            Multiple(() =>
+            {
+                That(dataPoints, Has.Count.EqualTo(1));
+                That(dataPoints[0].Type, Is.EqualTo(JsonType.Num));
+                That(dataPoints[0].Value, Has.Length.EqualTo(1));
+                That(dataPoints[0].Value[0], Is.EqualTo(JsonConst.Number9Byte));
+            });
         }
 
         [Test]
@@ -451,7 +454,6 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             {
                 That(err, Is.Not.Null);
                 That(err.Message, Is.EqualTo("Reached end. Can not find end token of multi line comment(*/)."));
-
             });
         }
 
@@ -477,7 +479,7 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
                 FileShare.None,
                 4096,
                 FileOptions.SequentialScan | FileOptions.Asynchronous | FileOptions.DeleteOnClose);
-            using StreamWriter w = new(f, new UTF8Encoding(false), 4096, true);
+            await using StreamWriter w = new(f, new UTF8Encoding(false), 4096, true);
             w.Write("[");
             Enumerable.Range(0, 1000).ForEach(_ =>
             {
