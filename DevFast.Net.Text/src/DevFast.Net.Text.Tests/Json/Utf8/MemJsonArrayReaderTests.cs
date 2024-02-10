@@ -605,6 +605,32 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
         }
 
         [Test]
+        public async Task ReadRaw_Throws_Error_When_Object_Does_Not_Have_Name_Separator()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)'"',
+                (byte)'a',
+                (byte)'"',
+                (byte)' ',// missed ':'
+                (byte)'1',
+                (byte)'}'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Invalid byte value while parsing 'Object property'. Expected = 58, Found = 1, 0-Based Position = 5."));
+            });
+        }
+
+        [Test]
         public async Task ReadRaw_Passes_When_Array_Or_Object_Is_Well_Defined()
         {
             MemoryStream m = new();
@@ -647,6 +673,109 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             using IJsonArrayReader rr = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
             d = rr.ReadRaw(false);
             That(d.Type, Is.EqualTo(JsonType.Arr));
+        }
+
+        [Test]
+        public async Task ReadRaw_Throws_Error_For_Mal_Formed_Comment()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'{',
+                (byte)'/'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end. Can not find correct comment format (neither single line comment token '//' nor multi-line comment token '/*')."));
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Passes_For_Empty_Comment()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'/',
+                (byte)'/'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            RawJson d = r.ReadRaw(false);
+            That(d.Type, Is.EqualTo(JsonType.Undefined));
+        }
+
+        [Test]
+        public async Task ReadRaw_Passes_For_MultiLine_Comment_Having_More_Asterisks_As_Needed()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'/',
+                (byte)'*',
+                (byte)'*',
+                (byte)'*',
+                (byte)'/'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            RawJson d = r.ReadRaw(false);
+            That(d.Type, Is.EqualTo(JsonType.Undefined));
+        }
+
+        [Test]
+        public async Task ReadRaw_Throws_Error_If_MultiLine_Comment_Not_Properly_Closed_At_End_Of_Data()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'/',
+                (byte)'*'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Reached end. Can not find end token of multi line comment(*/)."));
+
+            });
+        }
+
+        [Test]
+        public async Task ReadRaw_Throws_Error_For_Invalid_Comment_Opening()
+        {
+            MemoryStream m = new();
+            UTF8Encoding e = new(false);
+            await m.WriteAsync(e.GetPreamble());
+            await m.WriteAsync(new[]
+            {
+                (byte)'/',
+                (byte)'m',
+                (byte)'y'
+            });
+            _ = m.Seek(0, SeekOrigin.Begin);
+            using IJsonArrayReader r = await JsonReader.CreateUtf8ArrayReaderAsync(m, CancellationToken.None, disposeStream: true);
+            JsonException err = Throws<JsonException>(() => r.ReadRaw(false))!;
+            Multiple(() =>
+            {
+                That(err, Is.Not.Null);
+                That(err.Message, Is.EqualTo("Can not find correct comment format. Found single forward-slash '/' when expected either single line comment token '//' or multi-line comment token '/*'. 0-Based Position = 1."));
+
+            });
         }
     }
 }

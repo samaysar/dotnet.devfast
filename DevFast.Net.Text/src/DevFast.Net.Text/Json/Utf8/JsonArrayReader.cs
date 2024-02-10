@@ -469,16 +469,9 @@ namespace DevFast.Net.Text.Json.Utf8
             {
                 return;
             }
-
-            if (InRange)
-            {
-                throw new JsonException($"Invalid byte value while parsing '{partOf}'. " +
-                                                        $"Expected = {expected}, " +
-                                                        $"Found = {(char)Current!}, " +
-                                                        $"0-Based Position = {Position}.");
-            }
-            throw new JsonException($"Reached end while parsing '{partOf}'. " +
+            throw new JsonException($"Invalid byte value while parsing '{partOf}'. " +
                                                     $"Expected = {expected}, " +
+                                                    $"Found = {(char)Current!}, " +
                                                     $"0-Based Position = {Position}.");
         }
 

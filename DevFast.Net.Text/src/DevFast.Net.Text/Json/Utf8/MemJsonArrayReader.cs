@@ -462,16 +462,10 @@ namespace DevFast.Net.Text.Json.Utf8
                 return;
             }
 
-            if (InRange)
-            {
-                throw new JsonException($"Invalid byte value while parsing '{partOf}'. " +
-                                                        $"Expected = {expected}, " +
-                                                        $"Found = {(char)Current!}, " +
-                                                        $"0-Based Position = {Position}.");
-            }
-            throw new JsonException($"Reached end while parsing '{partOf}'. " +
-                                                    $"Expected = {expected}, " +
-                                                    $"0-Based Position = {Position}.");
+            throw new JsonException($"Invalid byte value while parsing '{partOf}'. " +
+                                    $"Expected = {expected}, " +
+                                    $"Found = {(char)Current!}, " +
+                                    $"0-Based Position = {Position}.");
         }
 
         private void SkipWhiteSpace()
@@ -490,9 +484,9 @@ namespace DevFast.Net.Text.Json.Utf8
                         if (!NextWithEnsureCapacity())
                         {
                             throw new JsonException("Reached end. " +
-                                                           "Can not find correct comment format " +
-                                                           "(neither single line comment token '//' " +
-                                                           "nor multi-line comment token '/*').");
+                                                    "Can not find correct comment format " +
+                                                    "(neither single line comment token '//' " +
+                                                    "nor multi-line comment token '/*').");
                         }
                         ReadComment();
                         continue;
@@ -539,8 +533,7 @@ namespace DevFast.Net.Text.Json.Utf8
                     }
                     //we need to throw error even if we reached EoJ
                     //coz the comment was not properly terminated!
-                    throw new JsonException("Reached end. " +
-                                                   "Can not find end token of multi line comment(*/).");
+                    throw new JsonException("Reached end. Can not find end token of multi line comment(*/).");
                 default:
                     throw new JsonException("Can not find correct comment format. " +
                         "Found single forward-slash '/' when expected " +
