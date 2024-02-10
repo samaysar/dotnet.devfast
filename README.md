@@ -1,5 +1,4 @@
-# dotnet.devfast [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast/graph/badge.svg?token=JQQNSCWGZB)](https://app.codecov.io/gh/samaysar/dotnet.devfast/tree/master)
-
+# dotnet.devfast [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast/graph/badge.svg?token=JQQNSCWGZB)](https://codecov.io/gh/samaysar/dotnet.devfast)
 dotnet.devfast project aims to achieve a single goal which is <strong>Fast Code Development in .Net</strong>. Verbosely speaking, we want to:
 
 - Bring readability to code
