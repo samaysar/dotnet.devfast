@@ -6,7 +6,6 @@ on:
     branches: [ "master" ]
 jobs:
   buildAndTestFull:
-    needs: buildExtensions
     strategy:
       matrix:
         dotnet-version: ['8.x.x']
