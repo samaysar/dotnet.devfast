@@ -477,7 +477,7 @@ namespace DevFast.Net.Text.Json.Utf8
 
         private void SkipWhiteSpace(CancellationToken token)
         {
-            while (InRange)
+            while (EnsureCapacity(token))
             {
                 switch (_buffer[_current])
                 {

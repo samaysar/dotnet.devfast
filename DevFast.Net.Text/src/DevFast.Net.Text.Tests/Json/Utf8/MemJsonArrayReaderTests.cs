@@ -774,7 +774,6 @@ namespace DevFast.Net.Text.Tests.Json.Utf8
             {
                 That(err, Is.Not.Null);
                 That(err.Message, Is.EqualTo("Can not find correct comment format. Found single forward-slash '/' when expected either single line comment token '//' or multi-line comment token '/*'. 0-Based Position = 1."));
-
             });
         }
     }
