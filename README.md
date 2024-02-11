@@ -1,4 +1,4 @@
-# dotnet.devfast [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast/graph/badge.svg?token=JQQNSCWGZB)](https://codecov.io/gh/samaysar/dotnet.devfast)
+# dotnet.devfast
 dotnet.devfast project aims to achieve a single goal which is <strong>Fast Code Development in .Net</strong>. Verbosely speaking, we want to:
 
 - Bring readability to code
@@ -13,4 +13,4 @@ With this goal, the project is divided into several separate solutions, in order
 - Continuous evolution
 
 Currently the project consists of following packages:
- - [![Build status](https://ci.appveyor.com/api/projects/status/7naggm2lvjcikgn2?svg=true)](https://ci.appveyor.com/project/samaysar/devfast-dotnet-extensions) [![NuGet](https://buildstats.info/nuget/DevFast.Net.Extensions)](https://www.nuget.org/packages/DevFast.Net.Extensions) DevFast.Net.Extensions: [Project](/DevFast.Net.Extensions), [Developer Documentation](/DevFast.Net.Extensions/docs/index.md 'index'), [Release Notes](https://raw.githubusercontent.com/samaysar/dotnet.devfast/master/DevFast.Net.Extensions/ReleaseNotes.txt)
+ - [![Build status](https://ci.appveyor.com/api/projects/status/7naggm2lvjcikgn2?svg=true)](https://ci.appveyor.com/project/samaysar/devfast-dotnet-extensions) [![codecov](https://codecov.io/gh/samaysar/dotnet.devfast.extensions/graph/badge.svg?token=7DXJsSSBLm)](https://codecov.io/gh/samaysar/dotnet.devfast.extensions) [![NuGet](https://buildstats.info/nuget/DevFast.Net.Extensions)](https://www.nuget.org/packages/DevFast.Net.Extensions) DevFast.Net.Extensions: [Project](https://github.com/samaysar/dotnet.devfast.extensions), [Developer Documentation](https://github.com/samaysar/dotnet.devfast.extensions/blob/master/docs/index.md 'index'), [Release Notes](https://raw.githubusercontent.com/samaysar/dotnet.devfast.extensions/master/ReleaseNotes.txt)
