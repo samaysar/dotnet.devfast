@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+           xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+           xsi:type="TaskPaneApp">
+  <Id>c3e93f44-8ad1-4b9d-8c83-000000000001</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Your Company</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Angular Office Add-in" />
+  <Description DefaultValue="An Office task pane add-in built with Angular 21." />
+
+  <IconUrl DefaultValue="https://localhost:4200/assets/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://localhost:4200/assets/icon-64.png" />
+
+  <SupportUrl DefaultValue="https://localhost:4200" />
+
+  <AppDomains>
+    <AppDomain>https://localhost:4200</AppDomain>
+  </AppDomains>
+
+  <Hosts>
+    <Host Name="Document" />
+    <Host Name="Workbook" />
+  </Hosts>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="https://localhost:4200" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xsi:type="ov:VersionOverrides" Version="1.0">
+    <ov:Hosts>
+      <ov:Host xsi:type="ov:DesktopFormFactor">
+        <ov:ExtensionPoint xsi:type="ov:PrimaryCommandSurface">
+          <ov:OfficeTab id="TabHome">
+            <ov:Group id="msgReadGroup">
+              <ov:Label resid="groupLabel" />
+              <ov:Icon>
+                <ov:IconSize Size="16">
+                  <ov:Image resid="icon16" />
+                </ov:IconSize>
+                <ov:IconSize Size="32">
+                  <ov:Image resid="icon32" />
+                </ov:IconSize>
+              </ov:Icon>
+              <ov:Control xsi:type="ov:Button" id="showTaskPaneButton">
+                <ov:Label resid="paneButtonLabel" />
+                <ov:Supertip>
+                  <ov:Title resid="paneButtonLabel" />
+                  <ov:Description resid="paneButtonDescription" />
+                </ov:Supertip>
+                <ov:Icon>
+                  <ov:IconSize Size="16">
+                    <ov:Image resid="icon16" />
+                  </ov:IconSize>
+                  <ov:IconSize Size="32">
+                    <ov:Image resid="icon32" />
+                  </ov:IconSize>
+                </ov:Icon>
+                <ov:Action xsi:type="ov:ShowTaskpane">
+                  <ov:SourceLocation resid="taskPaneUrl" />
+                </ov:Action>
+              </ov:Control>
+            </ov:Group>
+          </ov:OfficeTab>
+        </ov:ExtensionPoint>
+        <ov:ExtensionPoint xsi:type="ov:Taskpane">
+          <ov:SourceLocation resid="taskPaneUrl" />
+        </ov:ExtensionPoint>
+      </ov:Host>
+    </ov:Hosts>
+
+    <ov:Resources>
+      <ov:Images>
+        <ov:Image id="icon16" DefaultValue="https://localhost:4200/assets/icon-16.png" />
+        <ov:Image id="icon32" DefaultValue="https://localhost:4200/assets/icon-32.png" />
+      </ov:Images>
+      <ov:Urls>
+        <ov:Url id="taskPaneUrl" DefaultValue="https://localhost:4200" />
+      </ov:Urls>
+      <ov:ShortStrings>
+        <ov:String id="groupLabel" DefaultValue="Angular Add-in" />
+        <ov:String id="paneButtonLabel" DefaultValue="Show Angular Pane" />
+      </ov:ShortStrings>
+      <ov:LongStrings>
+        <ov:String id="paneButtonDescription" DefaultValue="Open the Angular-powered task pane." />
+      </ov:LongStrings>
+    </ov:Resources>
+  </VersionOverrides>
+</OfficeApp>
+
