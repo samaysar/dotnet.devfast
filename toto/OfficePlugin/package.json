@@ -21,11 +21,11 @@
     "@angular/platform-browser": "^21.2.0",
     "@angular/platform-browser-dynamic": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "@microsoft/office-js": "^1.1.110",
+    "@types/office-js": "^1.0.64",
     "rxjs": "^7.8.1",
     "tslib": "^2.8.1",
-    "zone.js": "^0.15.0",
-    "@types/office-js": "^1.0.64",
-    "@microsoft/office-js": "^1.1.110"
+    "zone.js": "^0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^21.2.0",
@@ -33,21 +33,23 @@
     "@angular/compiler-cli": "^21.2.0",
     "@types/jasmine": "^5.1.0",
     "@types/node": "^22.10.2",
+    "@typescript-eslint/eslint-plugin": "^8.57.1",
+    "@typescript-eslint/parser": "^8.57.1",
     "eslint": "^9.12.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jsdoc": "^50.0.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
+    "husky": "^9.0.0",
     "jasmine-core": "^5.5.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.4.1",
-    "typescript": "~5.9.0",
-    "husky": "^9.0.0",
-    "lint-staged": "^15.2.0"
+    "typescript": "~5.9.0"
   },
   "engines": {
     "node": ">=20.19.0"
