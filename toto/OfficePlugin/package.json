@@ -4,8 +4,11 @@
   "private": true,
   "description": "Microsoft Office Add-in built with React, TypeScript, and Office SSO.",
   "scripts": {
-    "start": "vite --port 4200",
+    "start": "office-addin-debugging start manifest.xml desktop --app excel --dev-server \"npm run dev-server\" --dev-server-port 4200",
     "dev": "vite --port 4200",
+    "dev-server": "vite --port 4200",
+    "start:web": "office-addin-debugging start manifest.xml web --app excel",
+    "stop": "office-addin-debugging stop manifest.xml",
     "build": "vite build",
     "preview": "vite preview --port 4200",
     "lint": "eslint . --ext .ts,.tsx,.js,.cjs,.mjs --max-warnings=0",
@@ -35,6 +38,9 @@
     "globals": "^17.4.0",
     "husky": "^9.0.0",
     "lint-staged": "^15.2.0",
+    "office-addin-debugging": "^6.0.6",
+    "office-addin-dev-certs": "^2.0.6",
+    "office-addin-manifest": "^2.1.2",
     "prettier": "^3.4.1",
     "typescript": "~5.9.0",
     "vite": "^7.1.0"

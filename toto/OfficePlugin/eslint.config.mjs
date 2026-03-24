@@ -24,7 +24,7 @@ export default [
         ...globals.node,
         Office: 'readonly',
         OfficeRuntime: 'readonly',
-        Word: 'readonly',
+        Excel: 'readonly',
       },
     },
     plugins: {
