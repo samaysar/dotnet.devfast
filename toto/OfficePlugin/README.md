@@ -1,6 +1,6 @@
-## Angular 21 Office Add-in scaffold
+## React Office SSO Add-in scaffold
 
-This project is a minimal **Microsoft Office task pane add-in** built with **Angular 21 + TypeScript** and the standard modern JS tooling stack (Angular CLI style layout, ESLint, Prettier).
+This project is a minimal **Microsoft Office task pane add-in** built with **React + TypeScript + Vite** and configured with **ESLint, Prettier, Husky, and lint-staged**.
 
 ### Prerequisites
 
@@ -17,18 +17,27 @@ cd d:/EverythingElse/toto/OfficePlugin
 npm install
 ```
 
-### Run the Angular dev server
+### Run the React dev server
 
 ```bash
 npm start
 ```
 
-By default this uses HTTP on port 4200. Office add-ins require **HTTPS**, so for real sideloading you should:
+By default this uses HTTP on port 4200. Office add-ins require **HTTPS**, so for sideloading you should:
 
-- Configure Angular dev server with `--ssl true --ssl-cert` and `--ssl-key`, or
+- Configure Vite with HTTPS cert/key, or
 - Proxy through a local HTTPS dev server that terminates TLS and forwards to `http://localhost:4200`.
 
 Once you have HTTPS serving on `https://localhost:4200`, update `manifest.xml` if you change host/port.
+
+### Office SSO setup (required)
+
+1. Register an Azure app for your add-in.
+2. Replace placeholders in `manifest.xml`:
+   - `ov:WebApplicationInfo/ov:Id`
+   - `ov:WebApplicationInfo/ov:Resource`
+3. Add redirect URI(s) for your local/dev host.
+4. Grant delegated permissions your add-in needs and grant admin consent if required.
 
 ### Use the add-in in Office
 
@@ -36,6 +45,5 @@ Once you have HTTPS serving on `https://localhost:4200`, update `manifest.xml` i
 2. Sideload `manifest.xml` into Word or Excel (follow the official Office Add-in sideloading guide).
 3. Open a document, then:
    - Go to the **Home** tab.
-   - Click **Show Angular Pane** in the custom group.
-4. In Word, use **Insert sample text** in the task pane to insert text at the current selection.
-
+   - Click **Show React Pane** in the custom group.
+4. In the task pane, click **Get SSO token** to trigger `OfficeRuntime.auth.getAccessToken`.
