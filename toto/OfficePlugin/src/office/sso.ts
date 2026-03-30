@@ -1,12 +1,3 @@
-declare const OfficeRuntime: {
-  auth: {
-    getAccessToken(options?: {
-      allowSignInPrompt?: boolean;
-      allowConsentPrompt?: boolean;
-    }): Promise<string>;
-  };
-};
-
 export function isOfficeHostAvailable(): boolean {
   return typeof Office !== 'undefined';
 }

@@ -12,5 +12,11 @@ export default defineConfig(async () => {
       strictPort: true,
       https: httpsOptions,
     },
+    esbuild: {
+      target: 'es2019',
+    },
+    build: {
+      target: 'es2019',
+    },
   };
 });

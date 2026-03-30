@@ -4,7 +4,7 @@
            xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
            xsi:type="TaskPaneApp">
   <Id>c3e93f44-8ad1-4b9d-8c83-000000000001</Id>
-  <Version>1.0.0.2</Version>
+  <Version>1.0.0.3</Version>
   <ProviderName>Your Company</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="React Excel SSO Add-in" />
@@ -56,7 +56,6 @@
                     <bt:Image size="80" resid="icon80" />
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>LoginPane</TaskpaneId>
                     <SourceLocation resid="taskPaneLoginUrl" />
                   </Action>
                 </Control>
@@ -72,12 +71,14 @@
                     <bt:Image size="80" resid="icon80" />
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
-                    <TaskpaneId>TestPane</TaskpaneId>
                     <SourceLocation resid="taskPaneTestUrl" />
                   </Action>
                 </Control>
               </Group>
             </CustomTab>
+          </ExtensionPoint>
+          <ExtensionPoint xsi:type="Taskpane">
+            <SourceLocation resid="taskPaneUrl" />
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
@@ -90,8 +91,9 @@
         <bt:Image id="icon80" DefaultValue="https://res-1.cdn.office.net/files/fabric-cdn-prod_20221201.001/assets/item-types/96/xlsx.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="taskPaneLoginUrl" DefaultValue="https://localhost:4200/#/sso" />
-        <bt:Url id="taskPaneTestUrl" DefaultValue="https://localhost:4200/#/write" />
+        <bt:Url id="taskPaneUrl" DefaultValue="https://localhost:4200/#/" />
+        <bt:Url id="taskPaneLoginUrl" DefaultValue="https://localhost:4200/#/login" />
+        <bt:Url id="taskPaneTestUrl" DefaultValue="https://localhost:4200/#/test" />
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="sssTabLabel" DefaultValue="SSS" />

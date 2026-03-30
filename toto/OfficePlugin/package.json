@@ -16,14 +16,17 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@fluentui/react-components": "^9.73.4",
     "@microsoft/office-js": "^1.1.110",
     "@types/office-js": "^1.0.64",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/node": "^22.10.2",
+    "@types/office-runtime": "^1.0.36",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
@@ -38,7 +41,7 @@
     "globals": "^17.4.0",
     "husky": "^9.0.0",
     "lint-staged": "^15.2.0",
-    "office-addin-debugging": "^6.0.6",
+    "office-addin-debugging": "^6.0.4",
     "office-addin-dev-certs": "^2.0.6",
     "office-addin-manifest": "^2.1.2",
     "prettier": "^3.4.1",
@@ -47,6 +50,9 @@
   },
   "engines": {
     "node": ">=20.19.0"
+  },
+  "overrides": {
+    "tmp": "^0.2.5"
   },
   "lint-staged": {
     "*.{ts,tsx,js,cjs,mjs}": [
