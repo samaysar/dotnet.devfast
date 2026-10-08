@@ -1,0 +1,51 @@
+Please execute an exhaustive security, configuration, and architectural audit on the provided project repository using the raw context and tool outputs provided below.
+
+================================================================================
+1. REPOSITORY STRUCTURE & CONTEXT
+================================================================================
+README Context:
+{{ README_CONTENT }}
+
+File Structure Overview:
+- Source Files (.py, .pyx): {{ SOURCE_FILES_LIST }}
+- Test Files: {{ TEST_FILES_LIST }}
+- Pipeline & Config Files (YAML, TOML, Docker, etc.): {{ CONFIG_FILES_LIST }}
+
+Ignored Artifacts (.gitignore applied):
+{{ GITIGNORE_PATTERNS }}
+
+================================================================================
+2. AGGREGATED SAST & SCANNER RESULTS
+================================================================================
+- Trivy Findings: {{ TRIVY_JSON_OR_TEXT }}
+- Bandit Findings: {{ BANDIT_JSON_OR_TEXT }}
+- Semgrep Findings: {{ SEMGREP_JSON_OR_TEXT }}
+- TruffleHog Findings: {{ TRUFFLEHOG_JSON_OR_TEXT }}
+- Pip-Audit Findings: {{ PIP_AUDIT_JSON_OR_TEXT }}
+- Pytest Coverage Summary: {{ PYTEST_COV_SUMMARY }}
+
+================================================================================
+3. AST, CST & CODE EXTRACTS
+================================================================================
+Key Code Modules & Symbol Outlines (Including LibCST Comments & Docstrings):
+{{ CST_AST_OUTLINES }}
+
+High-Risk Source Snippets (Line-based):
+{{ HIGH_RISK_FILE_SNIPPETS }}
+
+Pipeline & Infrastructure Files:
+{{ PIPELINE_AND_DOCKER_CONTENTS }}
+
+================================================================================
+4. AUDIT INSTRUCTIONS
+================================================================================
+1. Triage SAST Findings: Filter out false positives from the raw scanner outputs. Validate real vulnerabilities against the actual file contents and AST structures provided.
+2. Logic & Flow Analysis: Trace user data inputs across source files. Flag any unvalidated inputs reaching database queries, system execution calls, or unsafe serialization.
+3. Cython / C-Boundary Audit: If `.pyx` files are present, explicitly inspect memory allocations, pointer operations, and GIL management.
+4. Configuration & Pipeline Audit: Check Dockerfiles and CI/CD pipelines for non-root execution, secret leaks, unpinned action versions, or overly permissive environment variables.
+5. Test Gap Analysis: Identify critical production logic paths that have zero or low test coverage based on the coverage report and test file listing.
+
+================================================================================
+5. REQUIRED OUTPUT
+================================================================================
+Generate the final report as a complete, standalone HTML file adhering strictly to the system prompt's schema. Ensure all findings include clear business impact explanations alongside code-level remediations.
