@@ -1,0 +1,196 @@
+import json
+import os
+import sys
+from typing import Dict, Any, List, Optional
+import openai
+
+# Color constants for terminal UI
+COLOR_RESET = "\033[0m"
+COLOR_THOUGHT = "\033[90m"      # Muted Gray
+COLOR_RESPONSE = "\033[36m"     # Cyan
+COLOR_TOOL_EXEC = "\033[33m"    # Yellow
+COLOR_DEBUG = "\033[35m"        # Magenta
+COLOR_ERROR = "\033[31m"        # Red
+
+client = openai.OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+
+
+# ---------------------------------------------------------------------------
+# 1. SAMPLE TOOL IMPLEMENTATIONS
+# ---------------------------------------------------------------------------
+def run_custom_tool(name: str, args: Dict[str, Any]) -> str:
+    """Executes tools and logs detailed execution metadata for debugging."""
+    print(f"\n{COLOR_DEBUG}[DEBUG TOOL ENTER]: Name='{name}' Args={json.dumps(args)}{COLOR_RESET}")
+
+    if name == "inspect_code_ast":
+        file_path = args.get("file_path", "")
+        # Simulated payload
+        result = {"file": file_path, "classes": ["SecurityEngine"], "functions": ["verify_token"]}
+    else:
+        result = {"error": f"Tool '{name}' not found"}
+
+    result_json = json.dumps(result)
+    print(f"{COLOR_DEBUG}[DEBUG TOOL EXIT]: Result Payload Size={len(result_json)} bytes{COLOR_RESET}")
+    return result_json
+
+
+# ---------------------------------------------------------------------------
+# 2. STREAMING ENGINE WITH DEBUG & REASONING CAPABILITIES
+# ---------------------------------------------------------------------------
+class StatefulAuditRunner:
+    def __init__(self, model: str = "o3-mini", debug: bool = True):
+        self.model = model
+        self.debug = debug
+        self.last_response_id: Optional[str] = None  # Tracks conversation chain ID
+
+    def log_debug(self, msg: str):
+        if self.debug:
+            print(f"{COLOR_DEBUG}[DEBUG EVENT]: {msg}{COLOR_RESET}")
+
+    def run_turn(self, user_input: str, tools: List[Dict[str, Any]]):
+        """Runs a turn in the loop, streaming reasoning, logging debug events, and executing tools."""
+        
+        # Build API payload
+        kwargs: Dict[str, Any] = {
+            "model": self.model,
+            "messages": [{"role": "user", "content": user_input}],
+            "tools": tools,
+            "stream": True,
+            "store": True  # Enable server-side response retention
+        }
+
+        # Attach previous context ID if available
+        if self.last_response_id:
+            kwargs["previous_response_id"] = self.last_response_id
+            self.log_debug(f"Attaching context previous_response_id='{self.last_response_id}'")
+
+        while True:
+            self.log_debug("Sending completion request to OpenAI API...")
+            stream = client.chat.completions.create(**kwargs)
+
+            tool_calls_acc: Dict[int, Dict[str, Any]] = {}
+            current_phase = None
+            assistant_content = ""
+
+            for chunk in stream:
+                if not chunk.choices:
+                    continue
+
+                choice = chunk.choices[0]
+                delta = choice.delta
+
+                # A. EVENT LOGGING: Log finish reason or debug info
+                if choice.finish_reason:
+                    self.log_debug(f"Chunk Finish Reason: '{choice.finish_reason}'")
+
+                # B. STREAM REASONING / THOUGHTS
+                reasoning_text = getattr(delta, "reasoning_content", None)
+                if reasoning_text:
+                    if current_phase != "THOUGHT":
+                        print(f"\n{COLOR_THOUGHT}=== [LLM THOUGHTS] ===\n", end="", flush=True)
+                        current_phase = "THOUGHT"
+                    print(reasoning_text, end="", flush=True)
+
+                # C. STREAM USER-FACING RESPONSE
+                elif delta.content:
+                    if current_phase != "RESPONSE":
+                        print(f"\n{COLOR_RESET}\n{COLOR_RESPONSE}=== [MODEL RESPONSE] ===\n", end="", flush=True)
+                        current_phase = "RESPONSE"
+                    print(delta.content, end="", flush=True)
+                    assistant_content += delta.content
+
+                # D. ACCUMULATE TOOL CALL DELTAS
+                if delta.tool_calls:
+                    if current_phase != "TOOL":
+                        self.log_debug("Receiving Tool Call Deltas...")
+                        current_phase = "TOOL"
+
+                    for tc in delta.tool_calls:
+                        idx = tc.index
+                        if idx not in tool_calls_acc:
+                            tool_calls_acc[idx] = {"id": "", "name": "", "args": ""}
+                        
+                        if tc.id:
+                            tool_calls_acc[idx]["id"] = tc.id
+                        if tc.function and tc.function.name:
+                            tool_calls_acc[idx]["name"] += tc.function.name
+                        if tc.function and tc.function.arguments:
+                            tool_calls_acc[idx]["args"] += tc.function.arguments
+
+            print(COLOR_RESET)  # Reset terminal styling
+
+            # E. HANDLE TOOL EXECUTION LOOP
+            if tool_calls_acc:
+                self.log_debug(f"Stream ended. Executing {len(tool_calls_acc)} requested tools...")
+
+                # Construct assistant message for the conversation history
+                formatted_tools = [
+                    {
+                        "id": data["id"],
+                        "type": "function",
+                        "function": {"name": data["name"], "arguments": data["args"]}
+                    }
+                    for data in tool_calls_acc.values()
+                ]
+
+                # Update conversation messages locally for the multi-turn tool step
+                messages = [
+                    {"role": "assistant", "content": assistant_content or None, "tool_calls": formatted_tools}
+                ]
+
+                for tc_data in formatted_tools:
+                    t_name = tc_data["function"]["name"]
+                    t_args = json.loads(tc_data["function"]["arguments"])
+
+                    print(f"\n{COLOR_TOOL_EXEC}[EXECUTING TOOL]: {t_name}{COLOR_RESET}")
+                    
+                    # Execute tool function
+                    t_output = run_custom_tool(t_name, t_args)
+                    
+                    messages.append({
+                        "role": "tool",
+                        "tool_call_id": tc_data["id"],
+                        "content": t_output
+                    })
+
+                # Re-run the completion loop with tool execution outputs
+                kwargs["messages"] = messages
+                # Remove previous_response_id in the immediate tool loop since tool outputs are part of current turn
+                kwargs.pop("previous_response_id", None)
+            
+            else:
+                # Capture final response ID for long-running context in the NEXT turn
+                if hasattr(choice, "response_id") and choice.response_id:
+                     self.last_response_id = choice.response_id
+                     self.log_debug(f"Saved new Context ID for next turns: '{self.last_response_id}'")
+                break
+
+
+# ---------------------------------------------------------------------------
+# 3. CLI DEMO EXECUTION
+# ---------------------------------------------------------------------------
+if __name__ == "__main__":
+    tools_schema = [
+        {
+            "type": "function",
+            "function": {
+                "name": "inspect_code_ast",
+                "description": "Inspects AST structure of a given file.",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "file_path": {"type": "string", "description": "Path to file"}
+                    },
+                    "required": ["file_path"]
+                }
+            }
+        }
+    ]
+
+    runner = StatefulAuditRunner(model="o3-mini", debug=True)
+
+    print("\n--- TURN 1 ---")
+    runner.run_turn("Inspect the file 'services/auth.py' and tell me what classes exist.", tools=tools_schema)
+
+    print("\n--- TURN 2 (Preserves context via ID) ---")
+    runner.run_turn("Now explain what the verify_token function inside that class does.", tools=tools_schema)
