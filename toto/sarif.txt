@@ -1,0 +1,28 @@
+
+import json
+
+with open("bandit-report.sarif", "r", encoding="utf-8") as f:
+    sarif = json.load(f)
+
+vulnerabilities = []
+
+for run in sarif.get("runs", []):
+    for result in run.get("results", []):
+        locations = result.get("locations", [])
+        location = (
+            locations[0].get("physicalLocation", {})
+            if locations else {}
+        )
+
+        artifact = location.get("artifactLocation", {})
+        region = location.get("region", {})
+
+        vulnerabilities.append({
+            "rule_id": result.get("ruleId"),
+            "severity": result.get("level", "unknown"),
+            "vulnerability": result.get("message", {}).get("text", ""),
+            "file": artifact.get("uri", "unknown"),
+            "line": region.get("startLine", "unknown")
+        })
+
+print(json.dumps(vulnerabilities, indent=2))
