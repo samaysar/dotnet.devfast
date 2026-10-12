@@ -1,0 +1,29 @@
+import json
+
+
+def parse_pip_audit_json(json_file):
+    with open(json_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    vulnerabilities = []
+
+    for dependency in data.get("dependencies", []):
+        package = dependency.get("name")
+        installed_version = dependency.get("version")
+
+        for vuln in dependency.get("vulns", []):
+            vulnerabilities.append({
+                "package": package,
+                "installed_version": installed_version,
+                "vulnerability_id": vuln.get("id"),
+                "description": vuln.get("description"),
+                "fix_versions": vuln.get("fix_versions", [])
+            })
+
+    return vulnerabilities
+
+
+if __name__ == "__main__":
+    vulnerabilities = parse_pip_audit_json("pip-audit.json")
+
+    print(json.dumps(vulnerabilities, indent=2))
