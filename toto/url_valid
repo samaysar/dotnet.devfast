@@ -1,0 +1,35 @@
+from datetime import datetime, timezone
+from urllib.parse import urlparse
+
+def validate_chunk_url(link_info: dict) -> bool:
+    url = link_info.get("external_link")
+    expiration_str = link_info.get("expiration")
+    
+    if not url or not expiration_str:
+        return False
+        
+    parsed = urlparse(url)
+    
+    # 1. Check scheme
+    if parsed.scheme != "https":
+        return False
+        
+    # 2. Check trusted cloud storage domains (customize based on your cloud provider)
+    allowed_domains = (
+        "amazonaws.com", 
+        "blob.core.windows.net", 
+        "storage.googleapis.com"
+    )
+    if not any(parsed.netloc.endswith(domain) for domain in allowed_domains):
+        return False
+        
+    # 3. Check expiration
+    try:
+        # Databricks expiration format is typically ISO 8601 (e.g., 2026-10-30T22:23:23.140Z)
+        exp_time = datetime.fromisoformat(expiration_str.replace("Z", "+00:00"))
+        if datetime.now(timezone.utc) >= exp_time:
+            return False # Expired
+    except (ValueError, TypeError):
+        return False
+        
+    return True
