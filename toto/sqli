@@ -1,0 +1,38 @@
+import sqlite3
+import sqlite_vec
+
+def init_taint_db(db_path: str = ".alice_index.db"):
+    db = sqlite3.connect(db_path)
+    db.enable_load_extension(True)
+    sqlite_vec.load(db)
+    db.enable_load_extension(False)
+
+    db.executescript("""
+        -- Standard code chunks + vector embeddings
+        CREATE TABLE IF NOT EXISTS code_chunks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT,
+            name TEXT,
+            code TEXT
+        );
+        CREATE VIRTUAL TABLE IF NOT EXISTS vec_chunks USING vec0(
+            chunk_id INTEGER,
+            embedding float[384]
+        );
+
+        -- Relational graph for taint reachability
+        CREATE TABLE IF NOT EXISTS call_edges (
+            caller_id INTEGER,
+            callee_name TEXT,
+            FOREIGN KEY(caller_id) REFERENCES code_chunks(id)
+        );
+
+        CREATE TABLE IF NOT EXISTS taint_markers (
+            chunk_id INTEGER,
+            marker_type TEXT, -- 'SOURCE' (e.g., request.args) or 'SINK' (e.g., cursor.execute)
+            description TEXT,
+            FOREIGN KEY(chunk_id) REFERENCES code_chunks(id)
+        );
+    """)
+    db.commit()
+    return db
