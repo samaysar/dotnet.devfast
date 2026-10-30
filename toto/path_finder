@@ -1,0 +1,36 @@
+def extract_taint_path(db: sqlite3.Connection, entrypoint_chunk_id: int) -> list[dict]:
+    """
+    Traverses SQLite call edges outward from a source chunk 
+    to find connected functions and potential sinks.
+    """
+    cursor = db.cursor()
+    
+    # Recursive CTE (Common Table Expression) to traverse call graph hops in SQLite
+    query = """
+        WITH RECURSIVE call_chain(curr_id, depth) AS (
+            -- Base case: Start at the entry point chunk
+            SELECT ?, 0
+            UNION ALL
+            -- Recursive step: Find functions called by current chunk
+            SELECT c.id, cc.depth + 1
+            FROM call_chain cc
+            JOIN call_edges e ON e.caller_id = cc.curr_id
+            JOIN code_chunks c ON c.name = e.callee_name
+            WHERE cc.depth < 4 -- Limit depth to prevent infinite loops
+        )
+        SELECT DISTINCT chunk.file_path, chunk.name, chunk.code, t.marker_type
+        FROM call_chain cc
+        JOIN code_chunks chunk ON chunk.id = cc.curr_id
+        LEFT JOIN taint_markers t ON t.chunk_id = chunk.id;
+    """
+    cursor.execute(query, (entrypoint_chunk_id,))
+    
+    path_nodes = []
+    for row in cursor.fetchall():
+        path_nodes.append({
+            "file_path": row[0],
+            "name": row[1],
+            "code": row[2],
+            "marker": row[3] # 'SOURCE', 'SINK', or NULL
+        })
+    return path_nodes
