@@ -1,0 +1,57 @@
+const { execSync } = require('child_process');
+const os = require('os');
+
+function validateEnvironment() {
+  const platform = os.platform();
+  const shellEnv = process.env.SHELL || '';
+  const msystem = process.env.MSYSTEM; // Common indicator for Git Bash on Windows
+
+  if (platform === 'win32') {
+    // Windows check: must be a bash-like environment (e.g., Git Bash, MSYS2)
+    const isBashLike = 
+      Boolean(msystem) || 
+      shellEnv.toLowerCase().includes('bash') || 
+      shellEnv.toLowerCase().includes('sh');
+
+    if (!isBashLike) {
+      throw new Error("Validation Error: On Windows, this script must be executed in a bash-like prompt (such as Git Bash).");
+    }
+  } else if (platform === 'linux' || platform === 'darwin') {
+    // Linux/Mac check: must be 'sh' or 'zsh'
+    const isShOrZsh = 
+      shellEnv.endsWith('/sh') || 
+      shellEnv.endsWith('/zsh') || 
+      shellEnv === 'sh' || 
+      shellEnv === 'zsh';
+
+    if (!isShOrZsh) {
+      throw new Error(`Validation Error: On Linux/Mac, the shell must be 'sh' or 'zsh'. Current shell: ${shellEnv || 'unknown'}`);
+    }
+  } else {
+    throw new Error(`Validation Error: Unsupported operating system (${platform}).`);
+  }
+}
+
+function isBunGloballyInstalled() {
+  // Validate shell/OS before checking for Bun
+  validateEnvironment();
+
+  try {
+    execSync('bun --version', { stdio: 'ignore' });
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+// Execution block
+try {
+  if (isBunGloballyInstalled()) {
+    console.log("Success: Bun is installed globally and environment checks passed!");
+  } else {
+    console.log("Bun is NOT installed globally (though environment checks passed).");
+  }
+} catch (error) {
+  console.error(error.message);
+  process.exit(1);
+}
